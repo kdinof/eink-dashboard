@@ -1,0 +1,5 @@
+orientation=PORTRAIT columns=1 rows=4
+calendar
+todoist
+weather
+clock

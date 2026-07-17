@@ -1,77 +1,89 @@
 package com.eink.dashboard
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
+import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.eink.dashboard.core.DeviceProfile
+import androidx.activity.viewModels
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.lifecycle.Lifecycle
+import com.eink.dashboard.dashboard.DashboardViewModel
+import com.eink.dashboard.dashboard.ui.DashboardHost
+import com.eink.dashboard.settings.DashboardSettings
+import com.eink.dashboard.settings.OrientationSetting
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.launch
 
 /**
- * Single Activity that hosts the whole app (single-activity + Compose
- * architecture — see docs/adr/0001-architecture.md).
+ * The single Activity that hosts the whole dashboard (single-activity + Compose —
+ * see docs/adr/0001-architecture.md).
  *
- * T01 scope: this only proves the toolchain and the single-activity shell build
- * and launch. Immersive fullscreen, the dashboard scaffold, the minute ticker
- * and the e-ink-safe theme are added by T02.
+ * Responsibilities kept at the Activity level (things Compose cannot own):
+ * - immersive fullscreen (hide system bars) so the dashboard uses the full panel;
+ * - applying the persisted orientation lock and keep-screen-on flag;
+ * - forwarding foreground/background to the [DashboardViewModel] so the refresh
+ *   coordinator ticks only while visible and refreshes immediately on resume.
  */
 class MainActivity : ComponentActivity() {
+
+    private val viewModel: DashboardViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            FoundationScreen()
-        }
-    }
-}
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        enterImmersiveMode()
 
-/** Placeholder foundation screen. Grayscale, no animation — replaced by T02. */
-@Composable
-private fun FoundationScreen() {
-    // Explicit black-on-white; the real e-ink theme is defined in T02.
-    MaterialTheme {
-        Surface(modifier = Modifier.fillMaxSize(), color = Color.White) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(24.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                Text(
-                    text = "E-Ink Dashboard",
-                    color = Color.Black,
-                    fontSize = 28.sp,
-                )
-                Text(
-                    text = "Foundation build (T01)",
-                    color = Color.Black,
-                    fontSize = 16.sp,
-                )
-                Text(
-                    text = "Target: ${DeviceProfile.MODEL} · API ${DeviceProfile.MIN_SDK} · " +
-                        "${DeviceProfile.SCREEN_WIDTH_PX}×${DeviceProfile.SCREEN_HEIGHT_PX}px",
-                    color = Color.Black,
-                    fontSize = 12.sp,
-                )
+        setContent {
+            DashboardHost(viewModel)
+        }
+
+        // Apply persisted display settings whenever they change, while at least
+        // STARTED. distinctUntilChanged avoids redundant window churn.
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.settings
+                    .distinctUntilChanged { a, b ->
+                        a.orientation == b.orientation && a.keepScreenOn == b.keepScreenOn
+                    }
+                    .collect(::applyDisplaySettings)
             }
         }
     }
-}
 
-@Preview(showBackground = true)
-@Composable
-private fun FoundationScreenPreview() {
-    FoundationScreen()
+    override fun onResume() {
+        super.onResume()
+        // Re-assert immersive mode (system bars can reappear after a transient swipe).
+        enterImmersiveMode()
+        viewModel.onEnterForeground()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.onEnterBackground()
+    }
+
+    private fun applyDisplaySettings(settings: DashboardSettings) {
+        requestedOrientation = when (settings.orientation) {
+            OrientationSetting.SYSTEM -> ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+            OrientationSetting.PORTRAIT -> ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+            OrientationSetting.LANDSCAPE -> ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        }
+        if (settings.keepScreenOn) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        } else {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        }
+    }
+
+    private fun enterImmersiveMode() {
+        val controller = WindowInsetsControllerCompat(window, window.decorView)
+        controller.hide(WindowInsetsCompat.Type.systemBars())
+        controller.systemBarsBehavior =
+            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+    }
 }

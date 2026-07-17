@@ -1,0 +1,3 @@
+orientation=LANDSCAPE columns=2 rows=2
+calendar | todoist
+weather | clock
