@@ -1,0 +1,5 @@
+# Device audit outputs are generated locally and may echo device-specific
+# (even if redacted) values. Keep them out of git; track only the docs.
+*
+!.gitignore
+!README.md
