@@ -4,9 +4,12 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.eink.dashboard.BuildConfig
+import com.eink.dashboard.modules.battery.BatteryModule
 import com.eink.dashboard.modules.calendar.CalendarModule
+import com.eink.dashboard.modules.clock.ClockModule
 import com.eink.dashboard.modules.demo.demoModules
 import com.eink.dashboard.modules.todoist.TodoistModule
+import com.eink.dashboard.modules.weather.WeatherModule
 import com.eink.dashboard.settings.DashboardSettings
 import com.eink.dashboard.settings.OrientationSetting
 import com.eink.dashboard.settings.SettingsStore
@@ -34,8 +37,13 @@ class DashboardViewModel(app: Application) : AndroidViewModel(app) {
     val registry: DashboardModuleRegistry =
         DashboardModuleRegistry.builder(allowDemo = BuildConfig.DEBUG)
             // Real product modules first — registration order is block order.
+            // T05 appends its blocks after the existing ones (additive, no reorder of
+            // Calendar/Todoist); T06 owns the final cross-module layout.
             .register(CalendarModule.create(app)) // T03
             .register(TodoistModule.create(app)) // T04
+            .register(ClockModule()) // T05: on-device clock (minute ticker)
+            .register(WeatherModule.create(app)) // T05: Open-Meteo weather
+            .register(BatteryModule.create(app)) // T05: battery state
             // Demo modules only in debug (empty registry in release stays demo-free).
             .registerAll(if (BuildConfig.DEBUG) demoModules() else emptyList())
             .build()

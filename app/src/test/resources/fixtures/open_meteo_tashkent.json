@@ -1,0 +1,75 @@
+{
+  "latitude": 41.3,
+  "longitude": 69.25,
+  "generationtime_ms": 0.51,
+  "utc_offset_seconds": 18000,
+  "timezone": "Asia/Tashkent",
+  "timezone_abbreviation": "+05",
+  "elevation": 428.0,
+  "current_units": {
+    "time": "iso8601",
+    "interval": "seconds",
+    "temperature_2m": "°C",
+    "apparent_temperature": "°C",
+    "relative_humidity_2m": "%",
+    "weather_code": "wmo code",
+    "wind_speed_10m": "km/h",
+    "is_day": "",
+    "precipitation": "mm"
+  },
+  "current": {
+    "time": "2026-07-17T08:00",
+    "interval": 900,
+    "temperature_2m": 28.4,
+    "apparent_temperature": 27.1,
+    "relative_humidity_2m": 38,
+    "weather_code": 1,
+    "wind_speed_10m": 11.2,
+    "is_day": 1,
+    "precipitation": 0.0
+  },
+  "daily_units": {
+    "time": "iso8601",
+    "weather_code": "wmo code",
+    "temperature_2m_max": "°C",
+    "temperature_2m_min": "°C",
+    "sunrise": "iso8601",
+    "sunset": "iso8601",
+    "precipitation_sum": "mm",
+    "precipitation_probability_max": "%"
+  },
+  "daily": {
+    "time": [
+      "2026-07-17",
+      "2026-07-18",
+      "2026-07-19",
+      "2026-07-20",
+      "2026-07-21",
+      "2026-07-22",
+      "2026-07-23"
+    ],
+    "weather_code": [1, 0, 2, 3, 61, 95, 0],
+    "temperature_2m_max": [36.2, 37.1, 35.8, 33.4, 30.1, 29.6, 34.0],
+    "temperature_2m_min": [22.0, 22.8, 21.9, 20.5, 19.2, 18.7, 20.1],
+    "sunrise": [
+      "2026-07-17T05:14",
+      "2026-07-18T05:15",
+      "2026-07-19T05:16",
+      "2026-07-20T05:17",
+      "2026-07-21T05:17",
+      "2026-07-22T05:18",
+      "2026-07-23T05:19"
+    ],
+    "sunset": [
+      "2026-07-17T19:56",
+      "2026-07-18T19:55",
+      "2026-07-19T19:54",
+      "2026-07-20T19:53",
+      "2026-07-21T19:52",
+      "2026-07-22T19:51",
+      "2026-07-23T19:50"
+    ],
+    "precipitation_sum": [0.0, 0.0, 0.0, 0.0, 2.4, 6.1, 0.0],
+    "precipitation_probability_max": [0, 0, 5, 10, 55, 70, 15]
+  }
+}

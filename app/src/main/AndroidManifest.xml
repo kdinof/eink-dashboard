@@ -10,7 +10,14 @@
     <!-- T03: read-only Calendar Provider access. WRITE_CALENDAR is never requested. -->
     <uses-permission android:name="android.permission.READ_CALENDAR" />
     <!-- T04: network access for the Todoist API. The token is stored Keystore-encrypted. -->
+    <!-- T05 also uses INTERNET for the keyless Open-Meteo forecast API. -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <!--
+      T05: opt-in device location for the Weather block. COARSE only (never FINE),
+      requested at runtime from Weather settings, and read as a last-known fix only
+      (no continuous GPS). The shipped Tashkent preset works with this ungranted.
+    -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:name=".EinkDashApp"
