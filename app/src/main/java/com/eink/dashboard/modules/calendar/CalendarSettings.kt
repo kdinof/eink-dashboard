@@ -3,6 +3,8 @@ package com.eink.dashboard.modules.calendar
 import com.eink.dashboard.modules.calendar.model.CalendarInfo
 import com.eink.dashboard.modules.calendar.model.CalendarRangeMode
 
+enum class CalendarSourceMode { DEVICE, GOOGLE }
+
 /**
  * Calendar-module settings: which display window and which calendars are shown.
  *
@@ -18,6 +20,7 @@ import com.eink.dashboard.modules.calendar.model.CalendarRangeMode
 data class CalendarSettings(
     val range: CalendarRangeMode = CalendarRangeMode.TODAY,
     val deselectedCalendarIds: Set<Long> = emptySet(),
+    val source: CalendarSourceMode = CalendarSourceMode.DEVICE,
 ) {
     fun isSelected(id: Long): Boolean = id !in deselectedCalendarIds
 

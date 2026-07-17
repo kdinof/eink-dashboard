@@ -3,12 +3,8 @@ package com.eink.dashboard.dashboard
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.eink.dashboard.EinkDashApp
 import com.eink.dashboard.BuildConfig
-import com.eink.dashboard.modules.battery.BatteryModule
-import com.eink.dashboard.modules.calendar.CalendarModule
-import com.eink.dashboard.modules.clock.ClockModule
-import com.eink.dashboard.modules.todoist.TodoistModule
-import com.eink.dashboard.modules.weather.WeatherModule
 import com.eink.dashboard.settings.DashboardSettings
 import com.eink.dashboard.settings.OrientationSetting
 import com.eink.dashboard.settings.SettingsStore
@@ -16,9 +12,10 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import com.eink.dashboard.remote.RemotePermission
 
 /** Top-level navigation destinations of the single Activity. */
-enum class Screen { DASHBOARD, SETTINGS, DIAGNOSTICS }
+enum class Screen { DASHBOARD, SETTINGS, REMOTE, DIAGNOSTICS }
 
 /**
  * Holds the app graph for the single Activity: the module registry, the settings
@@ -32,22 +29,12 @@ enum class Screen { DASHBOARD, SETTINGS, DIAGNOSTICS }
  */
 class DashboardViewModel(app: Application) : AndroidViewModel(app) {
 
-    private val settingsStore = SettingsStore(app)
+    private val graph = (app as EinkDashApp).graph
+    private val settingsStore = graph.settingsStore
 
-    val registry: DashboardModuleRegistry =
-        DashboardModuleRegistry.builder(allowDemo = BuildConfig.DEBUG)
-            // Real product modules first — registration order is block order.
-            // T05 appends its blocks after the existing ones (additive, no reorder of
-            // Calendar/Todoist); T06 owns the final cross-module layout.
-            .register(CalendarModule.create(app)) // T03
-            .register(TodoistModule.create(app)) // T04
-            .register(ClockModule()) // T05: on-device clock (minute ticker)
-            .register(WeatherModule.create(app)) // T05: Open-Meteo weather
-            .register(BatteryModule.create(app)) // T05: battery state
-            // No demo modules: the runtime dashboard shows only real data in every build.
-            .build()
+    val registry: DashboardModuleRegistry = graph.registry
 
-    private val coordinator = RefreshCoordinator(registry, viewModelScope)
+    private val coordinator = graph.coordinator
 
     /** Epoch millis of the latest tick — the header clock reads this. */
     val lastTick: StateFlow<Long> = coordinator.lastTickEpochMs
@@ -78,16 +65,25 @@ class DashboardViewModel(app: Application) : AndroidViewModel(app) {
     // ---- Settings mutations ----
 
     fun setOrientation(value: OrientationSetting) = viewModelScope.launch {
-        settingsStore.setOrientation(value)
+        graph.remoteSettings.setOrientation(value)
     }
 
     fun setKeepScreenOn(value: Boolean) = viewModelScope.launch {
-        settingsStore.setKeepScreenOn(value)
+        graph.remoteSettings.setKeepScreenOn(value)
     }
 
     fun setModuleVisible(id: String, visible: Boolean) = viewModelScope.launch {
-        settingsStore.setModuleVisible(id, visible)
-        // A newly visible module should populate at once rather than wait a minute.
-        coordinator.onSettingsChanged()
+        graph.remoteSettings.setModuleVisible(id, visible)
+    }
+
+    val remoteServer get() = graph.remoteServer
+    val pairing get() = graph.pairing
+    val permissions get() = graph.permissions
+
+    fun regeneratePairingPin() = graph.pairing.regeneratePin()
+    fun revokeSession(id: String) = graph.pairing.revoke(id)
+    fun revokeAllSessions() = graph.pairing.revokeAll()
+    fun completeRemotePermission(id: String, permission: RemotePermission) = viewModelScope.launch {
+        graph.remoteSettings.completePermission(id, permission)
     }
 }

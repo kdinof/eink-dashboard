@@ -62,6 +62,16 @@ class MainActivity : ComponentActivity() {
         viewModel.onEnterForeground()
     }
 
+    override fun onStart() {
+        super.onStart()
+        (application as EinkDashApp).graph.remoteServer.start()
+    }
+
+    override fun onStop() {
+        (application as EinkDashApp).graph.remoteServer.stop()
+        super.onStop()
+    }
+
     override fun onPause() {
         super.onPause()
         viewModel.onEnterBackground()

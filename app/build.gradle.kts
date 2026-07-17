@@ -17,6 +17,8 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "0.1.0"
+        val googleBrokerUrl = providers.gradleProperty("EINK_GOOGLE_BROKER_URL").orNull.orEmpty()
+        buildConfigField("String", "GOOGLE_BROKER_URL", "\"$googleBrokerUrl\"")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -85,6 +87,8 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "/META-INF/INDEX.LIST"
+            excludes += "/META-INF/io.netty.versions.properties"
         }
     }
 }
@@ -123,6 +127,15 @@ dependencies {
     implementation(libs.retrofit.converter.kotlinx)
     implementation(libs.okhttp)
     implementation(libs.okhttp.logging)
+
+    // Foreground-only local configuration server + on-device pairing QR.
+    implementation(libs.ktor.server.core)
+    implementation(libs.ktor.server.netty)
+    implementation(libs.ktor.server.content.negotiation)
+    implementation(libs.ktor.serialization.kotlinx.json)
+    implementation(libs.ktor.server.status.pages)
+    implementation(libs.zxing.core)
+    implementation(libs.slf4j.nop)
 
     // --- Unit test stack ---
     testImplementation(libs.junit)
