@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.eink.dashboard.BuildConfig
 import com.eink.dashboard.modules.calendar.CalendarModule
 import com.eink.dashboard.modules.demo.demoModules
+import com.eink.dashboard.modules.todoist.TodoistModule
 import com.eink.dashboard.settings.DashboardSettings
 import com.eink.dashboard.settings.OrientationSetting
 import com.eink.dashboard.settings.SettingsStore
@@ -34,6 +35,7 @@ class DashboardViewModel(app: Application) : AndroidViewModel(app) {
         DashboardModuleRegistry.builder(allowDemo = BuildConfig.DEBUG)
             // Real product modules first — registration order is block order.
             .register(CalendarModule.create(app)) // T03
+            .register(TodoistModule.create(app)) // T04
             // Demo modules only in debug (empty registry in release stays demo-free).
             .registerAll(if (BuildConfig.DEBUG) demoModules() else emptyList())
             .build()

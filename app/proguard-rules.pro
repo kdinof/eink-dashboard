@@ -9,3 +9,19 @@
 -keepclassmembers class kotlinx.serialization.json.** {
     *** Companion;
 }
+
+# --- T04 Todoist ---------------------------------------------------------------
+# kotlinx.serialization DTOs: keep the classes and their generated serializers so
+# R8 (T09) can't strip fields the Todoist v1 JSON maps onto.
+-keepclassmembers @kotlinx.serialization.Serializable class com.eink.dashboard.modules.todoist.data.** {
+    *** Companion;
+    kotlinx.serialization.KSerializer serializer(...);
+}
+-keep class com.eink.dashboard.modules.todoist.data.**$$serializer { *; }
+
+# Retrofit service interfaces rely on generic signatures / annotations at runtime.
+-keepattributes Signature, RuntimeVisibleAnnotations, AnnotationDefault
+-keep,allowobfuscation interface com.eink.dashboard.modules.todoist.data.TodoistService
+
+# Room entities are accessed reflectively by generated code — keep their fields.
+-keep class com.eink.dashboard.modules.todoist.data.room.** { *; }

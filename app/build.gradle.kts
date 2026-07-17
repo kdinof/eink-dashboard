@@ -20,6 +20,14 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
+        // T04: export the Room schema JSON so future schema changes ship an explicit
+        // migration. Committed under app/schemas/.
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments["room.schemaLocation"] = "$projectDir/schemas"
+            }
+        }
+
         // App code is pure Kotlin/JVM, but some AndroidX libraries (e.g.
         // DataStore) bundle a small native .so for every ABI. The device is
         // arm64-v8a (T00), so we ship only that ABI — dropping x86/x86_64/

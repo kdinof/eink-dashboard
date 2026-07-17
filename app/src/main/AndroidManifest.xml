@@ -9,6 +9,8 @@
     -->
     <!-- T03: read-only Calendar Provider access. WRITE_CALENDAR is never requested. -->
     <uses-permission android:name="android.permission.READ_CALENDAR" />
+    <!-- T04: network access for the Todoist API. The token is stored Keystore-encrypted. -->
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".EinkDashApp"
