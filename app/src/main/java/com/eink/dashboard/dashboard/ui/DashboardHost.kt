@@ -17,6 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -28,6 +29,12 @@ import com.eink.dashboard.dashboard.theme.EinkSpacing
 import com.eink.dashboard.dashboard.theme.EinkTheme
 import com.eink.dashboard.diagnostics.ui.DiagnosticsScreen
 import com.eink.dashboard.settings.ui.SettingsScreen
+import com.eink.dashboard.remote.RemotePermission
+import com.eink.dashboard.remote.ui.RemoteSetupScreen
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import com.eink.dashboard.modules.calendar.READ_CALENDAR_PERMISSION
+import com.eink.dashboard.modules.weather.data.COARSE_LOCATION_PERMISSION
 
 /**
  * Root of the single-Activity UI. Draws a static top bar (clock + destination
@@ -41,6 +48,21 @@ fun DashboardHost(viewModel: DashboardViewModel, modifier: Modifier = Modifier) 
             var screen by remember { mutableStateOf(Screen.DASHBOARD) }
             val settings by viewModel.settings.collectAsStateWithLifecycle()
             val lastTick by viewModel.lastTick.collectAsStateWithLifecycle()
+            val pendingPermission by viewModel.permissions.pending.collectAsStateWithLifecycle()
+            val calendarLauncher = rememberLauncherForActivityResult(
+                ActivityResultContracts.RequestPermission(),
+            ) { viewModel.permissions.pending.value?.let { viewModel.completeRemotePermission(it.id, it.permission) } }
+            val locationLauncher = rememberLauncherForActivityResult(
+                ActivityResultContracts.RequestPermission(),
+            ) { viewModel.permissions.pending.value?.let { viewModel.completeRemotePermission(it.id, it.permission) } }
+
+            LaunchedEffect(pendingPermission?.id) {
+                when (pendingPermission?.permission) {
+                    RemotePermission.CALENDAR -> calendarLauncher.launch(READ_CALENDAR_PERMISSION)
+                    RemotePermission.LOCATION -> locationLauncher.launch(COARSE_LOCATION_PERMISSION)
+                    null -> Unit
+                }
+            }
 
             Column(modifier = Modifier.fillMaxSize()) {
                 TopBar(
@@ -61,6 +83,14 @@ fun DashboardHost(viewModel: DashboardViewModel, modifier: Modifier = Modifier) 
                         onOrientation = viewModel::setOrientation,
                         onKeepScreenOn = viewModel::setKeepScreenOn,
                         onModuleVisible = viewModel::setModuleVisible,
+                        modifier = Modifier.fillMaxSize(),
+                    )
+                    Screen.REMOTE -> RemoteSetupScreen(
+                        serverState = viewModel.remoteServer.state,
+                        pairing = viewModel.pairing,
+                        onRegeneratePin = viewModel::regeneratePairingPin,
+                        onRevokeSession = viewModel::revokeSession,
+                        onRevokeAll = viewModel::revokeAllSessions,
                         modifier = Modifier.fillMaxSize(),
                     )
                     Screen.DIAGNOSTICS -> {
@@ -93,6 +123,7 @@ private fun TopBar(clock: String, current: Screen, onSelect: (Screen) -> Unit) {
         Row(horizontalArrangement = Arrangement.spacedBy(EinkSpacing.sm)) {
             NavChip("Board", current == Screen.DASHBOARD) { onSelect(Screen.DASHBOARD) }
             NavChip("Settings", current == Screen.SETTINGS) { onSelect(Screen.SETTINGS) }
+            NavChip("Remote", current == Screen.REMOTE) { onSelect(Screen.REMOTE) }
             NavChip("Diag", current == Screen.DIAGNOSTICS) { onSelect(Screen.DIAGNOSTICS) }
         }
     }

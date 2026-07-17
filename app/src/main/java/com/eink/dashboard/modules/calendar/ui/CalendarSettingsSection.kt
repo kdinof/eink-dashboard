@@ -20,6 +20,7 @@ import com.eink.dashboard.dashboard.ui.EinkToggleRow
 import com.eink.dashboard.modules.calendar.CalendarModule
 import com.eink.dashboard.modules.calendar.CalendarSettingsStore
 import com.eink.dashboard.modules.calendar.READ_CALENDAR_PERMISSION
+import com.eink.dashboard.modules.calendar.CalendarSourceMode
 import com.eink.dashboard.modules.calendar.model.CalendarRangeMode
 import kotlinx.coroutines.launch
 import androidx.compose.runtime.rememberCoroutineScope
@@ -60,7 +61,34 @@ fun CalendarSettingsSection(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(EinkSpacing.sm),
     ) {
-        if (!granted) {
+        Text(text = "Source", style = MaterialTheme.typography.titleMedium)
+        Row(horizontalArrangement = Arrangement.spacedBy(EinkSpacing.sm)) {
+            CalendarSourceMode.entries.forEach { source ->
+                EinkChip(
+                    label = if (source == CalendarSourceMode.GOOGLE) "Google API" else "Reader",
+                    selected = settings.source == source,
+                    onClick = {
+                        scope.launch {
+                            settingsStore.setSource(source)
+                            module.refresh(RefreshReason.SETTINGS_CHANGED)
+                        }
+                    },
+                )
+            }
+            EinkChip(
+                label = "Refresh calendars",
+                selected = false,
+                onClick = { scope.launch { module.refresh(RefreshReason.SETTINGS_CHANGED) } },
+            )
+        }
+        Text(
+            text = if (module.googleConnected) "Google Calendar connected. Manage OAuth from Remote setup."
+            else "Connect Google Calendar from the phone web panel.",
+            style = MaterialTheme.typography.labelMedium,
+            color = EinkPalette.InkMuted,
+        )
+
+        if (settings.source == CalendarSourceMode.DEVICE && !granted) {
             Text(
                 text = "Calendar access is not granted.",
                 style = MaterialTheme.typography.bodyMedium,

@@ -4,12 +4,14 @@ Native, foreground-only personal dashboard for a **Meebook M103** e-ink tablet.
 It combines Google Calendar, Todoist, weather, a minute clock and battery status
 in a grayscale interface designed for low refresh rates and minimal ghosting.
 
-The app runs entirely on the device. It does not require a custom backend and
-does not perform background refreshes while closed.
+Calendar, tasks and weather data are rendered and cached on the device. The app
+does not perform background refreshes while closed. While the Activity is visible,
+it serves an authenticated settings panel on the reader's current Wi-Fi address.
 
 ## Features
 
-- Google Calendar through Android `CalendarContract` (read-only)
+- Google Calendar through Android `CalendarContract` or the read-only Google Calendar API
+- Phone-based Google OAuth through a minimal token broker; calendar data bypasses the broker
 - Todoist Today / Upcoming views and task completion
 - Open-Meteo current conditions, daily summary and seven-day forecast
 - Minute clock and live battery/charging status
@@ -17,6 +19,7 @@ does not perform background refreshes while closed.
 - Offline cache and stale-data states
 - E-ink-safe grayscale UI with foreground-only refresh scheduling
 - Todoist token encryption with Android Keystore (AES-256-GCM)
+- Local Wi-Fi web settings panel with QR + one-time PIN pairing
 
 Runtime debug builds contain only the five real product modules; demo blocks
 are retained solely as test fixtures and are never registered in the app.
@@ -72,6 +75,20 @@ Run Gradle with JDK 17. If your default `java` is a different version, either se
 `JAVA_HOME` to a JDK 17 install (as above) or use `./scripts/check.sh`, which
 resolves JDK 17 automatically.
 
+### Enable phone-based Google Calendar sign-in
+
+Deploy the broker described in [`oauth-worker/README.md`](oauth-worker/README.md),
+then bake its public HTTPS origin into the APK:
+
+```bash
+./gradlew assembleDebug \
+  -PEINK_GOOGLE_BROKER_URL=https://calendar-auth.example.com
+```
+
+Without this property the rest of the dashboard works normally, but the web panel
+shows that Google OAuth is not configured. Do not put the Google client secret in
+Gradle properties or the APK; it belongs only in the Worker secret store.
+
 ## Install on the device (smoke test)
 
 ```bash
@@ -107,4 +124,6 @@ physical-device verification reports are available in [`reports/`](reports/).
   audit dumps; the relevant paths are ignored by Git.
 - Enter the Todoist personal token only in the app. Plaintext tokens are not
   stored in Room, DataStore or logs.
+- Remote setup uses unencrypted HTTP and is intended only for a trusted, encrypted
+  home Wi-Fi network. Browser bearer tokens are stored only as hashes on the reader.
 - Calendar access is read-only; the app does not request `WRITE_CALENDAR`.

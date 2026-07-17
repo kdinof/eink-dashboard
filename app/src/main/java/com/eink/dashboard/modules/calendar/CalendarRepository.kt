@@ -35,18 +35,20 @@ data class CalendarAgenda(
  */
 class CalendarRepository(
     private val source: CalendarDataSource,
+    private val googleSource: CalendarDataSource? = null,
     private val zoneProvider: () -> ZoneId = { ZoneId.systemDefault() },
 ) {
     fun load(settings: CalendarSettings, nowMs: Long): CalendarAgenda {
         val zone = zoneProvider()
-        val calendars = source.listCalendars()
+        val activeSource = if (settings.source == CalendarSourceMode.GOOGLE) googleSource ?: source else source
+        val calendars = activeSource.listCalendars()
         val range = DayRange.of(settings.range, nowMs, zone)
         val selected = settings.selectedIdsAmong(calendars)
 
         val events = if (selected.isEmpty()) {
             emptyList()
         } else {
-            source.queryInstances(
+            activeSource.queryInstances(
                 startMs = range.queryStartMs(zone) - DAY_MS,
                 endMs = range.queryEndMs(zone) + DAY_MS,
                 calendarIds = selected,

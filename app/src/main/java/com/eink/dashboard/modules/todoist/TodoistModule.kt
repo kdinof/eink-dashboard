@@ -129,10 +129,20 @@ class TodoistModule(
 
     /** Save a new token (encrypted), verify it, and reload. `null` == verified OK. */
     suspend fun saveAndVerifyToken(token: String): TodoistError? {
+        // Preserve the last known credential until the replacement is accepted.
+        // This also prevents the remote form from leaving a rejected token active.
+        val previous = withContext(Dispatchers.IO) { tokenStore.load() }
         withContext(Dispatchers.IO) { tokenStore.save(token) }
         _hasToken.value = tokenStore.hasToken()
         val error = withContext(Dispatchers.IO) { repo.verifyToken() }
-        if (error == null) refresh(RefreshReason.SETTINGS_CHANGED)
+        if (error == null) {
+            refresh(RefreshReason.SETTINGS_CHANGED)
+        } else {
+            withContext(Dispatchers.IO) {
+                if (previous.isNullOrBlank()) tokenStore.clear() else tokenStore.save(previous)
+            }
+            _hasToken.value = tokenStore.hasToken()
+        }
         return error
     }
 

@@ -12,6 +12,7 @@
     <!-- T04: network access for the Todoist API. The token is stored Keystore-encrypted. -->
     <!-- T05 also uses INTERNET for the keyless Open-Meteo forecast API. -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!--
       T05: opt-in device location for the Weather block. COARSE only (never FINE),
       requested at runtime from Weather settings, and read as a last-known fix only

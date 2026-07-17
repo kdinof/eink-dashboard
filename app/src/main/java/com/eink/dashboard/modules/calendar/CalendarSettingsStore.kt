@@ -39,6 +39,10 @@ class CalendarSettingsStore(private val dataStore: DataStore<Preferences>) {
         dataStore.edit { it[Keys.RANGE] = range.name }
     }
 
+    suspend fun setSource(source: CalendarSourceMode) {
+        dataStore.edit { it[Keys.SOURCE] = source.name }
+    }
+
     suspend fun setCalendarSelected(id: Long, selected: Boolean) {
         dataStore.edit { prefs ->
             val current = prefs[Keys.DESELECTED] ?: emptySet()
@@ -47,10 +51,17 @@ class CalendarSettingsStore(private val dataStore: DataStore<Preferences>) {
         }
     }
 
+    suspend fun setSelectedCalendars(availableIds: Set<Long>, selectedIds: Set<Long>) {
+        dataStore.edit { prefs ->
+            prefs[Keys.DESELECTED] = (availableIds - selectedIds).map(Long::toString).toSet()
+        }
+    }
+
     /** Preference keys and the pure decoder, kept together and testable. */
     object Keys {
         val RANGE = stringPreferencesKey("range")
         val DESELECTED = stringSetPreferencesKey("deselected_calendar_ids")
+        val SOURCE = stringPreferencesKey("calendar_source")
 
         /** Pure Preferences → model mapping. Unknown/absent values fall back to defaults. */
         fun decode(prefs: Preferences): CalendarSettings {
@@ -62,6 +73,11 @@ class CalendarSettingsStore(private val dataStore: DataStore<Preferences>) {
                 ?.toSet()
                 ?: CalendarSettings.DEFAULT.deselectedCalendarIds
             return CalendarSettings(range = range, deselectedCalendarIds = deselected)
+                .copy(
+                    source = prefs[SOURCE]
+                        ?.let { name -> CalendarSourceMode.entries.firstOrNull { it.name == name } }
+                        ?: CalendarSourceMode.DEVICE,
+                )
         }
     }
 }

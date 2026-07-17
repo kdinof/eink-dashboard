@@ -25,3 +25,28 @@
 
 # Room entities are accessed reflectively by generated code — keep their fields.
 -keep class com.eink.dashboard.modules.todoist.data.room.** { *; }
+
+# --- Local Ktor/Netty settings server -----------------------------------------
+# These are optional Netty integrations (native TLS, alternate loggers, Jetty NPN
+# and BlockHound). The local server uses plain HTTP, JDK SSL is not selected, and
+# slf4j-nop is the only logging backend, so none are present in the Android APK.
+-dontwarn io.netty.internal.tcnative.**
+-dontwarn java.lang.management.ManagementFactory
+-dontwarn java.lang.management.RuntimeMXBean
+-dontwarn org.apache.log4j.**
+-dontwarn org.apache.logging.log4j.**
+-dontwarn org.eclipse.jetty.npn.**
+-dontwarn reactor.blockhound.integration.BlockHoundIntegration
+
+# Preserve serializers for the versioned web API DTOs.
+-keepclassmembers @kotlinx.serialization.Serializable class com.eink.dashboard.remote.** {
+    *** Companion;
+    kotlinx.serialization.KSerializer serializer(...);
+}
+-keep class com.eink.dashboard.remote.**$$serializer { *; }
+
+-keepclassmembers @kotlinx.serialization.Serializable class com.eink.dashboard.modules.calendar.google.** {
+    *** Companion;
+    kotlinx.serialization.KSerializer serializer(...);
+}
+-keep class com.eink.dashboard.modules.calendar.google.**$$serializer { *; }

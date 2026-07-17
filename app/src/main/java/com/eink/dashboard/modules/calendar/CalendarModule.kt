@@ -1,6 +1,7 @@
 package com.eink.dashboard.modules.calendar
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.eink.dashboard.dashboard.DashboardModule
@@ -11,6 +12,11 @@ import com.eink.dashboard.modules.calendar.data.AndroidCalendarDataSource
 import com.eink.dashboard.modules.calendar.model.CalendarInfo
 import com.eink.dashboard.modules.calendar.ui.CalendarContent
 import com.eink.dashboard.modules.calendar.ui.CalendarSettingsSection
+import com.eink.dashboard.modules.calendar.google.GoogleAuthManager
+import com.eink.dashboard.modules.calendar.google.GoogleCalendarDataSource
+import com.eink.dashboard.modules.calendar.google.GoogleCredentialStore
+import com.eink.dashboard.modules.calendar.google.GoogleCalendarApiException
+import com.eink.dashboard.BuildConfig
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -40,6 +46,7 @@ class CalendarModule(
     private val repo: CalendarRepository,
     private val settingsStore: CalendarSettingsStore,
     private val permission: CalendarPermission,
+    val googleAuth: GoogleAuthManager? = null,
     private val clock: () -> Long = { System.currentTimeMillis() },
 ) : DashboardModule {
 
@@ -62,13 +69,23 @@ class CalendarModule(
     /** Whether the app currently holds `READ_CALENDAR`, for the settings prompt. */
     private val _permissionGranted = MutableStateFlow(permission.isGranted())
     val permissionGranted: StateFlow<Boolean> = _permissionGranted.asStateFlow()
+    val googleConnected: Boolean get() = googleAuth?.isConnected == true
+    val googleBrokerConfigured: Boolean get() = googleAuth?.isConfigured == true
 
     override suspend fun refresh(reason: RefreshReason) {
+        val settings = settingsStore.current()
         val granted = permission.isGranted()
         _permissionGranted.value = granted
-        if (!granted) {
+        if (settings.source == CalendarSourceMode.DEVICE && !granted) {
             _state.value = ModuleState.Error(
                 message = "Calendar access needed — grant it in Settings",
+                lastUpdatedEpochMs = _state.value.lastUpdatedEpochMs,
+            )
+            return
+        }
+        if (settings.source == CalendarSourceMode.GOOGLE && !googleConnected) {
+            _state.value = ModuleState.Error(
+                message = "Connect Google Calendar in Settings",
                 lastUpdatedEpochMs = _state.value.lastUpdatedEpochMs,
             )
             return
@@ -76,7 +93,6 @@ class CalendarModule(
         try {
             // Heavy ContentResolver work off the caller thread (safe from either the
             // coordinator's background dispatcher or a settings-triggered reload).
-            val settings = settingsStore.current()
             val loaded = withContext(Dispatchers.IO) { repo.load(settings, clock()) }
             _agenda.value = loaded
             _calendars.value = loaded.calendars
@@ -86,6 +102,11 @@ class CalendarModule(
                 ModuleState.Ok(lastUpdatedEpochMs = clock())
             }
         } catch (t: Throwable) {
+            val safeReason = when (t) {
+                is GoogleCalendarApiException -> "HTTP ${t.statusCode} ${t.reason.orEmpty()}".trim()
+                else -> t.javaClass.simpleName
+            }
+            Log.w("EinkCalendar", "Calendar refresh failed: $safeReason")
             // Never log calendar contents; surface a generic message only.
             val previous = _agenda.value
             _state.value = if (previous != null) {
@@ -118,10 +139,12 @@ class CalendarModule(
         /** Wires the real Android implementations. Used by the composition root. */
         fun create(context: Context): CalendarModule {
             val app = context.applicationContext
+            val auth = GoogleAuthManager(BuildConfig.GOOGLE_BROKER_URL, GoogleCredentialStore(app))
             return CalendarModule(
-                repo = CalendarRepository(AndroidCalendarDataSource(app)),
+                repo = CalendarRepository(AndroidCalendarDataSource(app), GoogleCalendarDataSource(auth)),
                 settingsStore = CalendarSettingsStore(app),
                 permission = AndroidCalendarPermission(app),
+                googleAuth = auth,
             )
         }
     }
