@@ -46,6 +46,16 @@ interface DashboardModule {
      */
     val isDemo: Boolean get() = false
 
+    /**
+     * `true` if this module contributes a settings section to the Settings screen.
+     * Additive extension point (default `false`) introduced by T03 so a module can
+     * own module-specific configuration (calendar selection / range, and later the
+     * Todoist token, weather location) without the shell knowing its shape. The
+     * shell renders [SettingsContent] under the module [title] only when this is
+     * `true`. See `reports/T03_calendar.md` for the rationale handed to T04–T06.
+     */
+    val hasSettings: Boolean get() = false
+
     /** Latest shell-visible status. */
     val state: StateFlow<ModuleState>
 
@@ -59,4 +69,13 @@ interface DashboardModule {
     /** Draw the module body. Grayscale, no animation, no self-scheduled timers. */
     @Composable
     fun Content(modifier: Modifier)
+
+    /**
+     * Draw this module's own settings, rendered by the shell's Settings screen when
+     * [hasSettings] is `true`. Default no-op so existing modules need no change.
+     * Same rules as [Content]: grayscale, no animation, no self-scheduled timers.
+     */
+    @Composable
+    fun SettingsContent(modifier: Modifier) {
+    }
 }

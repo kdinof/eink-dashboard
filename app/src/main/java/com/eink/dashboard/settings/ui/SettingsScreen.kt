@@ -78,6 +78,14 @@ fun SettingsScreen(
                 }
             }
         }
+
+        // Per-module settings (additive hasSettings slot — see DashboardModule).
+        // A module owns its own config UI; the shell just gives it a titled section.
+        modules.filter { it.hasSettings }.forEach { module ->
+            Section(title = module.title) {
+                module.SettingsContent(Modifier.fillMaxWidth())
+            }
+        }
     }
 }
 

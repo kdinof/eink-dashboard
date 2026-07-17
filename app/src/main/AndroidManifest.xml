@@ -2,11 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--
-      Foundation manifest (T01). No runtime permissions are declared here:
-      READ_CALENDAR (T03), INTERNET for Todoist/Open-Meteo (T04/T05) and any
-      location permission (T05, opt-in) are added by the owning task, not now.
-      Keeping the surface minimal is a deliberate security posture (T08).
+      Runtime permissions are added by the owning task, not up front, to keep the
+      surface minimal (a deliberate security posture, T08). INTERNET for
+      Todoist/Open-Meteo (T04/T05) and any location permission (T05, opt-in) are
+      still deferred to their tasks.
     -->
+    <!-- T03: read-only Calendar Provider access. WRITE_CALENDAR is never requested. -->
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
 
     <application
         android:name=".EinkDashApp"
