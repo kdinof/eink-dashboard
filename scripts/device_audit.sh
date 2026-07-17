@@ -182,8 +182,9 @@ log "== logcat snapshot (buffer dump) =="
   printf '# To capture mode switches: run `adb logcat -c`, toggle Normal/Regal/A2\n'
   printf '# manually on the device, then re-run this script.\n'
 } > "$OUT_DIR/logcat_eink.txt"
-"$ADB" logcat -d 2>/dev/null | tr -d '\r' \
-  | grep -iE 'eink|epd|refresh|regal|a2|gc16|boyue' | redact \
+# logcat may emit non-UTF8 bytes; force a byte-safe locale so `tr`/`grep` don't abort.
+"$ADB" logcat -d 2>/dev/null | LC_ALL=C tr -d '\r' \
+  | LC_ALL=C grep -iaE 'eink|epd|refresh|regal|a2|gc16|boyue|haoqing|waveform' | redact \
   >> "$OUT_DIR/logcat_eink.txt" || warn "logcat dump failed"
 
 # ---------------------------------------------------------------------------
