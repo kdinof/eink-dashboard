@@ -1,12 +1,25 @@
 # E-Ink Dashboard
 
-Always-on personal dashboard for a **Meebook M103** e-ink tablet: Google
-Calendar, Todoist and weather on a grayscale, low-refresh panel.
+Native, foreground-only personal dashboard for a **Meebook M103** e-ink tablet.
+It combines Google Calendar, Todoist, weather, a minute clock and battery status
+in a grayscale interface designed for low refresh rates and minimal ghosting.
 
-This repository currently contains the **project foundation** (task T01): a
-minimal, buildable single-activity Compose app plus the fixed architecture and
-toolchain. Product modules (Calendar, Todoist, Weather, the dashboard shell) are
-added by later tasks — see [`AGENT_EXECUTION_PLAN.md`](AGENT_EXECUTION_PLAN.md).
+The app runs entirely on the device. It does not require a custom backend and
+does not perform background refreshes while closed.
+
+## Features
+
+- Google Calendar through Android `CalendarContract` (read-only)
+- Todoist Today / Upcoming views and task completion
+- Open-Meteo current conditions, daily summary and seven-day forecast
+- Minute clock and live battery/charging status
+- Configurable block visibility, orientation and calendar range
+- Offline cache and stale-data states
+- E-ink-safe grayscale UI with foreground-only refresh scheduling
+- Todoist token encryption with Android Keystore (AES-256-GCM)
+
+Runtime debug builds contain only the five real product modules; demo blocks
+are retained solely as test fixtures and are never registered in the app.
 
 ## Target device (confirmed — see `DEVICE_AUDIT.md`)
 
@@ -68,7 +81,7 @@ adb shell monkey -p com.eink.dashboard.debug -c android.intent.category.LAUNCHER
 ```
 
 The debug application id is `com.eink.dashboard.debug` (a `.debug` suffix keeps
-it installable alongside a future release build).
+it installable alongside a release build).
 
 ## Project layout
 
@@ -84,5 +97,14 @@ scripts/        # check.sh (CI gate), device_audit.sh (T00)
 reports/        # per-task completion reports
 ```
 
-Packages beyond `core.DeviceProfile` are intentionally empty in T01 — they fix
-names and ownership boundaries only. See the ADR for the module-registry design.
+See the ADRs in [`docs/adr/`](docs/adr/) for the module-registry architecture,
+refresh policy and Todoist security decisions. Detailed implementation and
+physical-device verification reports are available in [`reports/`](reports/).
+
+## Privacy and credentials
+
+- Never commit `local.properties`, Todoist tokens, signing keys or raw device
+  audit dumps; the relevant paths are ignored by Git.
+- Enter the Todoist personal token only in the app. Plaintext tokens are not
+  stored in Room, DataStore or logs.
+- Calendar access is read-only; the app does not request `WRITE_CALENDAR`.
