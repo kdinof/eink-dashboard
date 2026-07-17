@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+      Foundation manifest (T01). No runtime permissions are declared here:
+      READ_CALENDAR (T03), INTERNET for Todoist/Open-Meteo (T04/T05) and any
+      location permission (T05, opt-in) are added by the owning task, not now.
+      Keeping the surface minimal is a deliberate security posture (T08).
+    -->
+
+    <application
+        android:name=".EinkDashApp"
+        android:allowBackup="false"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.EinkDashboard">
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|uiMode"
+            android:theme="@style/Theme.EinkDashboard">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+    </application>
+
+</manifest>

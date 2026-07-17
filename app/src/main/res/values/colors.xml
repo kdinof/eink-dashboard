@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Grayscale-only palette. E-ink panels render pure black/white best;
+         no chroma is used anywhere in the app (see docs/adr/0001-architecture.md). -->
+    <color name="eink_black">#FF000000</color>
+    <color name="eink_white">#FFFFFFFF</color>
+    <color name="ic_launcher_background">#FFFFFFFF</color>
+</resources>

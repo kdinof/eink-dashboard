@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">E-Ink Dashboard</string>
+    <string name="foundation_title">E-Ink Dashboard</string>
+    <string name="foundation_subtitle">Project foundation (T01) — no product modules yet</string>
+</resources>

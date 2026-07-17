@@ -1,0 +1,26 @@
+# ---------- Android / Gradle ----------
+*.iml
+.gradle/
+/local.properties
+.idea/
+.DS_Store
+/build/
+**/build/
+/captures/
+.externalNativeBuild/
+.cxx/
+
+# Kotlin
+.kotlin/
+
+# ---------- Secrets / signing (never commit) ----------
+# Keystores, signing configs and API tokens are provided locally / via CI only.
+*.jks
+*.keystore
+keystore.properties
+signing.properties
+secrets.properties
+release.properties
+
+# NOTE: raw device-audit dumps are ignored by artifacts/device-audit/.gitignore
+# (owned by T00); do not duplicate that rule here.

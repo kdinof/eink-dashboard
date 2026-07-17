@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      Base platform theme (no ActionBar). Actual Compose styling lives in the
+      Compose layer; this XML theme only sets the window chrome so the very
+      first frame is e-ink-safe (white background, black system bars).
+      The full e-ink-safe Compose theme + immersive fullscreen is T02's scope.
+    -->
+    <style name="Theme.EinkDashboard" parent="@android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/eink_white</item>
+        <item name="android:statusBarColor">@color/eink_white</item>
+        <item name="android:navigationBarColor">@color/eink_white</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:colorBackground">@color/eink_white</item>
+    </style>
+</resources>

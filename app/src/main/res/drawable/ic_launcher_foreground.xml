@@ -1,0 +1,11 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Minimal grayscale glyph: a framed "e-ink page". Foreground occupies the
+         inner 72dp safe zone of the 108dp adaptive canvas. -->
+    <path
+        android:fillColor="#000000"
+        android:pathData="M34,30h40a4,4 0 0 1 4,4v40a4,4 0 0 1 -4,4h-40a4,4 0 0 1 -4,-4v-40a4,4 0 0 1 4,-4zM38,40v6h32v-6zM38,52v4h32v-4zM38,60v4h20v-4z" />
+</vector>
