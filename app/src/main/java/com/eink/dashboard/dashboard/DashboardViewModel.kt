@@ -7,7 +7,6 @@ import com.eink.dashboard.BuildConfig
 import com.eink.dashboard.modules.battery.BatteryModule
 import com.eink.dashboard.modules.calendar.CalendarModule
 import com.eink.dashboard.modules.clock.ClockModule
-import com.eink.dashboard.modules.demo.demoModules
 import com.eink.dashboard.modules.todoist.TodoistModule
 import com.eink.dashboard.modules.weather.WeatherModule
 import com.eink.dashboard.settings.DashboardSettings
@@ -26,9 +25,10 @@ enum class Screen { DASHBOARD, SETTINGS, DIAGNOSTICS }
  * store, and the foreground-only [RefreshCoordinator]. There is no DI framework
  * (see docs/adr/0001-architecture.md) — this ViewModel is the composition root.
  *
- * Demo modules are registered **only in debug builds** (`allowDemo = BuildConfig.DEBUG`);
- * a release build registers an empty registry until T03–T05 add real modules, so
- * sample data can never ship as if it were real.
+ * Only real product modules are registered at runtime, in every build type. The
+ * registry is still built with `allowDemo = BuildConfig.DEBUG` so the demo-safety
+ * guard stays live, but no demo module is ever registered — the sample modules
+ * survive purely as `RefreshCoordinator` test fixtures (see `RefreshCoordinatorTest`).
  */
 class DashboardViewModel(app: Application) : AndroidViewModel(app) {
 
@@ -44,8 +44,7 @@ class DashboardViewModel(app: Application) : AndroidViewModel(app) {
             .register(ClockModule()) // T05: on-device clock (minute ticker)
             .register(WeatherModule.create(app)) // T05: Open-Meteo weather
             .register(BatteryModule.create(app)) // T05: battery state
-            // Demo modules only in debug (empty registry in release stays demo-free).
-            .registerAll(if (BuildConfig.DEBUG) demoModules() else emptyList())
+            // No demo modules: the runtime dashboard shows only real data in every build.
             .build()
 
     private val coordinator = RefreshCoordinator(registry, viewModelScope)

@@ -29,14 +29,15 @@ import java.time.format.DateTimeFormatter
 import kotlin.time.Duration.Companion.minutes
 
 /**
- * Sample modules used to exercise the shell layout without any real data source.
+ * Sample modules retained purely as test fixtures — they are **not** registered
+ * on the runtime dashboard in any build type (see `DashboardViewModel`). The real
+ * Calendar/Todoist/Clock/Weather/Battery modules are the only runtime blocks.
  *
- * Every module here sets `isDemo = true`. The registry refuses to register a
- * demo module in a release build (`allowDemo = BuildConfig.DEBUG`), and the
- * shell paints a visible "DEMO" tag on demo blocks — so sample content can never
- * be mistaken for the user's real calendar/tasks/weather in a shipped build.
- * These exist only to prove portrait/landscape layout and the refresh pipeline;
- * T03–T05 replace them with real modules and do not touch this file.
+ * `RefreshCoordinatorTest` uses these two because together they cover both refresh
+ * policies (an `EveryMinute` clock and a `Periodic(15m)` agenda) with trivial,
+ * data-source-free `refresh()` bodies — ideal for exercising the coordinator's
+ * scheduling under virtual time. Every module still sets `isDemo = true`, so the
+ * registry's demo-safety guard (`allowDemo`) stays exercised by those tests.
  */
 
 /** Big clock that re-renders on every minute tick — proves the minute cadence end to end. */
@@ -106,12 +107,3 @@ class DemoAgendaModule(private val timeSource: TimeSource = SystemTimeSource) : 
         }
     }
 }
-
-/**
- * All demo modules in canonical order. Only registered when `allowDemo` is true
- * (debug builds). Kept as a single provider so wiring stays in one place.
- */
-fun demoModules(timeSource: TimeSource = SystemTimeSource): List<DashboardModule> = listOf(
-    DemoClockModule(timeSource),
-    DemoAgendaModule(timeSource),
-)

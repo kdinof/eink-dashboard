@@ -165,7 +165,8 @@ clock/battery mapping) — все зелёные; `./scripts/check.sh` соби�
 ## Что должен знать следующий агент (T06)
 
 - Три новых модуля зарегистрированы в `DashboardViewModel` (аппенд после Todoist):
-  порядок блоков сейчас `calendar, todoist, clock, weather, battery` (+demo в debug).
+  порядок блоков сейчас `calendar, todoist, clock, weather, battery` (демо-модули
+  убраны из runtime во всех build type — см. `reports/M103_remove_demo_modules.md`).
   Реордер/финальную геометрию свести здесь.
 - Weather требует `INTERNET` (уже был) и опционально `ACCESS_COARSE_LOCATION` (добавлен,
   runtime, opt-in из Weather settings). Никаких секретов — Open-Meteo keyless.
