@@ -37,6 +37,14 @@ object CalendarFormat {
             HH_MM.format(Instant.ofEpochMilli(event.beginMs).atZone(zone))
         }
 
+    /** Calendar-card time range, for example "09:30–10:15" or "All day". */
+    fun timeRangeLabel(event: CalendarEvent, zone: ZoneId): String {
+        if (event.isAllDay) return "All day"
+        val start = HH_MM.format(Instant.ofEpochMilli(event.beginMs).atZone(zone))
+        val end = HH_MM.format(Instant.ofEpochMilli(event.endMs).atZone(zone))
+        return "$start–$end"
+    }
+
     /** Adds a count only when one row represents copies from multiple calendars. */
     fun titleLabel(event: AgendaEvent): String =
         if (event.duplicateCount > 1) "${event.title} (${event.duplicateCount})" else event.title

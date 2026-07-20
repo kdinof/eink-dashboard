@@ -1,19 +1,16 @@
 package com.eink.dashboard.modules.calendar.ui
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -22,13 +19,12 @@ import com.eink.dashboard.dashboard.theme.EinkSpacing
 import com.eink.dashboard.modules.calendar.CalendarModule
 import com.eink.dashboard.modules.calendar.model.AgendaDay
 import com.eink.dashboard.modules.calendar.model.AgendaEvent
-import com.eink.dashboard.modules.calendar.model.CalendarMarker
 import java.time.ZoneId
 
 /**
- * The Calendar block body: grouped days, each event prefixed by its calendar's
- * grayscale marker (shape + shade) so calendars are distinguishable without colour.
- * Pure grayscale, no animation, no self-scheduled timers — the shell owns refresh.
+ * The Calendar block body: upcoming events grouped by day and rendered as
+ * individual calendar cards. Pure grayscale, no decorative calendar markers,
+ * no animation and no self-scheduled timers — the shell owns refresh.
  * Loading/empty/error chrome is drawn by the shell from [ModuleState]; here we only
  * render the resolved agenda (or a quiet placeholder before the first load).
  */
@@ -54,7 +50,7 @@ fun CalendarContent(module: CalendarModule, modifier: Modifier = Modifier) {
         verticalArrangement = Arrangement.spacedBy(EinkSpacing.sm),
     ) {
         current.days.forEach { day ->
-            DayGroup(day = day, today = today, markers = current.markers, zone = zone)
+            DayGroup(day = day, today = today, zone = zone)
         }
     }
 }
@@ -63,64 +59,50 @@ fun CalendarContent(module: CalendarModule, modifier: Modifier = Modifier) {
 private fun DayGroup(
     day: AgendaDay,
     today: java.time.LocalDate,
-    markers: Map<Long, CalendarMarker>,
     zone: ZoneId,
 ) {
-    Row(
+    Column(
         modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.Top,
+        verticalArrangement = Arrangement.spacedBy(EinkSpacing.sm),
     ) {
-        Column(modifier = Modifier.width(92.dp)) {
-            Text(
-                text = CalendarFormat.dayHeader(day.date, today),
-                style = MaterialTheme.typography.titleSmall,
-                fontWeight = FontWeight.SemiBold,
-                color = EinkPalette.Ink,
-            )
-        }
-        Column(
-            modifier = Modifier.weight(1f),
-            verticalArrangement = Arrangement.spacedBy(EinkSpacing.xs),
-        ) {
-            day.events.forEach { event ->
-                EventRow(event = event, marker = markers[event.calendarId], zone = zone)
-            }
+        Text(
+            text = CalendarFormat.dayHeader(day.date, today),
+            style = MaterialTheme.typography.titleSmall,
+            fontWeight = FontWeight.SemiBold,
+            color = EinkPalette.Ink,
+        )
+        day.events.forEach { event ->
+            EventCard(event = event, zone = zone)
         }
     }
 }
 
 @Composable
-private fun EventRow(event: AgendaEvent, marker: CalendarMarker?, zone: ZoneId) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.Top,
+private fun EventCard(event: AgendaEvent, zone: ZoneId) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(EinkSpacing.hairline, EinkPalette.Line, RoundedCornerShape(8.dp))
+            .padding(horizontal = 14.dp, vertical = 10.dp),
+        verticalArrangement = Arrangement.spacedBy(EinkSpacing.xs),
     ) {
-        // Grayscale calendar marker: shape carries identity, shade adds separation.
         Text(
-            text = marker?.glyph ?: "•",
-            style = MaterialTheme.typography.bodyMedium,
-            color = marker?.let { grayOf(it.shade) } ?: EinkPalette.Ink,
-        )
-        Spacer(Modifier.width(EinkSpacing.sm))
-        Text(
-            text = CalendarFormat.timeLabel(event.event, zone),
+            text = CalendarFormat.timeRangeLabel(event.event, zone),
             style = MaterialTheme.typography.labelMedium,
             fontWeight = FontWeight.Medium,
             color = EinkPalette.InkMuted,
-            modifier = Modifier.width(56.dp).padding(top = 2.dp),
         )
-        Spacer(Modifier.width(EinkSpacing.sm))
         Text(
             text = CalendarFormat.titleLabel(event),
-            style = MaterialTheme.typography.bodyLarge,
+            style = MaterialTheme.typography.titleMedium,
             color = EinkPalette.Ink,
-            modifier = Modifier.fillMaxWidth(),
         )
+        event.event.location?.takeIf { it.isNotBlank() }?.let { location ->
+            Text(
+                text = location,
+                style = MaterialTheme.typography.labelMedium,
+                color = EinkPalette.InkMuted,
+            )
+        }
     }
-}
-
-/** Map a 0f..1f gray level onto a chroma-free Compose color. */
-private fun grayOf(shade: Float): Color {
-    val v = shade.coerceIn(0f, 1f)
-    return Color(red = v, green = v, blue = v)
 }

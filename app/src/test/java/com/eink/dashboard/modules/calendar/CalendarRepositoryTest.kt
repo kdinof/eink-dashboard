@@ -80,4 +80,24 @@ class CalendarRepositoryTest {
         assertThat(agenda.isEmpty).isTrue()
         assertThat(agenda.calendars).hasSize(2) // still offered in Settings
     }
+
+    @Test
+    fun completedEventsAreHidden_whileOngoingAndFutureEventsRemain() {
+        val completed = ev(1, 10, "Completed", 7) // ends exactly at now (08:00)
+        val ongoing = CalendarEvent(
+            eventId = 2,
+            calendarId = 10,
+            title = "In progress",
+            beginMs = localMs(TASHKENT, 2026, 7, 17, 7, 30),
+            endMs = localMs(TASHKENT, 2026, 7, 17, 8, 30),
+            isAllDay = false,
+        )
+        val future = ev(3, 10, "Next meeting", 9)
+
+        val (_, repo) = repo(listOf(completed, ongoing, future))
+        val titles = repo.load(CalendarSettings(range = CalendarRangeMode.TODAY), now)
+            .days.single().events.map { it.title }
+
+        assertThat(titles).containsExactly("In progress", "Next meeting").inOrder()
+    }
 }

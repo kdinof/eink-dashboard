@@ -55,7 +55,11 @@ class CalendarRepository(
             )
         }
 
-        val days = AgendaBuilder.build(events, range, zone)
+        // The dashboard is a forward-looking surface: completed timed events and
+        // all-day spans whose exclusive end has passed no longer belong in it.
+        // Ongoing events remain visible until their real end time.
+        val upcomingEvents = events.filter { it.endMs > nowMs }
+        val days = AgendaBuilder.build(upcomingEvents, range, zone)
         val markers = CalendarMarkers.assign(calendars)
         return CalendarAgenda(calendars, days, markers, range)
     }
