@@ -1,5 +1,6 @@
-orientation=PORTRAIT columns=1 rows=4
+orientation=PORTRAIT columns=1 rows=5
 calendar
 todoist
+taskforge
 weather
 clock

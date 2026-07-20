@@ -1,5 +1,6 @@
 package com.eink.dashboard.modules.calendar.ui
 
+import com.eink.dashboard.modules.calendar.model.AgendaEvent
 import com.eink.dashboard.modules.calendar.model.CalendarEvent
 import java.time.Instant
 import java.time.LocalDate
@@ -35,6 +36,10 @@ object CalendarFormat {
         } else {
             HH_MM.format(Instant.ofEpochMilli(event.beginMs).atZone(zone))
         }
+
+    /** Adds a count only when one row represents copies from multiple calendars. */
+    fun titleLabel(event: AgendaEvent): String =
+        if (event.duplicateCount > 1) "${event.title} (${event.duplicateCount})" else event.title
 
     /** The calendar date an event line is filed under (UTC for all-day, [zone] for timed). */
     fun eventDate(event: CalendarEvent, zone: ZoneId): LocalDate =

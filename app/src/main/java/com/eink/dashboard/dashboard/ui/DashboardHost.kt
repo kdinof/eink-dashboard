@@ -55,11 +55,21 @@ fun DashboardHost(viewModel: DashboardViewModel, modifier: Modifier = Modifier) 
             val locationLauncher = rememberLauncherForActivityResult(
                 ActivityResultContracts.RequestPermission(),
             ) { viewModel.permissions.pending.value?.let { viewModel.completeRemotePermission(it.id, it.permission) } }
+            val taskForgeFileLauncher = rememberLauncherForActivityResult(
+                ActivityResultContracts.OpenDocument(),
+            ) { uri ->
+                viewModel.permissions.pending.value?.let {
+                    viewModel.completeTaskForgeFileSelection(it.id, uri)
+                }
+            }
 
             LaunchedEffect(pendingPermission?.id) {
                 when (pendingPermission?.permission) {
                     RemotePermission.CALENDAR -> calendarLauncher.launch(READ_CALENDAR_PERMISSION)
                     RemotePermission.LOCATION -> locationLauncher.launch(COARSE_LOCATION_PERMISSION)
+                    RemotePermission.TASKFORGE_FILE -> taskForgeFileLauncher.launch(
+                        arrayOf("text/markdown", "text/plain", "application/octet-stream"),
+                    )
                     null -> Unit
                 }
             }

@@ -201,6 +201,11 @@ private fun Application.configureRemoteApi(
                 settings.updateTodoist(call.receive())
                 call.respond(settings.snapshot())
             }
+            put("/taskforge") {
+                if (!call.authorized(pairing, expectedHost, url)) return@put
+                settings.updateTaskForge(call.receive())
+                call.respond(settings.snapshot())
+            }
             put("/todoist/token") {
                 if (!call.authorized(pairing, expectedHost, url)) return@put
                 val verified = settings.updateTodoistToken(call.receive<TodoistTokenUpdate>().token)
@@ -222,6 +227,7 @@ private fun Application.configureRemoteApi(
                 val type = when (call.parameters["type"]) {
                     "calendar" -> RemotePermission.CALENDAR
                     "location" -> RemotePermission.LOCATION
+                    "taskforge-file" -> RemotePermission.TASKFORGE_FILE
                     else -> throw IllegalArgumentException("Unknown permission")
                 }
                 val pending = settings.requestPermission(type)

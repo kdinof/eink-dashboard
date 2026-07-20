@@ -17,7 +17,7 @@ import org.junit.Test
 class DashboardLayoutSpecTest {
 
     // Represents the intended real-module order once T03–T05 land.
-    private val moduleIds = listOf("calendar", "todoist", "weather", "clock")
+    private val moduleIds = listOf("calendar", "todoist", "taskforge", "weather", "clock")
 
     @Test
     fun portrait_singleColumn_matchesGolden() {
@@ -50,6 +50,36 @@ class DashboardLayoutSpecTest {
             DashboardLayoutSpec.layout(Orientation.PORTRAIT, emptyList()),
         )
         assertThat(rendered).contains("empty")
+    }
+
+    @Test
+    fun updatedLandscape_placesGlanceableModulesAboveLists() {
+        val plan = DashboardLayoutSpec.updatedLandscapePlan(
+            listOf("calendar", "todoist", "clock", "weather", "battery"),
+        )
+
+        assertThat(plan).isEqualTo(
+            DashboardLayoutSpec.UpdatedLandscapePlan(
+                topLeft = listOf("clock", "battery"),
+                topRight = "weather",
+                bottomLeft = "calendar",
+                bottomRight = "todoist",
+            ),
+        )
+    }
+
+    @Test
+    fun updatedLandscape_rejectsUnknownModulesForGenericFallback() {
+        assertThat(DashboardLayoutSpec.updatedLandscapePlan(listOf("clock", "future-module"))).isNull()
+    }
+
+    @Test
+    fun updatedLandscape_usesCompactFallbackWhenAModuleIsHidden() {
+        assertThat(
+            DashboardLayoutSpec.updatedLandscapePlan(
+                listOf("calendar", "todoist", "clock", "weather"),
+            ),
+        ).isNull()
     }
 
     private fun readGolden(name: String): String {

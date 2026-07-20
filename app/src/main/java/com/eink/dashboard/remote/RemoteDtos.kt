@@ -12,10 +12,16 @@ data class RemoteConfig(
     val dashboard: DashboardConfig,
     val calendar: CalendarConfig,
     val todoist: TodoistConfig,
+    val taskforge: TaskForgeConfig,
     val weather: WeatherConfig,
 )
 
-@Serializable data class ModuleConfig(val id: String, val title: String, val visible: Boolean)
+@Serializable data class ModuleConfig(
+    val id: String,
+    val title: String,
+    val visible: Boolean,
+    val lastUpdatedEpochMs: Long? = null,
+)
 @Serializable data class DashboardConfig(
     val orientation: String,
     val keepScreenOn: Boolean,
@@ -33,6 +39,17 @@ data class RemoteConfig(
     val googleBrokerConfigured: Boolean,
 )
 @Serializable data class TodoistConfig(val view: String, val todoistTokenConfigured: Boolean)
+@Serializable data class TaskForgeConfig(
+    val view: String,
+    val selectedTags: Set<String>,
+    val limit: Int,
+    val fileConfigured: Boolean,
+    val fileName: String? = null,
+    val canWrite: Boolean,
+    val lastLocalReadEpochMs: Long? = null,
+    val availableTags: Set<String>,
+    val fileSelectionPending: Boolean,
+)
 @Serializable data class WeatherConfig(
     val locationPermissionGranted: Boolean,
     val permissionPending: Boolean,
@@ -56,6 +73,7 @@ data class RemoteConfig(
 @Serializable data class GoogleCompleteRequest(val handoffId: String)
 @Serializable data class TodoistUpdate(val view: String)
 @Serializable data class TodoistTokenUpdate(val token: String)
+@Serializable data class TaskForgeUpdate(val view: String, val selectedTags: Set<String>, val limit: Int)
 @Serializable data class WeatherUpdate(
     val locationMode: String,
     val fixedLatitude: Double? = null,

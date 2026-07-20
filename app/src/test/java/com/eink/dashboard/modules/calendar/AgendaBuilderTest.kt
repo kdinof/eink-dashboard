@@ -87,4 +87,33 @@ class AgendaBuilderTest {
         val tomorrow = timed(2, 10, "Future", 9, 0, day = 18)
         assertThat(AgendaBuilder.build(listOf(yesterday, tomorrow), range, TASHKENT)).isEmpty()
     }
+
+    @Test
+    fun matchingEventsFromDifferentCalendars_areGroupedWithCount() {
+        val range = DayRange.of(CalendarRangeMode.TODAY, localMs(TASHKENT, 2026, 7, 17, 8, 0), TASHKENT)
+        val events = listOf(
+            timed(1, 10, "Design Daily", 11, 0),
+            timed(2, 20, "  design   daily ", 11, 0),
+            timed(3, 30, "Design Daily", 11, 0),
+        )
+
+        val grouped = AgendaBuilder.build(events, range, TASHKENT).single().events.single()
+
+        assertThat(grouped.title).isEqualTo("Design Daily")
+        assertThat(grouped.duplicateCount).isEqualTo(3)
+    }
+
+    @Test
+    fun matchingEventsFromSameCalendar_remainSeparate() {
+        val range = DayRange.of(CalendarRangeMode.TODAY, localMs(TASHKENT, 2026, 7, 17, 8, 0), TASHKENT)
+        val events = listOf(
+            timed(1, 10, "Busy", 13, 0),
+            timed(2, 10, "Busy", 13, 0),
+        )
+
+        val rows = AgendaBuilder.build(events, range, TASHKENT).single().events
+
+        assertThat(rows).hasSize(2)
+        assertThat(rows.map { it.duplicateCount }).containsExactly(1, 1)
+    }
 }

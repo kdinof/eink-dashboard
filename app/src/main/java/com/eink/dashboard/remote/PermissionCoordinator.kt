@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import java.util.UUID
 
-enum class RemotePermission { CALENDAR, LOCATION }
+enum class RemotePermission { CALENDAR, LOCATION, TASKFORGE_FILE }
 
 data class PendingPermissionRequest(val id: String, val permission: RemotePermission)
 

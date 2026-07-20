@@ -1,3 +1,4 @@
-orientation=LANDSCAPE columns=2 rows=2
+orientation=LANDSCAPE columns=2 rows=3
 calendar | todoist
-weather | clock
+taskforge | weather
+clock | ·

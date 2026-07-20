@@ -4,11 +4,21 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.ZoneOffset
+import java.util.Locale
+
+/** One rendered agenda row, optionally representing matching events from several calendars. */
+data class AgendaEvent(
+    val event: CalendarEvent,
+    val duplicateCount: Int = 1,
+) {
+    val calendarId: Long get() = event.calendarId
+    val title: String get() = event.title
+}
 
 /** A single day of the agenda: its date plus the events on it, already ordered. */
 data class AgendaDay(
     val date: LocalDate,
-    val events: List<CalendarEvent>,
+    val events: List<AgendaEvent>,
 )
 
 /**
@@ -25,13 +35,25 @@ data class AgendaDay(
  *   on every day of the week view, not only day one).
  * - Within a day, **all-day events sort first**, then timed events by start time,
  *   ties broken by title for stable output.
+ * - Matching occurrences (same normalized title, start, end and all-day flag) from
+ *   different calendars collapse into one row carrying their total count. Matching
+ *   rows within only one calendar remain separate.
  * - Days with no events are omitted; the result is sorted by date ascending.
  */
 object AgendaBuilder {
 
-    private val dayOrder: Comparator<CalendarEvent> =
-        compareByDescending<CalendarEvent> { it.isAllDay }
-            .thenBy { it.beginMs }
+    private val whitespace = Regex("\\s+")
+
+    private data class DuplicateKey(
+        val normalizedTitle: String,
+        val beginMs: Long,
+        val endMs: Long,
+        val isAllDay: Boolean,
+    )
+
+    private val dayOrder: Comparator<AgendaEvent> =
+        compareByDescending<AgendaEvent> { it.event.isAllDay }
+            .thenBy { it.event.beginMs }
             .thenBy { it.title }
 
     fun build(events: List<CalendarEvent>, range: DayRange, zone: ZoneId): List<AgendaDay> {
@@ -43,8 +65,27 @@ object AgendaBuilder {
         }
         return byDate.entries
             .sortedBy { it.key }
-            .map { (date, list) -> AgendaDay(date, list.sortedWith(dayOrder)) }
+            .map { (date, list) -> AgendaDay(date, groupDuplicates(list).sortedWith(dayOrder)) }
     }
+
+    private fun groupDuplicates(events: List<CalendarEvent>): List<AgendaEvent> =
+        events.groupBy { event ->
+            DuplicateKey(
+                normalizedTitle = event.title.trim().replace(whitespace, " ").lowercase(Locale.ROOT),
+                beginMs = event.beginMs,
+                endMs = event.endMs,
+                isAllDay = event.isAllDay,
+            )
+        }.values.flatMap { matches ->
+            if (matches.map { it.calendarId }.distinct().size > 1) {
+                val representative = matches.minWith(
+                    compareBy<CalendarEvent> { it.calendarId }.thenBy { it.eventId },
+                )
+                listOf(AgendaEvent(event = representative, duplicateCount = matches.size))
+            } else {
+                matches.map(::AgendaEvent)
+            }
+        }
 
     /** The dates in [range] that [event] occupies (see class rules). */
     private fun coveredDates(event: CalendarEvent, range: DayRange, zone: ZoneId): List<LocalDate> {

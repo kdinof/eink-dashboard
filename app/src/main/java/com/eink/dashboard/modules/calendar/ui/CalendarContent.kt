@@ -21,7 +21,7 @@ import com.eink.dashboard.dashboard.theme.EinkPalette
 import com.eink.dashboard.dashboard.theme.EinkSpacing
 import com.eink.dashboard.modules.calendar.CalendarModule
 import com.eink.dashboard.modules.calendar.model.AgendaDay
-import com.eink.dashboard.modules.calendar.model.CalendarEvent
+import com.eink.dashboard.modules.calendar.model.AgendaEvent
 import com.eink.dashboard.modules.calendar.model.CalendarMarker
 import java.time.ZoneId
 
@@ -83,7 +83,7 @@ private fun DayGroup(
 }
 
 @Composable
-private fun EventRow(event: CalendarEvent, marker: CalendarMarker?, zone: ZoneId) {
+private fun EventRow(event: AgendaEvent, marker: CalendarMarker?, zone: ZoneId) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.Top,
@@ -96,7 +96,7 @@ private fun EventRow(event: CalendarEvent, marker: CalendarMarker?, zone: ZoneId
         )
         Spacer(Modifier.width(EinkSpacing.sm))
         Text(
-            text = CalendarFormat.timeLabel(event, zone),
+            text = CalendarFormat.timeLabel(event.event, zone),
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.Medium,
             color = EinkPalette.InkMuted,
@@ -104,7 +104,7 @@ private fun EventRow(event: CalendarEvent, marker: CalendarMarker?, zone: ZoneId
         )
         Spacer(Modifier.width(EinkSpacing.sm))
         Text(
-            text = event.title,
+            text = CalendarFormat.titleLabel(event),
             style = MaterialTheme.typography.bodyMedium,
             color = EinkPalette.Ink,
             modifier = Modifier.fillMaxWidth(),

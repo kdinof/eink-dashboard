@@ -14,6 +14,9 @@ import com.eink.dashboard.modules.calendar.model.CalendarRangeMode
 import com.eink.dashboard.modules.todoist.TodoistModule
 import com.eink.dashboard.modules.todoist.TodoistSettingsStore
 import com.eink.dashboard.modules.todoist.model.TodoistView
+import com.eink.dashboard.modules.taskforge.TaskForgeModule
+import com.eink.dashboard.modules.taskforge.TaskForgeSettings
+import com.eink.dashboard.modules.taskforge.model.TaskForgeView
 import com.eink.dashboard.modules.weather.LocationMode
 import com.eink.dashboard.modules.weather.WeatherModule
 import com.eink.dashboard.modules.weather.WeatherSettingsStore
@@ -31,17 +34,20 @@ class RemoteSettingsService(
     private val coordinator: RefreshCoordinator,
     private val calendarModule: CalendarModule,
     private val todoistModule: TodoistModule,
+    private val taskForgeModule: TaskForgeModule,
     private val weatherModule: WeatherModule,
     val permissions: PermissionCoordinator,
 ) {
     private val calendarStore = CalendarSettingsStore(context)
     private val todoistStore = TodoistSettingsStore(context)
+    private val taskForgeStore = taskForgeModule.settingsStore
     private val weatherStore = WeatherSettingsStore(context)
 
     suspend fun snapshot(): RemoteConfig {
         val dashboard = settingsStore.settings.first()
         val calendar = calendarStore.settings.first()
         val todoist = todoistStore.settings.first()
+        val taskforge = taskForgeStore.settings.first()
         val weather = weatherStore.settings.first()
         val pending = permissions.pending.value?.permission
         val calendars = calendarModule.calendars.value
@@ -49,7 +55,14 @@ class RemoteSettingsService(
             dashboard = DashboardConfig(
                 orientation = dashboard.orientation.name,
                 keepScreenOn = dashboard.keepScreenOn,
-                modules = registry.all.map { ModuleConfig(it.id, it.title, dashboard.isModuleVisible(it.id)) },
+                modules = registry.all.map {
+                    ModuleConfig(
+                        id = it.id,
+                        title = it.title,
+                        visible = dashboard.isModuleVisible(it.id),
+                        lastUpdatedEpochMs = it.state.value.lastUpdatedEpochMs,
+                    )
+                },
             ),
             calendar = CalendarConfig(
                 permissionGranted = calendarModule.permissionGranted.value,
@@ -62,6 +75,17 @@ class RemoteSettingsService(
                 googleBrokerConfigured = calendarModule.googleBrokerConfigured,
             ),
             todoist = TodoistConfig(todoist.view.name, todoistModule.hasToken.value),
+            taskforge = TaskForgeConfig(
+                view = taskforge.view.name,
+                selectedTags = taskforge.selectedTags,
+                limit = taskforge.limit,
+                fileConfigured = taskforge.fileUri != null,
+                fileName = taskforge.fileName,
+                canWrite = taskforge.canWrite,
+                lastLocalReadEpochMs = taskForgeModule.lastLocalRead.value,
+                availableTags = taskForgeModule.board.value?.availableTags.orEmpty(),
+                fileSelectionPending = pending == RemotePermission.TASKFORGE_FILE,
+            ),
             weather = WeatherConfig(
                 locationPermissionGranted = hasPermission(Manifest.permission.ACCESS_COARSE_LOCATION),
                 permissionPending = pending == RemotePermission.LOCATION,
@@ -132,6 +156,20 @@ class RemoteSettingsService(
 
     suspend fun clearTodoistToken() = todoistModule.clearToken()
 
+    suspend fun updateTaskForge(value: TaskForgeUpdate) {
+        require(value.limit in TaskForgeSettings.ALLOWED_LIMITS) { "Invalid limit" }
+        require(value.selectedTags.size <= 50 && value.selectedTags.all { it.length in 1..64 }) { "Invalid tags" }
+        taskForgeModule.updateFilter(enumValue<TaskForgeView>(value.view), value.selectedTags, value.limit)
+    }
+
+    suspend fun completeTaskForgeFileSelection(id: String, uri: android.net.Uri?) {
+        try {
+            uri?.let { taskForgeModule.connectFile(it) }
+        } finally {
+            permissions.complete(id)
+        }
+    }
+
     suspend fun updateWeather(value: WeatherUpdate) {
         val mode = enumValue<LocationMode>(value.locationMode)
         if (mode == LocationMode.FIXED) {
@@ -153,6 +191,7 @@ class RemoteSettingsService(
                 calendarModule.refresh(RefreshReason.SETTINGS_CHANGED)
             }
             RemotePermission.LOCATION -> weatherModule.refresh(RefreshReason.SETTINGS_CHANGED)
+            RemotePermission.TASKFORGE_FILE -> Unit
         }
     }
 

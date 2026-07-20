@@ -24,6 +24,7 @@ release.properties
 .dev.vars
 oauth-worker/node_modules/
 oauth-worker/.wrangler/
+.wrangler/
 oauth-worker/wrangler.toml
 
 # NOTE: raw device-audit dumps are ignored by artifacts/device-audit/.gitignore

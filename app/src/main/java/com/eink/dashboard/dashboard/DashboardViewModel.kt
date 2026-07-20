@@ -79,11 +79,16 @@ class DashboardViewModel(app: Application) : AndroidViewModel(app) {
     val remoteServer get() = graph.remoteServer
     val pairing get() = graph.pairing
     val permissions get() = graph.permissions
+    val taskForgeModule get() = graph.taskForgeModule
 
     fun regeneratePairingPin() = graph.pairing.regeneratePin()
     fun revokeSession(id: String) = graph.pairing.revoke(id)
     fun revokeAllSessions() = graph.pairing.revokeAll()
     fun completeRemotePermission(id: String, permission: RemotePermission) = viewModelScope.launch {
         graph.remoteSettings.completePermission(id, permission)
+    }
+
+    fun completeTaskForgeFileSelection(id: String, uri: android.net.Uri?) = viewModelScope.launch {
+        graph.remoteSettings.completeTaskForgeFileSelection(id, uri)
     }
 }

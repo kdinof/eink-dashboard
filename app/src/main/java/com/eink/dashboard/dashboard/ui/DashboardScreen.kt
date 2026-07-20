@@ -5,7 +5,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -47,9 +49,85 @@ fun DashboardScreen(
         return
     }
 
-    val layout = DashboardLayoutSpec.layout(orientation, visibleModuleIds)
-    val byId: (String) -> DashboardModule? = registry::byId
+    val updatedPlan = if (orientation == Orientation.LANDSCAPE) {
+        DashboardLayoutSpec.updatedLandscapePlan(visibleModuleIds)
+    } else {
+        null
+    }
+    if (updatedPlan != null) {
+        UpdatedLandscapeDashboard(registry = registry, plan = updatedPlan, modifier = modifier)
+    } else {
+        GenericDashboard(
+            registry = registry,
+            visibleModuleIds = visibleModuleIds,
+            orientation = orientation,
+            modifier = modifier,
+        )
+    }
+}
 
+@Composable
+private fun UpdatedLandscapeDashboard(
+    registry: DashboardModuleRegistry,
+    plan: DashboardLayoutSpec.UpdatedLandscapePlan,
+    modifier: Modifier,
+) {
+    Column(
+        modifier = modifier.fillMaxSize().padding(EinkSpacing.md),
+        verticalArrangement = Arrangement.spacedBy(EinkSpacing.md),
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth().weight(310f),
+            horizontalArrangement = Arrangement.spacedBy(EinkSpacing.md),
+        ) {
+            Row(modifier = Modifier.weight(1f).fillMaxHeight()) {
+                plan.topLeft.forEach { id ->
+                    registry.byId(id)?.let { module ->
+                        ModuleBlock(
+                            module = module,
+                            modifier = Modifier.weight(1f).fillMaxHeight(),
+                        )
+                    }
+                }
+            }
+            DashboardRegion(
+                module = plan.topRight?.let(registry::byId),
+                modifier = Modifier.weight(1f).fillMaxHeight(),
+            )
+        }
+        Row(
+            modifier = Modifier.fillMaxWidth().weight(499f),
+            horizontalArrangement = Arrangement.spacedBy(EinkSpacing.md),
+        ) {
+            DashboardRegion(
+                module = plan.bottomLeft?.let(registry::byId),
+                modifier = Modifier.weight(1f).fillMaxHeight(),
+            )
+            DashboardRegion(
+                module = plan.bottomRight?.let(registry::byId),
+                modifier = Modifier.weight(1f).fillMaxHeight(),
+            )
+        }
+    }
+}
+
+@Composable
+private fun RowScope.DashboardRegion(module: DashboardModule?, modifier: Modifier) {
+    if (module != null) {
+        ModuleBlock(module = module, modifier = modifier)
+    } else {
+        Box(modifier = modifier)
+    }
+}
+
+@Composable
+private fun GenericDashboard(
+    registry: DashboardModuleRegistry,
+    visibleModuleIds: List<String>,
+    orientation: Orientation,
+    modifier: Modifier,
+) {
+    val layout = DashboardLayoutSpec.layout(orientation, visibleModuleIds)
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -64,13 +142,8 @@ fun DashboardScreen(
             ) {
                 (0 until layout.columns).forEach { col ->
                     val slot = layout.slots.firstOrNull { it.row == row && it.column == col }
-                    val module = slot?.let { byId(it.moduleId) }
-                    if (module != null) {
-                        ModuleBlock(module = module, modifier = Modifier.weight(1f))
-                    } else {
-                        // Keep the grid aligned when the last row is short.
-                        Box(modifier = Modifier.weight(1f))
-                    }
+                    val module = slot?.let { registry.byId(it.moduleId) }
+                    DashboardRegion(module = module, modifier = Modifier.weight(1f))
                 }
             }
         }

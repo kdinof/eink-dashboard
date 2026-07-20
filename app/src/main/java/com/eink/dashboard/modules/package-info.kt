@@ -1,6 +1,6 @@
 /**
  * `modules` — pluggable dashboard data sources, one sub-package per feature:
- * `modules/calendar` (T03), `modules/todoist` (T04), `modules/weather` and the
+ * `modules/calendar` (T03), `modules/todoist` (T04), `modules/taskforge`, `modules/weather` and the
  * clock/battery system modules (T05).
  *
  * Owner: **T03–T05**. Each module registers itself with the registry defined by

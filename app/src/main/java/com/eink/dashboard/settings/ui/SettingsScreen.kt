@@ -11,7 +11,9 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.eink.dashboard.dashboard.DashboardModule
 import com.eink.dashboard.dashboard.theme.EinkPalette
 import com.eink.dashboard.dashboard.theme.EinkSpacing
@@ -70,11 +72,21 @@ fun SettingsScreen(
                 )
             } else {
                 modules.forEach { module ->
+                    val moduleState by module.state.collectAsStateWithLifecycle()
+                    val visible = settings.isModuleVisible(module.id)
                     EinkToggleRow(
                         label = module.title + if (module.isDemo) "  (demo)" else "",
-                        checked = settings.isModuleVisible(module.id),
-                        onToggle = { visible -> onModuleVisible(module.id, visible) },
+                        checked = visible,
+                        onToggle = { enabled -> onModuleVisible(module.id, enabled) },
                     )
+                    if (visible && module.id in LAST_UPDATED_MODULE_IDS) {
+                        Text(
+                            text = SettingsFormat.lastUpdated(moduleState.lastUpdatedEpochMs),
+                            style = MaterialTheme.typography.labelMedium,
+                            color = EinkPalette.InkMuted,
+                            modifier = Modifier.padding(start = EinkSpacing.sm),
+                        )
+                    }
                 }
             }
         }
@@ -88,6 +100,8 @@ fun SettingsScreen(
         }
     }
 }
+
+private val LAST_UPDATED_MODULE_IDS = setOf("calendar", "todoist", "taskforge")
 
 @Composable
 private fun Section(title: String, content: @Composable () -> Unit) {

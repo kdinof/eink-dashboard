@@ -13,6 +13,8 @@ package com.eink.dashboard.dashboard
  */
 object DashboardLayoutSpec {
 
+    private val UPDATED_LANDSCAPE_IDS = setOf("clock", "battery", "weather", "calendar", "todoist")
+
     enum class Orientation(val columns: Int) {
         PORTRAIT(1),
         LANDSCAPE(2),
@@ -27,6 +29,29 @@ object DashboardLayoutSpec {
         val slots: List<Slot>,
     ) {
         val rows: Int get() = slots.maxOfOrNull { it.row + 1 } ?: 0
+    }
+
+    /** The asymmetric two-row composition from "App Dashboard / updated". */
+    data class UpdatedLandscapePlan(
+        val topLeft: List<String>,
+        val topRight: String?,
+        val bottomLeft: String?,
+        val bottomRight: String?,
+    )
+
+    /**
+     * Returns the product-specific landscape plan when all five dashboard modules
+     * are visible. Hidden or future modules use the compact generic grid so module
+     * visibility settings never leave reserved holes behind.
+     */
+    fun updatedLandscapePlan(visibleModuleIds: List<String>): UpdatedLandscapePlan? {
+        if (visibleModuleIds.toSet() != UPDATED_LANDSCAPE_IDS) return null
+        return UpdatedLandscapePlan(
+            topLeft = listOf("clock", "battery"),
+            topRight = "weather",
+            bottomLeft = "calendar",
+            bottomRight = "todoist",
+        )
     }
 
     /**

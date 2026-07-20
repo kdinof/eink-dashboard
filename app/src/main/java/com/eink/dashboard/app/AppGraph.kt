@@ -8,6 +8,7 @@ import com.eink.dashboard.modules.battery.BatteryModule
 import com.eink.dashboard.modules.calendar.CalendarModule
 import com.eink.dashboard.modules.clock.ClockModule
 import com.eink.dashboard.modules.todoist.TodoistModule
+import com.eink.dashboard.modules.taskforge.TaskForgeModule
 import com.eink.dashboard.modules.weather.WeatherModule
 import com.eink.dashboard.remote.PairingManager
 import com.eink.dashboard.remote.PermissionCoordinator
@@ -25,12 +26,14 @@ class AppGraph(app: Application) {
     val settingsStore = SettingsStore(app)
     val calendarModule = CalendarModule.create(app)
     val todoistModule = TodoistModule.create(app)
+    val taskForgeModule = TaskForgeModule.create(app)
     val weatherModule = WeatherModule.create(app)
 
     val registry: DashboardModuleRegistry =
         DashboardModuleRegistry.builder(allowDemo = BuildConfig.DEBUG)
             .register(calendarModule)
             .register(todoistModule)
+            .register(taskForgeModule)
             .register(ClockModule())
             .register(weatherModule)
             .register(BatteryModule.create(app))
@@ -46,6 +49,7 @@ class AppGraph(app: Application) {
         coordinator = coordinator,
         calendarModule = calendarModule,
         todoistModule = todoistModule,
+        taskForgeModule = taskForgeModule,
         weatherModule = weatherModule,
         permissions = permissions,
     )

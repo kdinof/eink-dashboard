@@ -1,7 +1,7 @@
 # E-Ink Dashboard
 
 Native, foreground-only personal dashboard for a **Meebook M103** e-ink tablet.
-It combines Google Calendar, Todoist, weather, a minute clock and battery status
+It combines Google Calendar, Todoist, TaskForge/Obsidian tasks, weather, a minute clock and battery status
 in a grayscale interface designed for low refresh rates and minimal ghosting.
 
 Calendar, tasks and weather data are rendered and cached on the device. The app
@@ -13,6 +13,7 @@ it serves an authenticated settings panel on the reader's current Wi-Fi address.
 - Google Calendar through Android `CalendarContract` or the read-only Google Calendar API
 - Phone-based Google OAuth through a minimal token broker; calendar data bypasses the broker
 - Todoist Today / Upcoming views and task completion
+- TaskForge Markdown views with safe local completion through Android's document picker
 - Open-Meteo current conditions, daily summary and seven-day forecast
 - Minute clock and live battery/charging status
 - Configurable block visibility, orientation and calendar range
@@ -21,7 +22,7 @@ it serves an authenticated settings panel on the reader's current Wi-Fi address.
 - Todoist token encryption with Android Keystore (AES-256-GCM)
 - Local Wi-Fi web settings panel with QR + one-time PIN pairing
 
-Runtime debug builds contain only the five real product modules; demo blocks
+Runtime debug builds contain only the six real product modules; demo blocks
 are retained solely as test fixtures and are never registered in the app.
 
 ## Target device (confirmed — see `DEVICE_AUDIT.md`)
@@ -106,7 +107,7 @@ it installable alongside a release build).
 app/src/main/java/com/eink/dashboard/
   core/         # shared foundation — DeviceProfile (T00 constants), e-ink flag (T07)
   dashboard/    # shell, layout, refresh coordinator            (T02)
-  modules/      # calendar (T03), todoist (T04), weather/system (T05)
+  modules/      # calendar, todoist, taskforge, weather/system
   settings/     # DataStore settings + Settings screen          (T02)
   diagnostics/  # Diagnostics screen                            (T02)
 docs/adr/       # architecture decision records
@@ -124,6 +125,8 @@ physical-device verification reports are available in [`reports/`](reports/).
   audit dumps; the relevant paths are ignored by Git.
 - Enter the Todoist personal token only in the app. Plaintext tokens are not
   stored in Room, DataStore or logs.
+- TaskForge uses a persisted Android document URI and a private last-good snapshot.
+  The Markdown file remains authoritative; the dashboard never uploads it.
 - Remote setup uses unencrypted HTTP and is intended only for a trusted, encrypted
   home Wi-Fi network. Browser bearer tokens are stored only as hashes on the reader.
 - Calendar access is read-only; the app does not request `WRITE_CALENDAR`.
