@@ -55,7 +55,7 @@ class DashboardLayoutSpecTest {
     @Test
     fun updatedLandscape_placesGlanceableModulesAboveLists() {
         val plan = DashboardLayoutSpec.updatedLandscapePlan(
-            listOf("calendar", "todoist", "clock", "weather", "battery"),
+            listOf("calendar", "taskforge", "clock", "weather", "battery"),
         )
 
         assertThat(plan).isEqualTo(
@@ -63,7 +63,7 @@ class DashboardLayoutSpecTest {
                 topLeft = listOf("clock", "battery"),
                 topRight = "weather",
                 bottomLeft = "calendar",
-                bottomRight = "todoist",
+                bottomRight = "taskforge",
             ),
         )
     }
@@ -77,7 +77,7 @@ class DashboardLayoutSpecTest {
     fun updatedLandscape_usesCompactFallbackWhenAModuleIsHidden() {
         assertThat(
             DashboardLayoutSpec.updatedLandscapePlan(
-                listOf("calendar", "todoist", "clock", "weather"),
+                listOf("calendar", "taskforge", "clock", "weather"),
             ),
         ).isNull()
     }

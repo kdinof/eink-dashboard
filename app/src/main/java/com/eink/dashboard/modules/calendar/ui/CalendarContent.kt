@@ -66,18 +66,25 @@ private fun DayGroup(
     markers: Map<Long, CalendarMarker>,
     zone: ZoneId,
 ) {
-    Column(
+    Row(
         modifier = Modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(EinkSpacing.xs),
+        verticalAlignment = Alignment.Top,
     ) {
-        Text(
-            text = CalendarFormat.dayHeader(day.date, today),
-            style = MaterialTheme.typography.titleSmall,
-            fontWeight = FontWeight.SemiBold,
-            color = EinkPalette.Ink,
-        )
-        day.events.forEach { event ->
-            EventRow(event = event, marker = markers[event.calendarId], zone = zone)
+        Column(modifier = Modifier.width(92.dp)) {
+            Text(
+                text = CalendarFormat.dayHeader(day.date, today),
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = FontWeight.SemiBold,
+                color = EinkPalette.Ink,
+            )
+        }
+        Column(
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.spacedBy(EinkSpacing.xs),
+        ) {
+            day.events.forEach { event ->
+                EventRow(event = event, marker = markers[event.calendarId], zone = zone)
+            }
         }
     }
 }
@@ -97,15 +104,15 @@ private fun EventRow(event: AgendaEvent, marker: CalendarMarker?, zone: ZoneId) 
         Spacer(Modifier.width(EinkSpacing.sm))
         Text(
             text = CalendarFormat.timeLabel(event.event, zone),
-            style = MaterialTheme.typography.bodyMedium,
+            style = MaterialTheme.typography.labelMedium,
             fontWeight = FontWeight.Medium,
             color = EinkPalette.InkMuted,
-            modifier = Modifier.width(64.dp),
+            modifier = Modifier.width(56.dp).padding(top = 2.dp),
         )
         Spacer(Modifier.width(EinkSpacing.sm))
         Text(
             text = CalendarFormat.titleLabel(event),
-            style = MaterialTheme.typography.bodyMedium,
+            style = MaterialTheme.typography.bodyLarge,
             color = EinkPalette.Ink,
             modifier = Modifier.fillMaxWidth(),
         )

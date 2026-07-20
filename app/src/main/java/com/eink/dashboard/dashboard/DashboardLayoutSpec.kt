@@ -13,7 +13,7 @@ package com.eink.dashboard.dashboard
  */
 object DashboardLayoutSpec {
 
-    private val UPDATED_LANDSCAPE_IDS = setOf("clock", "battery", "weather", "calendar", "todoist")
+    private val UPDATED_LANDSCAPE_IDS = setOf("clock", "battery", "weather", "calendar", "taskforge")
 
     enum class Orientation(val columns: Int) {
         PORTRAIT(1),
@@ -50,7 +50,7 @@ object DashboardLayoutSpec {
             topLeft = listOf("clock", "battery"),
             topRight = "weather",
             bottomLeft = "calendar",
-            bottomRight = "todoist",
+            bottomRight = "taskforge",
         )
     }
 

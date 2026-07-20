@@ -9,7 +9,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.eink.dashboard.core.time.SystemTimeSource
 import com.eink.dashboard.core.time.TimeSource
@@ -61,19 +64,24 @@ class ClockModule(
         Column(
             modifier = modifier.fillMaxWidth().padding(vertical = EinkSpacing.sm),
             verticalArrangement = Arrangement.spacedBy(EinkSpacing.xs),
+            horizontalAlignment = Alignment.Start,
         ) {
             Text(
                 text = value.time,
                 modifier = Modifier.fillMaxWidth(),
-                style = MaterialTheme.typography.displayLarge,
-                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.displayLarge.copy(
+                    fontSize = 76.sp,
+                    lineHeight = 78.sp,
+                    fontWeight = FontWeight.Normal,
+                ),
+                textAlign = TextAlign.Start,
                 color = EinkPalette.Ink,
             )
             Text(
                 text = value.date,
                 modifier = Modifier.fillMaxWidth(),
-                style = MaterialTheme.typography.titleMedium,
-                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Normal),
+                textAlign = TextAlign.Start,
                 color = EinkPalette.InkMuted,
             )
         }
