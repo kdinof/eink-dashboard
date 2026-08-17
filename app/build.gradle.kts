@@ -1,8 +1,14 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.kotlin.serialization)
+}
+
+val localProperties = Properties().apply {
+    rootProject.file("local.properties").takeIf { it.isFile }?.inputStream()?.use { load(it) }
 }
 
 android {
@@ -17,7 +23,14 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "0.1.0"
-        val googleBrokerUrl = providers.gradleProperty("EINK_GOOGLE_BROKER_URL").orNull.orEmpty()
+        // The endpoint is public configuration, not a credential. CI can inject
+        // it through -P or the environment; local builds persist it in the
+        // git-ignored local.properties so a routine rebuild cannot silently
+        // replace a working APK with one that cannot refresh expired tokens.
+        val googleBrokerUrl = providers.gradleProperty("EINK_GOOGLE_BROKER_URL").orNull
+            ?: providers.environmentVariable("EINK_GOOGLE_BROKER_URL").orNull
+            ?: localProperties.getProperty("EINK_GOOGLE_BROKER_URL")
+            ?: ""
         buildConfigField("String", "GOOGLE_BROKER_URL", "\"$googleBrokerUrl\"")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

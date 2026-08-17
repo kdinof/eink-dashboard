@@ -41,7 +41,7 @@ class CalendarRepositoryTest {
     @Test
     fun deselectingOneCalendar_filtersItsEvents_andQueriesOnlySelected() {
         val (src, repo) = repo(listOf(ev(1, 10, "Work sync", 9), ev(2, 20, "Dentist", 11)))
-        val settings = CalendarSettings(deselectedCalendarIds = setOf(20))
+        val settings = CalendarSettings(deviceDeselectedCalendarIds = setOf(20))
         val agenda = repo.load(settings, now)
         assertThat(agenda.days.single().events.map { it.title }).containsExactly("Work sync")
         assertThat(src.lastCalendarIds).containsExactly(10L)
@@ -50,7 +50,7 @@ class CalendarRepositoryTest {
     @Test
     fun allCalendarsDeselected_yieldsEmpty_withoutQueryingProvider() {
         val (src, repo) = repo(listOf(ev(1, 10, "Work sync", 9)))
-        val settings = CalendarSettings(deselectedCalendarIds = setOf(10, 20))
+        val settings = CalendarSettings(deviceDeselectedCalendarIds = setOf(10, 20))
         val agenda = repo.load(settings, now)
         assertThat(agenda.isEmpty).isTrue()
         assertThat(src.queryCount).isEqualTo(0)

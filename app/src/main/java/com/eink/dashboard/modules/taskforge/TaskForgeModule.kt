@@ -5,8 +5,8 @@ import android.net.Uri
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.eink.dashboard.dashboard.DashboardModule
+import com.eink.dashboard.dashboard.DataWidgetRefreshPolicy
 import com.eink.dashboard.dashboard.ModuleState
-import com.eink.dashboard.dashboard.RefreshPolicy
 import com.eink.dashboard.dashboard.RefreshReason
 import com.eink.dashboard.modules.taskforge.data.AndroidTaskForgeFileStore
 import com.eink.dashboard.modules.taskforge.data.SharedPreferencesTaskForgeSnapshotCache
@@ -19,7 +19,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
-import kotlin.time.Duration.Companion.minutes
 
 class TaskForgeModule(
     private val repository: TaskForgeRepository,
@@ -27,7 +26,7 @@ class TaskForgeModule(
 ) : DashboardModule {
     override val id = "taskforge"
     override val title = "TaskForge"
-    override val refreshPolicy = RefreshPolicy.Periodic(1.minutes)
+    override val refreshPolicy = DataWidgetRefreshPolicy
     override val hasSettings = true
 
     private val _state = MutableStateFlow<ModuleState>(ModuleState.Loading)

@@ -13,6 +13,12 @@ class RefreshDecisionTest {
     private val now = 1_000_000L
 
     @Test
+    fun dataWidgetPolicy_isTenMinutes() {
+        val policy = DataWidgetRefreshPolicy as RefreshPolicy.Periodic
+        assertThat(policy.minInterval.inWholeMinutes).isEqualTo(10L)
+    }
+
+    @Test
     fun lifecycleReasons_alwaysRefresh_regardlessOfPolicy() {
         val reasons = listOf(
             RefreshReason.INITIAL,

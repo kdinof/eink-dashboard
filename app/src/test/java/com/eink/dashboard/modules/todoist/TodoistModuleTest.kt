@@ -4,7 +4,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import com.eink.dashboard.dashboard.ModuleState
-import com.eink.dashboard.dashboard.RefreshPolicy
+import com.eink.dashboard.dashboard.DataWidgetRefreshPolicy
 import com.eink.dashboard.dashboard.RefreshReason
 import com.eink.dashboard.modules.todoist.data.TodoistError
 import com.eink.dashboard.modules.todoist.model.TodoistView
@@ -51,7 +51,7 @@ class TodoistModuleTest {
         val m = module(FakeTodoistApi(), token = "t")
         assertThat(m.id).isEqualTo("todoist")
         assertThat(m.title).isEqualTo("Todoist")
-        assertThat(m.refreshPolicy).isInstanceOf(RefreshPolicy.Periodic::class.java)
+        assertThat(m.refreshPolicy).isEqualTo(DataWidgetRefreshPolicy)
         assertThat(m.isDemo).isFalse()
         assertThat(m.hasSettings).isTrue()
     }

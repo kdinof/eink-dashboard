@@ -8,14 +8,21 @@ import com.eink.dashboard.dashboard.RefreshPolicy
 import com.eink.dashboard.dashboard.RefreshReason
 import com.eink.dashboard.modules.calendar.model.CalendarEvent
 import com.eink.dashboard.modules.calendar.model.CalendarInfo
+import com.eink.dashboard.modules.calendar.data.CalendarDataSource
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 import org.junit.Test
 import java.io.File
 import java.nio.file.Files
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicInteger
+import kotlin.time.Duration.Companion.minutes
 
 /**
  * The module's state machine over the frozen [ModuleState] contract: permission
@@ -55,7 +62,7 @@ class CalendarModuleTest {
     fun contractIdentity_isStable() {
         val m = module(FakeCalendarDataSource(listOf(work), emptyList()), granted = true)
         assertThat(m.id).isEqualTo("calendar")
-        assertThat(m.refreshPolicy).isInstanceOf(RefreshPolicy.Periodic::class.java)
+        assertThat(m.refreshPolicy).isEqualTo(RefreshPolicy.Periodic(5.minutes))
         assertThat(m.isDemo).isFalse()
         assertThat(m.hasSettings).isTrue()
     }
@@ -78,7 +85,8 @@ class CalendarModuleTest {
         m.refresh(RefreshReason.INITIAL)
         assertThat(m.state.value).isInstanceOf(ModuleState.Ok::class.java)
         assertThat(m.agenda.value?.days?.single()?.events?.single()?.title).isEqualTo("Stand-up")
-        assertThat(m.calendars.value).containsExactly(work)
+        assertThat(m.catalog.value.source).isEqualTo(CalendarSourceMode.DEVICE)
+        assertThat(m.catalog.value.calendars).containsExactly(work)
     }
 
     @Test
@@ -111,5 +119,50 @@ class CalendarModuleTest {
         assertThat((state as ModuleState.Ok).isStale).isTrue()
         // Previous agenda is retained for display.
         assertThat(m.agenda.value?.days).isNotEmpty()
+    }
+
+    @Test
+    fun concurrentRefreshes_areSerialized_soOlderLoadCannotOverwriteNewerState(): Unit = runBlocking {
+        val activeLoads = AtomicInteger()
+        val maxActiveLoads = AtomicInteger()
+        val firstEntered = CountDownLatch(1)
+        val releaseFirst = CountDownLatch(1)
+        val source = object : CalendarDataSource {
+            override fun listCalendars(): List<CalendarInfo> {
+                val active = activeLoads.incrementAndGet()
+                maxActiveLoads.updateAndGet { maxOf(it, active) }
+                if (firstEntered.count > 0) {
+                    firstEntered.countDown()
+                    check(releaseFirst.await(2, TimeUnit.SECONDS))
+                }
+                return listOf(work)
+            }
+
+            override fun queryInstances(
+                startMs: Long,
+                endMs: Long,
+                calendarIds: Set<Long>?,
+            ): List<CalendarEvent> {
+                activeLoads.decrementAndGet()
+                return listOf(todayEvent())
+            }
+        }
+        val m = CalendarModule(
+            repo = CalendarRepository(source, zoneProvider = { TASHKENT }),
+            settingsStore = tempStore(),
+            permission = CalendarPermission { true },
+            clock = { now },
+        )
+
+        val first = async(Dispatchers.Default) { m.refresh(RefreshReason.INITIAL) }
+        check(firstEntered.await(2, TimeUnit.SECONDS))
+        val second = async(Dispatchers.Default) { m.refresh(RefreshReason.SETTINGS_CHANGED) }
+        delay(100)
+        releaseFirst.countDown()
+        first.await()
+        second.await()
+
+        assertThat(maxActiveLoads.get()).isEqualTo(1)
+        assertThat(m.state.value).isInstanceOf(ModuleState.Ok::class.java)
     }
 }

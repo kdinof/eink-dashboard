@@ -42,4 +42,31 @@ class GoogleCalendarDataSourceTest {
         assertThat(events.first { it.title == "Holiday" }.isAllDay).isTrue()
         assertThat(server.takeRequest().getHeader("Authorization")).isEqualTo("Bearer access")
     }
+
+    @Test
+    fun localDateTimeWithIanaZone_isLoaded_andMalformedNeighborIsIsolated() {
+        server.enqueue(MockResponse().setResponseCode(200).setBody("""
+            {"items":[{"id":"primary@example.com","summary":"Personal"}]}
+        """.trimIndent()))
+        server.enqueue(MockResponse().setResponseCode(200).setBody("""
+            {"items":[
+              {"id":"broken","summary":"Broken import","start":{},"end":{}},
+              {"id":"floating","summary":"Imported meeting",
+               "start":{"dateTime":"2026-07-17T10:00:00","timeZone":"Asia/Tashkent"},
+               "end":{"dateTime":"2026-07-17T11:00:00","timeZone":"Asia/Tashkent"}},
+              {"id":"deleted","status":"cancelled"}
+            ]}
+        """.trimIndent()))
+        val source = GoogleCalendarDataSource(
+            auth = GoogleAccessTokenProvider { "access" },
+            apiBase = server.url("/calendar/v3/"),
+        )
+
+        val calendar = source.listCalendars().single()
+        val events = source.queryInstances(0, Long.MAX_VALUE, setOf(calendar.id))
+
+        assertThat(events.map { it.title }).containsExactly("Imported meeting")
+        assertThat(events.single().beginMs)
+            .isEqualTo(Instant.parse("2026-07-17T05:00:00Z").toEpochMilli())
+    }
 }

@@ -16,12 +16,16 @@ import com.eink.dashboard.modules.calendar.google.GoogleAuthManager
 import com.eink.dashboard.modules.calendar.google.GoogleCalendarDataSource
 import com.eink.dashboard.modules.calendar.google.GoogleCredentialStore
 import com.eink.dashboard.modules.calendar.google.GoogleCalendarApiException
+import com.eink.dashboard.modules.calendar.google.GoogleReconnectRequiredException
 import com.eink.dashboard.BuildConfig
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlin.time.Duration.Companion.minutes
 
 /**
@@ -52,7 +56,9 @@ class CalendarModule(
 
     override val id: String = "calendar"
     override val title: String = "Calendar"
-    override val refreshPolicy: RefreshPolicy = RefreshPolicy.Periodic(15.minutes)
+
+    /** The agenda is the board's centerpiece — refresh twice as often as other data widgets. */
+    override val refreshPolicy: RefreshPolicy = RefreshPolicy.Periodic(5.minutes)
     override val hasSettings: Boolean = true
 
     private val _state = MutableStateFlow<ModuleState>(ModuleState.Loading)
@@ -62,9 +68,9 @@ class CalendarModule(
     private val _agenda = MutableStateFlow<CalendarAgenda?>(null)
     val agenda: StateFlow<CalendarAgenda?> = _agenda.asStateFlow()
 
-    /** Calendars available to pick from, for [SettingsContent]. */
-    private val _calendars = MutableStateFlow<List<CalendarInfo>>(emptyList())
-    val calendars: StateFlow<List<CalendarInfo>> = _calendars.asStateFlow()
+    /** Calendar choices are tagged with their source so ids cannot cross sources. */
+    private val _catalog = MutableStateFlow(CalendarCatalog())
+    val catalog: StateFlow<CalendarCatalog> = _catalog.asStateFlow()
 
     /** Whether the app currently holds `READ_CALENDAR`, for the settings prompt. */
     private val _permissionGranted = MutableStateFlow(permission.isGranted())
@@ -72,7 +78,10 @@ class CalendarModule(
     val googleConnected: Boolean get() = googleAuth?.isConnected == true
     val googleBrokerConfigured: Boolean get() = googleAuth?.isConfigured == true
 
-    override suspend fun refresh(reason: RefreshReason) {
+    /** Prevent an older, slower request from overwriting a newer settings refresh. */
+    private val refreshMutex = Mutex()
+
+    override suspend fun refresh(reason: RefreshReason) = refreshMutex.withLock {
         val settings = settingsStore.current()
         val granted = permission.isGranted()
         _permissionGranted.value = granted
@@ -95,24 +104,32 @@ class CalendarModule(
             // coordinator's background dispatcher or a settings-triggered reload).
             val loaded = withContext(Dispatchers.IO) { repo.load(settings, clock()) }
             _agenda.value = loaded
-            _calendars.value = loaded.calendars
+            _catalog.value = CalendarCatalog(loaded.source, loaded.calendars)
             _state.value = if (loaded.isEmpty) {
                 ModuleState.Empty(lastUpdatedEpochMs = clock())
             } else {
                 ModuleState.Ok(lastUpdatedEpochMs = clock())
             }
         } catch (t: Throwable) {
+            if (t is CancellationException) throw t
             val safeReason = when (t) {
                 is GoogleCalendarApiException -> "HTTP ${t.statusCode} ${t.reason.orEmpty()}".trim()
+                // Our own error() strings (broker/connect failures) — fixed text, never calendar data.
+                is IllegalStateException -> t.message ?: t.javaClass.simpleName
                 else -> t.javaClass.simpleName
             }
             Log.w("EinkCalendar", "Calendar refresh failed: $safeReason")
             // Never log calendar contents; surface a generic message only.
             val previous = _agenda.value
-            _state.value = if (previous != null) {
-                ModuleState.Ok(lastUpdatedEpochMs = _state.value.lastUpdatedEpochMs, isStale = true)
-            } else {
-                ModuleState.Error(
+            _state.value = when {
+                // A dead grant can't heal by retrying — tell the user what to do.
+                t is GoogleReconnectRequiredException -> ModuleState.Error(
+                    message = "Reconnect Google Calendar in Settings",
+                    lastUpdatedEpochMs = _state.value.lastUpdatedEpochMs,
+                )
+                previous != null ->
+                    ModuleState.Ok(lastUpdatedEpochMs = _state.value.lastUpdatedEpochMs, isStale = true)
+                else -> ModuleState.Error(
                     message = "Couldn't read the calendar",
                     lastUpdatedEpochMs = _state.value.lastUpdatedEpochMs,
                 )
@@ -149,3 +166,8 @@ class CalendarModule(
         }
     }
 }
+
+data class CalendarCatalog(
+    val source: CalendarSourceMode? = null,
+    val calendars: List<CalendarInfo> = emptyList(),
+)

@@ -26,6 +26,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.eink.dashboard.core.time.SystemTimeSource
 import com.eink.dashboard.core.time.TimeSource
 import com.eink.dashboard.dashboard.DashboardModule
+import com.eink.dashboard.dashboard.DataWidgetRefreshPolicy
 import com.eink.dashboard.dashboard.ModuleState
 import com.eink.dashboard.dashboard.RefreshPolicy
 import com.eink.dashboard.dashboard.RefreshReason
@@ -42,8 +43,7 @@ import kotlinx.coroutines.flow.asStateFlow
  * Battery block (T05). On each [refresh] it reads the current battery state through
  * [BatterySource] (a synchronous read of the sticky battery broadcast — no live
  * receiver, no background work) and maps it onto the frozen [ModuleState]. Cadence is
- * the shell's minute ticker ([RefreshPolicy.EveryMinute]), so a charge/discharge
- * change is reflected within a minute without the module scheduling anything itself.
+ * the shell's shared ten-minute data-widget policy, without any module-owned loop.
  */
 class BatteryModule(
     private val source: BatterySource,
@@ -52,7 +52,7 @@ class BatteryModule(
 
     override val id: String = "battery"
     override val title: String = "Battery"
-    override val refreshPolicy: RefreshPolicy = RefreshPolicy.EveryMinute
+    override val refreshPolicy: RefreshPolicy = DataWidgetRefreshPolicy
 
     private val _state = MutableStateFlow<ModuleState>(ModuleState.Loading)
     override val state: StateFlow<ModuleState> = _state.asStateFlow()

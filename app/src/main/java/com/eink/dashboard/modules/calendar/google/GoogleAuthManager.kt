@@ -27,6 +27,9 @@ import java.util.concurrent.ConcurrentHashMap
 data class GoogleConnectStart(val handoffId: String, val authorizationUrl: String)
 fun interface GoogleAccessTokenProvider { fun accessToken(): String }
 
+/** The stored Google grant is dead (revoked or expired); only a new OAuth connect can fix it. */
+class GoogleReconnectRequiredException : IllegalStateException("Google Calendar needs to be reconnected")
+
 /** OAuth handoff + access-token lifecycle. Calendar data never passes through the broker. */
 class GoogleAuthManager(
     private val brokerUrl: String,
@@ -80,12 +83,19 @@ class GoogleAuthManager(
 
     @Synchronized
     override fun accessToken(): String {
-        val current = store.load() ?: error("Google Calendar is not connected")
+        val current = store.load() ?: throw GoogleReconnectRequiredException()
         if (current.accessTokenExpiresAtEpochMs > clock()) return current.accessToken
-        val response = post(
+        val (code, response) = postRaw(
             "oauth/refresh",
             json.encodeToString(RefreshRequest(current.refreshToken, current.brokerToken)),
         )
+        if (code == 401 && response.contains("invalid_grant")) {
+            // Google declared the grant permanently dead — no retry can revive it.
+            // Drop the credential so Settings offers "Connect" instead of erroring forever.
+            store.clear()
+            throw GoogleReconnectRequiredException()
+        }
+        if (code !in 200..299) error("Google OAuth broker rejected the request ($code ${response.take(80)})")
         val refreshed = json.decodeFromString<Refreshed>(response)
         store.save(
             current.copy(
@@ -107,14 +117,21 @@ class GoogleAuthManager(
     }
 
     private fun post(path: String, body: String): String {
+        val (code, responseBody) = postRaw(path, body)
+        // The failure body is the broker's own tiny error JSON (never token material).
+        if (code !in 200..299) {
+            error("Google OAuth broker rejected the request ($code ${responseBody.take(80)})")
+        }
+        return responseBody
+    }
+
+    private fun postRaw(path: String, body: String): Pair<Int, String> {
         val request = Request.Builder()
             .url(brokerUrl.trimEnd('/') + "/" + path)
             .post(body.toRequestBody(JSON_MEDIA))
             .build()
         return client.newCall(request).execute().use { response ->
-            val responseBody = response.body?.string().orEmpty()
-            if (!response.isSuccessful) error("Google OAuth broker rejected the request (${response.code})")
-            responseBody
+            response.code to response.body?.string().orEmpty()
         }
     }
 

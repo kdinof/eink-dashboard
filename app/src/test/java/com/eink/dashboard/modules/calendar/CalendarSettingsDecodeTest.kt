@@ -3,6 +3,7 @@ package com.eink.dashboard.modules.calendar
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.mutablePreferencesOf
 import androidx.datastore.preferences.core.stringSetPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
 import com.eink.dashboard.modules.calendar.model.CalendarRangeMode
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
@@ -46,5 +47,33 @@ class CalendarSettingsDecodeTest {
         )
         assertThat(CalendarSettingsStore.Keys.decode(prefs).deselectedCalendarIds)
             .containsExactly(10L)
+    }
+
+    @Test
+    fun sourceSelections_areIndependent() {
+        val prefs = mutablePreferencesOf(
+            CalendarSettingsStore.Keys.SOURCE to CalendarSourceMode.GOOGLE.name,
+            CalendarSettingsStore.Keys.DEVICE_DESELECTED to setOf("10"),
+            CalendarSettingsStore.Keys.GOOGLE_DESELECTED to setOf("20"),
+        )
+
+        val decoded = CalendarSettingsStore.Keys.decode(prefs)
+
+        assertThat(decoded.deselectedIdsFor(CalendarSourceMode.DEVICE)).containsExactly(10L)
+        assertThat(decoded.deselectedIdsFor(CalendarSourceMode.GOOGLE)).containsExactly(20L)
+        assertThat(decoded.deselectedCalendarIds).containsExactly(20L)
+    }
+
+    @Test
+    fun legacySelection_migratesToPreviouslyActiveSource() {
+        val prefs = mutablePreferencesOf(
+            stringPreferencesKey("calendar_source") to CalendarSourceMode.GOOGLE.name,
+            stringSetPreferencesKey("deselected_calendar_ids") to setOf("42"),
+        )
+
+        val decoded = CalendarSettingsStore.Keys.decode(prefs)
+
+        assertThat(decoded.googleDeselectedCalendarIds).containsExactly(42L)
+        assertThat(decoded.deviceDeselectedCalendarIds).isEmpty()
     }
 }

@@ -46,7 +46,8 @@ fun CalendarSettingsSection(
     val settings by settingsStore.settings.collectAsStateWithLifecycle(
         initialValue = com.eink.dashboard.modules.calendar.CalendarSettings.DEFAULT,
     )
-    val calendars by module.calendars.collectAsStateWithLifecycle()
+    val catalog by module.catalog.collectAsStateWithLifecycle()
+    val calendars = if (catalog.source == settings.source) catalog.calendars else emptyList()
     val granted by module.permissionGranted.collectAsStateWithLifecycle()
 
     val permissionLauncher = rememberLauncherForActivityResult(
@@ -132,7 +133,7 @@ fun CalendarSettingsSection(
                     checked = settings.isSelected(calendar.id),
                     onToggle = { selected ->
                         scope.launch {
-                            settingsStore.setCalendarSelected(calendar.id, selected)
+                            settingsStore.setCalendarSelected(settings.source, calendar.id, selected)
                             module.refresh(RefreshReason.SETTINGS_CHANGED)
                         }
                     },

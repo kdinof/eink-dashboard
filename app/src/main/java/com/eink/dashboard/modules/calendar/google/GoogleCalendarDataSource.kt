@@ -19,6 +19,7 @@ import java.security.MessageDigest
 import java.time.Instant
 import java.time.LocalDate
 import java.time.OffsetDateTime
+import java.time.ZoneId
 import java.time.ZoneOffset
 import java.util.concurrent.ConcurrentHashMap
 
@@ -31,7 +32,7 @@ class GoogleCalendarApiException(val statusCode: Int, val reason: String?) :
 )
 @Serializable private data class GoogleCalendarDto(
     val id: String,
-    val summary: String = "",
+    val summary: String? = null,
 )
 @Serializable private data class EventPage(
     val items: List<GoogleEventDto> = emptyList(),
@@ -39,12 +40,17 @@ class GoogleCalendarApiException(val statusCode: Int, val reason: String?) :
 )
 @Serializable private data class GoogleEventDto(
     val id: String,
-    val summary: String = "(untitled)",
+    val summary: String? = null,
     val location: String? = null,
-    val start: GoogleEventTime,
-    val end: GoogleEventTime,
+    val status: String? = null,
+    val start: GoogleEventTime? = null,
+    val end: GoogleEventTime? = null,
 )
-@Serializable private data class GoogleEventTime(val date: String? = null, val dateTime: String? = null)
+@Serializable private data class GoogleEventTime(
+    val date: String? = null,
+    val dateTime: String? = null,
+    val timeZone: String? = null,
+)
 
 /** Read-only Google Calendar API v3 source using the reader's OAuth access token. */
 class GoogleCalendarDataSource(
@@ -57,6 +63,7 @@ class GoogleCalendarDataSource(
 
     override fun listCalendars(): List<CalendarInfo> {
         val result = mutableListOf<CalendarInfo>()
+        val resolvedIds = mutableMapOf<Long, String>()
         var page: String? = null
         do {
             val url = apiBase.newBuilder().addPathSegments("users/me/calendarList")
@@ -65,16 +72,21 @@ class GoogleCalendarDataSource(
             val parsed = json.decodeFromString<CalendarListPage>(get(url.toString()))
             parsed.items.forEach { item ->
                 val stable = stableId(item.id)
-                rawIds[stable] = item.id
-                result += CalendarInfo(stable, item.summary, "Google")
+                resolvedIds[stable] = item.id
+                result += CalendarInfo(stable, item.summary.orEmpty(), "Google")
             }
             page = parsed.nextPageToken
         } while (page != null)
+        // Publish only a complete catalog. A failed/paginating request cannot
+        // leave a half-old, half-new id map behind for the event query.
+        rawIds.clear()
+        rawIds.putAll(resolvedIds)
         return result
     }
 
     override fun queryInstances(startMs: Long, endMs: Long, calendarIds: Set<Long>?): List<CalendarEvent> {
-        val selected = calendarIds.orEmpty().mapNotNull { id -> rawIds[id]?.let { id to it } }
+        val requestedIds = calendarIds ?: rawIds.keys
+        val selected = requestedIds.mapNotNull { id -> rawIds[id]?.let { id to it } }
         return selected.flatMap { (stableCalendarId, rawCalendarId) ->
             loadEvents(rawCalendarId, stableCalendarId, startMs, endMs)
         }
@@ -93,7 +105,11 @@ class GoogleCalendarDataSource(
                 .apply { page?.let { addQueryParameter("pageToken", it) } }
                 .build()
             val parsed = json.decodeFromString<EventPage>(get(url.toString()))
-            parsed.items.mapNotNullTo(result) { it.toModel(calendarId) }
+            // Isolate malformed/deleted rows at the network boundary: one unusual
+            // event must not make every valid event on the page disappear.
+            parsed.items.mapNotNullTo(result) { dto ->
+                runCatching { dto.toModel(calendarId) }.getOrNull()
+            }
             page = parsed.nextPageToken
         } while (page != null)
         return result
@@ -117,13 +133,17 @@ class GoogleCalendarDataSource(
     }.getOrNull()
 
     private fun GoogleEventDto.toModel(calendarId: Long): CalendarEvent? {
-        val allDay = start.date != null
-        val begin = start.epochMs() ?: return null
-        val finish = end.epochMs() ?: return null
+        if (status == "cancelled") return null
+        val eventStart = start ?: return null
+        val eventEnd = end ?: return null
+        val allDay = eventStart.date != null
+        val begin = eventStart.epochMs() ?: return null
+        val finish = eventEnd.epochMs() ?: return null
+        if (finish <= begin) return null
         return CalendarEvent(
             eventId = stableId("$id:$begin"),
             calendarId = calendarId,
-            title = summary,
+            title = summary?.takeIf { it.isNotBlank() } ?: "(untitled)",
             beginMs = begin,
             endMs = finish,
             isAllDay = allDay,
@@ -132,7 +152,16 @@ class GoogleCalendarDataSource(
     }
 
     private fun GoogleEventTime.epochMs(): Long? = when {
-        dateTime != null -> OffsetDateTime.parse(dateTime).toInstant().toEpochMilli()
+        dateTime != null -> runCatching {
+            OffsetDateTime.parse(dateTime).toInstant().toEpochMilli()
+        }.recoverCatching {
+            // Imported and recurring calendars may send a local date-time plus
+            // an explicit IANA zone instead of embedding an offset.
+            java.time.LocalDateTime.parse(dateTime)
+                .atZone(ZoneId.of(requireNotNull(timeZone)))
+                .toInstant()
+                .toEpochMilli()
+        }.getOrNull()
         date != null -> LocalDate.parse(date).atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli()
         else -> null
     }

@@ -1,6 +1,10 @@
 package com.eink.dashboard.dashboard
 
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.minutes
+
+/** Shared foreground cadence for every data widget on the dashboard. */
+val DataWidgetRefreshPolicy: RefreshPolicy = RefreshPolicy.Periodic(10.minutes)
 
 /**
  * How often a [DashboardModule] wants to be refreshed on the minute ticker.

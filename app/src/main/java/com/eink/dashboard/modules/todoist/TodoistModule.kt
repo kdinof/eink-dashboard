@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.eink.dashboard.dashboard.DashboardModule
+import com.eink.dashboard.dashboard.DataWidgetRefreshPolicy
 import com.eink.dashboard.dashboard.ModuleState
 import com.eink.dashboard.dashboard.RefreshPolicy
 import com.eink.dashboard.dashboard.RefreshReason
@@ -20,12 +21,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
-import kotlin.time.Duration.Companion.minutes
 
 /**
  * Todoist block (T04) — a pluggable [DashboardModule].
  *
- * The shell drives all cadence via [refreshPolicy] (every 5 minutes plus manual /
+ * The shell drives all cadence via [refreshPolicy] (every 10 minutes plus manual /
  * lifecycle refreshes); this module starts no loop of its own. Each [refresh] gates
  * on a configured token (never touching the network without one), then delegates to
  * [TodoistRepository], which retries queued completions and loads the chosen view
@@ -46,7 +46,7 @@ class TodoistModule(
 
     override val id: String = "todoist"
     override val title: String = "Todoist"
-    override val refreshPolicy: RefreshPolicy = RefreshPolicy.Periodic(5.minutes)
+    override val refreshPolicy: RefreshPolicy = DataWidgetRefreshPolicy
     override val hasSettings: Boolean = true
 
     private val _state = MutableStateFlow<ModuleState>(ModuleState.Loading)

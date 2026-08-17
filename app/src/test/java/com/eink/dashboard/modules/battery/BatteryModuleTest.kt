@@ -1,8 +1,8 @@
 package com.eink.dashboard.modules.battery
 
 import com.eink.dashboard.core.time.TimeSource
+import com.eink.dashboard.dashboard.DataWidgetRefreshPolicy
 import com.eink.dashboard.dashboard.ModuleState
-import com.eink.dashboard.dashboard.RefreshPolicy
 import com.eink.dashboard.dashboard.RefreshReason
 import com.eink.dashboard.modules.battery.data.BatterySource
 import com.eink.dashboard.modules.battery.data.BatteryStatus
@@ -38,10 +38,10 @@ class BatteryModuleTest {
     }
 
     @Test
-    fun contract_isEveryMinute_andNotDemo() {
+    fun contract_usesDataWidgetCadence_andNotDemo() {
         val m = BatteryModule(BatterySource { BatteryStatus(80, false) })
         assertThat(m.id).isEqualTo("battery")
-        assertThat(m.refreshPolicy).isEqualTo(RefreshPolicy.EveryMinute)
+        assertThat(m.refreshPolicy).isEqualTo(DataWidgetRefreshPolicy)
         assertThat(m.isDemo).isFalse()
     }
 

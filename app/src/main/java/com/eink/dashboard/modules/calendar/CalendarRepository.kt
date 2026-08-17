@@ -6,6 +6,7 @@ import com.eink.dashboard.modules.calendar.model.AgendaDay
 import com.eink.dashboard.modules.calendar.model.CalendarInfo
 import com.eink.dashboard.modules.calendar.model.CalendarMarker
 import com.eink.dashboard.modules.calendar.model.CalendarMarkers
+import com.eink.dashboard.modules.calendar.model.CalendarEventVisibility
 import com.eink.dashboard.modules.calendar.model.DayRange
 import java.time.ZoneId
 
@@ -14,6 +15,7 @@ private const val DAY_MS = 24L * 60 * 60 * 1000
 
 /** The fully-resolved agenda the module renders: calendars, grouped days, markers. */
 data class CalendarAgenda(
+    val source: CalendarSourceMode,
     val calendars: List<CalendarInfo>,
     val days: List<AgendaDay>,
     val markers: Map<Long, CalendarMarker>,
@@ -58,9 +60,9 @@ class CalendarRepository(
         // The dashboard is a forward-looking surface: completed timed events and
         // all-day spans whose exclusive end has passed no longer belong in it.
         // Ongoing events remain visible until their real end time.
-        val upcomingEvents = events.filter { it.endMs > nowMs }
+        val upcomingEvents = events.filter { CalendarEventVisibility.isUpcomingOrOngoing(it, nowMs, zone) }
         val days = AgendaBuilder.build(upcomingEvents, range, zone)
         val markers = CalendarMarkers.assign(calendars)
-        return CalendarAgenda(calendars, days, markers, range)
+        return CalendarAgenda(settings.source, calendars, days, markers, range)
     }
 }

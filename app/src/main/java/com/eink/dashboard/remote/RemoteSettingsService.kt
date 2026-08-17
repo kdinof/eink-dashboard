@@ -50,7 +50,8 @@ class RemoteSettingsService(
         val taskforge = taskForgeStore.settings.first()
         val weather = weatherStore.settings.first()
         val pending = permissions.pending.value?.permission
-        val calendars = calendarModule.calendars.value
+        val catalog = calendarModule.catalog.value
+        val calendars = catalog.calendars.takeIf { catalog.source == calendar.source }.orEmpty()
         return RemoteConfig(
             dashboard = DashboardConfig(
                 orientation = dashboard.orientation.name,
@@ -118,11 +119,16 @@ class RemoteSettingsService(
     suspend fun updateCalendar(value: CalendarUpdate) {
         val range = enumValue<CalendarRangeMode>(value.range)
         val source = enumValue<CalendarSourceMode>(value.source)
-        val available = calendarModule.calendars.value.map { it.id }.toSet()
-        require(value.selectedCalendarIds.all { it in available }) { "Unknown calendar" }
-        calendarStore.setRange(range)
-        calendarStore.setSource(source)
-        calendarStore.setSelectedCalendars(available, value.selectedCalendarIds)
+        val catalog = calendarModule.catalog.value
+        if (catalog.source == source) {
+            val available = catalog.calendars.map { it.id }.toSet()
+            require(value.selectedCalendarIds.all { it in available }) { "Unknown calendar" }
+            calendarStore.update(range, source, available, value.selectedCalendarIds)
+        } else {
+            // The browser changed the source while still rendering the previous
+            // source's ids. Preserve both selections and only switch the source.
+            calendarStore.update(range, source)
+        }
         calendarModule.refresh(RefreshReason.SETTINGS_CHANGED)
     }
 

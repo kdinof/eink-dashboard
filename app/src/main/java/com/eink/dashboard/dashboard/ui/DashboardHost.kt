@@ -1,6 +1,8 @@
 package com.eink.dashboard.dashboard.ui
 
+import android.content.res.Configuration
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,7 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,12 +22,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.eink.dashboard.core.time.TimeFormat
 import com.eink.dashboard.dashboard.DashboardViewModel
 import com.eink.dashboard.dashboard.Screen
 import com.eink.dashboard.dashboard.theme.EinkPalette
-import com.eink.dashboard.dashboard.theme.EinkSpacing
 import com.eink.dashboard.dashboard.theme.EinkTheme
 import com.eink.dashboard.diagnostics.ui.DiagnosticsScreen
 import com.eink.dashboard.settings.ui.SettingsScreen
@@ -35,10 +39,14 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import com.eink.dashboard.modules.calendar.READ_CALENDAR_PERMISSION
 import com.eink.dashboard.modules.weather.data.COARSE_LOCATION_PERMISSION
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 /**
- * Root of the single-Activity UI. Draws a static top bar (clock + destination
- * chips) and swaps the body by [Screen] with a plain `when` — no crossfade, no
+ * Root of the single-Activity UI. Draws the Swiss date/navigation header and
+ * swaps the body by [Screen] with a plain `when` — no crossfade, no
  * navigation animation, because any transition repaints the whole e-ink panel.
  */
 @Composable
@@ -48,6 +56,7 @@ fun DashboardHost(viewModel: DashboardViewModel, modifier: Modifier = Modifier) 
             var screen by remember { mutableStateOf(Screen.DASHBOARD) }
             val settings by viewModel.settings.collectAsStateWithLifecycle()
             val lastTick by viewModel.lastTick.collectAsStateWithLifecycle()
+            val isLandscape = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
             val pendingPermission by viewModel.permissions.pending.collectAsStateWithLifecycle()
             val calendarLauncher = rememberLauncherForActivityResult(
                 ActivityResultContracts.RequestPermission(),
@@ -74,19 +83,31 @@ fun DashboardHost(viewModel: DashboardViewModel, modifier: Modifier = Modifier) 
                 }
             }
 
-            Column(modifier = Modifier.fillMaxSize()) {
-                TopBar(
-                    clock = TimeFormat.clock(lastTick),
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 48.dp),
+            ) {
+                SwissHeader(
+                    epochMs = lastTick,
                     current = screen,
                     onSelect = { screen = it },
                 )
-                HairlineDivider()
+                HeavyDivider()
                 when (screen) {
-                    Screen.DASHBOARD -> DashboardScreen(
-                        registry = viewModel.registry,
-                        visibleModuleIds = settings.visibleAmong(viewModel.registry.ids),
-                        modifier = Modifier.fillMaxSize(),
-                    )
+                    Screen.DASHBOARD -> if (isLandscape) {
+                        SwissBoardScreen(
+                            registry = viewModel.registry,
+                            epochMs = lastTick,
+                            modifier = Modifier.fillMaxSize(),
+                        )
+                    } else {
+                        DashboardScreen(
+                            registry = viewModel.registry,
+                            visibleModuleIds = settings.visibleAmong(viewModel.registry.ids),
+                            modifier = Modifier.fillMaxSize(),
+                        )
+                    }
                     Screen.SETTINGS -> SettingsScreen(
                         settings = settings,
                         modules = viewModel.registry.all,
@@ -121,35 +142,76 @@ fun DashboardHost(viewModel: DashboardViewModel, modifier: Modifier = Modifier) 
 }
 
 @Composable
-private fun TopBar(clock: String, current: Screen, onSelect: (Screen) -> Unit) {
+private fun SwissHeader(epochMs: Long, current: Screen, onSelect: (Screen) -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = EinkSpacing.md, vertical = EinkSpacing.sm),
+            .height(72.dp)
+            .padding(bottom = 10.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
+        verticalAlignment = Alignment.Bottom,
     ) {
-        Text(text = clock, style = MaterialTheme.typography.headlineMedium)
-        Row(horizontalArrangement = Arrangement.spacedBy(EinkSpacing.sm)) {
-            NavChip("Board", current == Screen.DASHBOARD) { onSelect(Screen.DASHBOARD) }
-            NavChip("Settings", current == Screen.SETTINGS) { onSelect(Screen.SETTINGS) }
-            NavChip("Remote", current == Screen.REMOTE) { onSelect(Screen.REMOTE) }
-            NavChip("Diag", current == Screen.DIAGNOSTICS) { onSelect(Screen.DIAGNOSTICS) }
+        Text(
+            text = HEADER_DATE.format(Instant.ofEpochMilli(epochMs).atZone(ZoneId.systemDefault())).uppercase(Locale.ENGLISH),
+            color = EinkPalette.Ink,
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Bold,
+            letterSpacing = 1.6.sp,
+        )
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(24.dp),
+            verticalAlignment = Alignment.Bottom,
+        ) {
+            SwissNavItem("BOARD", current == Screen.DASHBOARD) { onSelect(Screen.DASHBOARD) }
+            SwissNavItem("SETTINGS", current == Screen.SETTINGS) { onSelect(Screen.SETTINGS) }
+            SwissNavItem("REMOTE", current == Screen.REMOTE) { onSelect(Screen.REMOTE) }
+            SwissNavItem("DIAG", current == Screen.DIAGNOSTICS) { onSelect(Screen.DIAGNOSTICS) }
         }
     }
 }
 
 @Composable
-private fun NavChip(label: String, selected: Boolean, onClick: () -> Unit) {
-    EinkChip(label = label, selected = selected, onClick = onClick)
+private fun SwissNavItem(label: String, selected: Boolean, onClick: () -> Unit) {
+    Column(
+        modifier = Modifier
+            .width(
+                when (label) {
+                    "BOARD" -> 52.dp
+                    "SETTINGS" -> 76.dp
+                    "REMOTE" -> 64.dp
+                    else -> 42.dp
+                },
+            )
+            .clickable(onClick = onClick),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(6.dp),
+    ) {
+        Text(
+            text = label,
+            color = if (selected) EinkPalette.Ink else EinkPalette.InkMuted,
+            fontSize = 12.5.sp,
+            fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium,
+            letterSpacing = 1.7.sp,
+        )
+        if (selected) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(2.dp)
+                    .background(EinkPalette.Ink),
+            )
+        }
+    }
 }
 
 @Composable
-private fun HairlineDivider() {
+private fun HeavyDivider() {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(EinkSpacing.hairline)
-            .background(EinkPalette.Line),
+            .height(3.dp)
+            .background(EinkPalette.Ink),
     )
 }
+
+private val HEADER_DATE = DateTimeFormatter.ofPattern("EEEE, d MMMM", Locale.ENGLISH)

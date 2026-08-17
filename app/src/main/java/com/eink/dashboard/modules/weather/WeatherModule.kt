@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.eink.dashboard.dashboard.DashboardModule
+import com.eink.dashboard.dashboard.DataWidgetRefreshPolicy
 import com.eink.dashboard.dashboard.ModuleState
 import com.eink.dashboard.dashboard.RefreshPolicy
 import com.eink.dashboard.dashboard.RefreshReason
@@ -19,7 +20,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
-import kotlin.time.Duration.Companion.minutes
 
 /**
  * Weather block (T05) over the official keyless Open-Meteo forecast API.
@@ -36,9 +36,9 @@ import kotlin.time.Duration.Companion.minutes
  * - live fetch fails but a cached snapshot exists → [ModuleState.Ok] with `isStale`;
  * - live fetch fails with nothing cached → [ModuleState.Error].
  *
- * The refresh policy is [RefreshPolicy.Periodic] at 30 minutes: weather never
+ * The refresh policy is [RefreshPolicy.Periodic] at 10 minutes: weather never
  * refreshes on the once-a-minute clock tick (T05: "do not refresh weather every
- * minute"), only on resume/manual/settings-change or every half hour in foreground.
+ * minute"), only on resume/manual/settings-change or every 10 minutes in foreground.
  */
 class WeatherModule(
     private val repo: WeatherRepository,
@@ -48,7 +48,7 @@ class WeatherModule(
 
     override val id: String = "weather"
     override val title: String = "Weather"
-    override val refreshPolicy: RefreshPolicy = RefreshPolicy.Periodic(30.minutes)
+    override val refreshPolicy: RefreshPolicy = DataWidgetRefreshPolicy
     override val hasSettings: Boolean = true
 
     private val _state = MutableStateFlow<ModuleState>(ModuleState.Loading)

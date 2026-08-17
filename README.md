@@ -5,8 +5,10 @@ It combines Google Calendar, Todoist, TaskForge/Obsidian tasks, weather, a minut
 in a grayscale interface designed for low refresh rates and minimal ghosting.
 
 Calendar, tasks and weather data are rendered and cached on the device. The app
-does not perform background refreshes while closed. While the Activity is visible,
-it serves an authenticated settings panel on the reader's current Wi-Fi address.
+refreshes all data widgets immediately on launch/resume and every 10 minutes while
+the Activity is visible; the clock keeps its minute cadence. It does not refresh
+while closed. While visible, it also serves an authenticated settings panel on the
+reader's current Wi-Fi address.
 
 ## Features
 

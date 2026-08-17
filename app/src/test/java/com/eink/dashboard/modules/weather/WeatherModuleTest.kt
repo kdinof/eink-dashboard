@@ -4,6 +4,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import com.eink.dashboard.dashboard.ModuleState
+import com.eink.dashboard.dashboard.DataWidgetRefreshPolicy
 import com.eink.dashboard.dashboard.RefreshPolicy
 import com.eink.dashboard.dashboard.RefreshReason
 import com.eink.dashboard.modules.weather.data.InMemoryWeatherCache
@@ -70,7 +71,7 @@ class WeatherModuleTest {
         val m = module(FakeWeatherApi(snapshot = snapshot(20.0, 1L)))
         assertThat(m.id).isEqualTo("weather")
         assertThat(m.title).isEqualTo("Weather")
-        assertThat(m.refreshPolicy).isInstanceOf(RefreshPolicy.Periodic::class.java)
+        assertThat(m.refreshPolicy).isEqualTo(DataWidgetRefreshPolicy)
         assertThat(m.isDemo).isFalse()
         assertThat(m.hasSettings).isTrue()
     }
@@ -81,7 +82,7 @@ class WeatherModuleTest {
         val m = module(FakeWeatherApi(snapshot = snapshot(20.0, 1L)))
         assertThat(m.refreshPolicy).isNotEqualTo(RefreshPolicy.EveryMinute)
         val periodic = m.refreshPolicy as RefreshPolicy.Periodic
-        assertThat(periodic.minInterval.inWholeMinutes).isAtLeast(2L)
+        assertThat(periodic.minInterval.inWholeMinutes).isEqualTo(10L)
     }
 
     @Test

@@ -95,8 +95,21 @@ class RefreshCoordinator(
         for (module in registry.all) {
             if (RefreshDecision.shouldRefresh(module.refreshPolicy, reason, lastRefresh[module.id], now)) {
                 lastRefresh[module.id] = now
-                scope.launch { onRefreshModule(module, reason) }
+                scope.launch {
+                    onRefreshModule(module, reason)
+                    // A failed load must not consume the whole periodic slot —
+                    // otherwise one bad refresh at app start (Wi-Fi not up yet,
+                    // expired OAuth token) leaves the module empty/stale for the
+                    // full interval. Forgetting the timestamp lets the next
+                    // minute tick retry. The guard keeps a newer pass's stamp.
+                    if (module.state.value.isFailedLoad && lastRefresh[module.id] == now) {
+                        lastRefresh.remove(module.id)
+                    }
+                }
             }
         }
     }
+
+    private val ModuleState.isFailedLoad: Boolean
+        get() = this is ModuleState.Error || (this is ModuleState.Ok && isStale)
 }
