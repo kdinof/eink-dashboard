@@ -53,8 +53,11 @@ class TaskForgeRepository(
     fun complete(settings: TaskForgeSettings, task: TaskForgeTask): TaskForgeFailure? {
         if (task.isRecurring) return TaskForgeFailure.RECURRING
         if (!task.canComplete) return TaskForgeFailure.CONFLICT
+        // The connected document already proved unwritable — don't bother the
+        // provider (some throw instead of failing gracefully on write opens).
+        if (!settings.canWrite) return TaskForgeFailure.READ_ONLY
         val uri = settings.fileUri ?: return TaskForgeFailure.NOT_CONFIGURED
-        return when (files.complete(uri, task.source)) {
+        return when (files.complete(uri, task.source, task.status.marker)) {
             FileCompletionResult.Done -> null
             FileCompletionResult.Conflict -> TaskForgeFailure.CONFLICT
             FileCompletionResult.ReadOnly -> TaskForgeFailure.READ_ONLY

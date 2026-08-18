@@ -159,6 +159,10 @@ dependencies {
     testImplementation(libs.androidx.test.core)
     testImplementation(libs.androidx.room.testing)
     testImplementation(libs.okhttp.mockwebserver)
+    // Compose UI tests run on the JVM through Robolectric (tap-target regressions
+    // on the e-ink board are exactly what a device can't cheaply catch in CI).
+    testImplementation(platform(libs.androidx.compose.bom))
+    testImplementation(libs.androidx.compose.ui.test.junit4)
 
     // --- Instrumented test stack ---
     androidTestImplementation(libs.androidx.test.ext.junit)

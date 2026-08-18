@@ -1,7 +1,6 @@
 package com.eink.dashboard.modules.taskforge.ui
 
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -41,7 +40,7 @@ fun TaskForgeSettingsSection(
     val settings by settingsStore.settings.collectAsStateWithLifecycle(initialValue = TaskForgeSettings.DEFAULT)
     val board by module.board.collectAsStateWithLifecycle()
     val lastRead by module.lastLocalRead.collectAsStateWithLifecycle()
-    val picker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+    val picker = rememberLauncherForActivityResult(OpenWritableDocument()) { uri ->
         uri?.let { scope.launch { module.connectFile(it) } }
     }
 

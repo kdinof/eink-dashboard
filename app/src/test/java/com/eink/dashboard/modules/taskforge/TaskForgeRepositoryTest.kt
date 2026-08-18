@@ -36,20 +36,50 @@ class TaskForgeRepositoryTest {
         assertThat(repo.complete(settings, recurring)).isEqualTo(TaskForgeFailure.RECURRING)
         assertThat(files.completeCalls).isEqualTo(1)
     }
+
+    @Test fun completesOpenNonTodoStatusesPassingTheirActualMarker() {
+        val files = FakeFiles()
+        val repo = TaskForgeRepository(files, FakeCache())
+        val inProgress = TaskForgeParser.parse("- [/] running".toByteArray()).single()
+        val deferred = TaskForgeParser.parse("- [>] later".toByteArray()).single()
+        val onHold = TaskForgeParser.parse("- [!] blocked".toByteArray()).single()
+
+        assertThat(repo.complete(settings, inProgress)).isNull()
+        assertThat(repo.complete(settings, deferred)).isNull()
+        assertThat(repo.complete(settings, onHold)).isNull()
+        assertThat(files.markers).containsExactly('/', '>', '!').inOrder()
+    }
+
+    @Test fun refusesDoneAndUnknownMarkers() {
+        val files = FakeFiles()
+        val repo = TaskForgeRepository(files, FakeCache())
+        val done = TaskForgeParser.parse("- [x] shipped".toByteArray()).single()
+        val unknown = TaskForgeParser.parse("- [?] custom".toByteArray()).single()
+
+        assertThat(repo.complete(settings, done)).isEqualTo(TaskForgeFailure.CONFLICT)
+        assertThat(repo.complete(settings, unknown)).isEqualTo(TaskForgeFailure.CONFLICT)
+        assertThat(files.completeCalls).isEqualTo(0)
+    }
 }
 
 private class FakeFiles : TaskForgeFileStore {
     var unavailable = false
     var completion: FileCompletionResult = FileCompletionResult.Done
     var completeCalls = 0
+    val markers = mutableListOf<Char>()
     override fun persist(uri: Uri) = PersistedTaskForgeFile(uri.toString(), "TaskForge.md", true)
     override fun release(uri: String) = Unit
     override fun read(uri: String): TaskForgeFile {
         if (unavailable) error("offline")
         return TaskForgeFile("- [ ] live".toByteArray(), "TaskForge.md", true)
     }
-    override fun complete(uri: String, source: com.eink.dashboard.modules.taskforge.model.TaskSourceRef): FileCompletionResult {
+    override fun complete(
+        uri: String,
+        source: com.eink.dashboard.modules.taskforge.model.TaskSourceRef,
+        expectedMarker: Char,
+    ): FileCompletionResult {
         completeCalls++
+        markers += expectedMarker
         return completion
     }
 }

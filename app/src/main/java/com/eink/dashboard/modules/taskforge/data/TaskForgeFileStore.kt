@@ -25,7 +25,13 @@ interface TaskForgeFileStore {
     fun persist(uri: Uri): PersistedTaskForgeFile
     fun release(uri: String)
     fun read(uri: String): TaskForgeFile
-    fun complete(uri: String, source: TaskSourceRef): FileCompletionResult
+
+    /**
+     * Flip the checkbox byte of the task at [source] to `x`. [expectedMarker] is
+     * the status character the caller last saw (`' '`, `'/'`, `'>'`, `'!'`); the
+     * write is refused as a conflict if the file no longer holds that byte.
+     */
+    fun complete(uri: String, source: TaskSourceRef, expectedMarker: Char): FileCompletionResult
 }
 
 /** SAF-backed access. Completion patches one ASCII status byte; it never truncates the document. */
@@ -64,12 +70,17 @@ class AndroidTaskForgeFileStore(context: Context) : TaskForgeFileStore {
         return TaskForgeFile(bytes, displayName(parsed) ?: "TaskForge.md", supportsWrite(parsed))
     }
 
-    override fun complete(uri: String, source: TaskSourceRef): FileCompletionResult {
+    override fun complete(uri: String, source: TaskSourceRef, expectedMarker: Char): FileCompletionResult {
         val descriptor = try {
             resolver.openFileDescriptor(Uri.parse(uri), "rw") ?: return FileCompletionResult.Unavailable
         } catch (_: SecurityException) {
             return FileCompletionResult.Unavailable
         } catch (_: FileNotFoundException) {
+            return FileCompletionResult.ReadOnly
+        } catch (_: RuntimeException) {
+            // Providers surface "will never open this for writing" as unchecked
+            // exceptions — e.g. MediaDocumentsProvider throws
+            // IllegalArgumentException("Media is read-only").
             return FileCompletionResult.ReadOnly
         }
         descriptor.use { pfd ->
@@ -86,7 +97,7 @@ class AndroidTaskForgeFileStore(context: Context) : TaskForgeFileStore {
                 if (read != current.size) return FileCompletionResult.Conflict
                 val offset = TaskForgeParser.resolveCheckboxOffset(current, source)
                     ?: return FileCompletionResult.Conflict
-                if (offset < 0 || offset >= current.size || current[offset.toInt()] != ' '.code.toByte()) {
+                if (offset < 0 || offset >= current.size || current[offset.toInt()] != expectedMarker.code.toByte()) {
                     return FileCompletionResult.Conflict
                 }
                 val written = Os.pwrite(pfd.fileDescriptor, byteArrayOf('x'.code.toByte()), 0, 1, offset)

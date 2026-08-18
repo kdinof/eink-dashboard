@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -70,6 +71,7 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.temporal.IsoFields
 import java.util.Locale
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 /**
@@ -99,6 +101,7 @@ fun InkBoardScreen(
     val calendarState = calendarModule?.state?.collectAsStateWithLifecycle()?.value
     val weatherState = weatherModule?.state?.collectAsStateWithLifecycle()?.value
     val taskForgeState = taskForgeModule?.state?.collectAsStateWithLifecycle()?.value
+    val taskNotice = taskForgeModule?.notice?.collectAsStateWithLifecycle()?.value
     val moduleStates = listOfNotNull(
         clockModule?.state?.collectAsStateWithLifecycle()?.value,
         batteryModule?.state?.collectAsStateWithLifecycle()?.value,
@@ -107,6 +110,15 @@ fun InkBoardScreen(
         taskForgeState,
     )
     val scope = rememberCoroutineScope()
+
+    // Completion feedback should not sit on the board forever: one repaint to
+    // show it, one to take it away once the user has had time to read it.
+    LaunchedEffect(taskNotice) {
+        if (taskNotice != null && taskForgeModule != null) {
+            delay(NOTICE_VISIBLE_MS)
+            taskForgeModule.clearNotice()
+        }
+    }
 
     InkBoard(
         epochMs = epochMs,
@@ -119,6 +131,7 @@ fun InkBoardScreen(
         tasks = board?.tasks.orEmpty(),
         totalTasks = board?.totalMatches ?: 0,
         taskForgeState = taskForgeState,
+        taskNotice = taskNotice,
         updatedEpochMs = moduleStates.mapNotNull { it.lastUpdatedEpochMs }.maxOrNull() ?: epochMs,
         onComplete = { task -> taskForgeModule?.let { scope.launch { it.complete(task) } } },
         modifier = modifier,
@@ -141,6 +154,7 @@ internal fun InkBoard(
     updatedEpochMs: Long,
     onComplete: (TaskForgeTask) -> Unit,
     modifier: Modifier = Modifier,
+    taskNotice: String? = null,
 ) {
     val now = Instant.ofEpochMilli(epochMs).atZone(ZoneId.systemDefault())
     val today = now.toLocalDate()
@@ -184,6 +198,7 @@ internal fun InkBoard(
                 total = totalTasks,
                 state = taskForgeState,
                 today = today,
+                notice = taskNotice,
                 onComplete = onComplete,
                 modifier = Modifier.weight(1f).fillMaxHeight(),
             )
@@ -429,13 +444,14 @@ private fun visibleAgendaDays(agendaDays: List<AgendaDay>, limit: Int = 6): List
 // ---------------------------------------------------------------------------
 
 @Composable
-private fun TasksCard(
+internal fun TasksCard(
     tasks: List<TaskForgeTask>,
     total: Int,
     state: ModuleState?,
     today: LocalDate,
+    notice: String?,
     onComplete: (TaskForgeTask) -> Unit,
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
 ) {
     val visible = tasks.take(7)
     InkCard(modifier = modifier) {
@@ -447,6 +463,13 @@ private fun TasksCard(
         Column(
             modifier = Modifier.fillMaxWidth().weight(1f).clipToBounds().padding(vertical = InkSpace.s1),
         ) {
+            notice?.let {
+                InkEyebrow(
+                    text = it,
+                    color = InkColors.Ink,
+                    modifier = Modifier.padding(horizontal = InkSpace.s3, vertical = InkSpace.s1),
+                )
+            }
             if (visible.isEmpty()) {
                 InkEmpty(
                     title = if (state is ModuleState.Error) "TaskForge unavailable" else "No matching tasks",
@@ -518,3 +541,5 @@ private val WEEKDAY = DateTimeFormatter.ofPattern("EEEE", Locale.ENGLISH)
 private val AGENDA_DAY = DateTimeFormatter.ofPattern("EEE, d MMM", Locale.ENGLISH)
 private val HOUR_MIN = DateTimeFormatter.ofPattern("HH:mm", Locale.ENGLISH)
 private val TASK_DATE = DateTimeFormatter.ofPattern("d MMM", Locale.ENGLISH)
+
+private const val NOTICE_VISIBLE_MS = 10_000L

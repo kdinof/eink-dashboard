@@ -331,15 +331,22 @@ fun InkTaskRow(
     leading: (@Composable () -> Unit)? = null,
     onCheck: (() -> Unit)? = null,
 ) {
+    // The whole row is the tap target: a bare controlXs checkbox cannot be hit
+    // reliably on the e-ink touch layer. The board doesn't scroll, so a row tap
+    // is always a deliberate completion gesture.
+    val tappable = onCheck != null && enabled
     Row(
-        modifier = modifier.fillMaxWidth().heightIn(min = InkSize.controlMd),
+        modifier = modifier
+            .fillMaxWidth()
+            .then(if (tappable) Modifier.clickable(role = Role.Checkbox, onClick = onCheck!!) else Modifier)
+            .heightIn(min = InkSize.controlMd),
         horizontalArrangement = Arrangement.spacedBy(InkSpace.s3),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         if (leading != null) {
             leading()
         } else {
-            InkCheckbox(checked = checked, enabled = enabled && onCheck != null, onClick = onCheck)
+            InkCheckbox(checked = checked, enabled = tappable)
         }
         Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(InkSpace.half)) {
             Text(

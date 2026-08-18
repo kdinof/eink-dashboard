@@ -61,14 +61,24 @@ class TaskForgeModule(
         }
     }
 
-    suspend fun connectFile(uri: Uri): String? = withContext(Dispatchers.IO) {
-        runCatching {
-            val connected = repository.connect(uri)
-            settingsStore.setFile(connected.uri, connected.name, connected.canWrite)
-        }.exceptionOrNull()?.message
-    }.also { error ->
-        _notice.value = error?.let { "Couldn't open Markdown file" }
+    suspend fun connectFile(uri: Uri): String? {
+        val result = withContext(Dispatchers.IO) {
+            runCatching {
+                val connected = repository.connect(uri)
+                settingsStore.setFile(connected.uri, connected.name, connected.canWrite)
+                connected
+            }
+        }
+        val error = result.exceptionOrNull()?.message
+        _notice.value = when {
+            error != null -> "Couldn't open Markdown file"
+            // Warn at pick time, not at the first tap: a media-provider pick
+            // can never be completed back into the file.
+            result.getOrNull()?.canWrite == false -> "Connected read-only — re-pick it via Internal storage"
+            else -> null
+        }
         if (error == null) refresh(RefreshReason.SETTINGS_CHANGED)
+        return error
     }
 
     suspend fun disconnectFile() {
@@ -100,7 +110,7 @@ class TaskForgeModule(
         TaskForgeFailure.NOT_CONFIGURED -> "Choose TaskForge.md in Settings"
         TaskForgeFailure.UNAVAILABLE -> "Local Markdown file is unavailable"
         TaskForgeFailure.CONFLICT -> "Task changed elsewhere — list refreshed"
-        TaskForgeFailure.READ_ONLY -> "File is read-only — complete it in TaskForge"
+        TaskForgeFailure.READ_ONLY -> "Read-only file — re-pick it in Settings via Internal storage"
         TaskForgeFailure.RECURRING -> "Complete recurring tasks in TaskForge"
     }
 

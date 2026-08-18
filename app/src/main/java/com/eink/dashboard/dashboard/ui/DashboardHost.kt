@@ -57,7 +57,7 @@ fun DashboardHost(viewModel: DashboardViewModel, modifier: Modifier = Modifier) 
                 ActivityResultContracts.RequestPermission(),
             ) { viewModel.permissions.pending.value?.let { viewModel.completeRemotePermission(it.id, it.permission) } }
             val taskForgeFileLauncher = rememberLauncherForActivityResult(
-                ActivityResultContracts.OpenDocument(),
+                com.eink.dashboard.modules.taskforge.ui.OpenWritableDocument(),
             ) { uri ->
                 viewModel.permissions.pending.value?.let {
                     viewModel.completeTaskForgeFileSelection(it.id, uri)

@@ -47,7 +47,14 @@ data class TaskForgeTask(
     val source: TaskSourceRef,
 ) {
     val isRecurring: Boolean get() = recurrence != null
-    val canComplete: Boolean get() = status == TaskForgeStatus.TODO && !isRecurring
+
+    /**
+     * Completable from the dashboard: any open status whose checkbox marker we
+     * know exactly (so the write can verify the byte before flipping it).
+     * [TaskForgeStatus.OTHER] is excluded — its marker is a placeholder, not
+     * the actual character in the file.
+     */
+    val canComplete: Boolean get() = status.isOpen && status != TaskForgeStatus.OTHER && !isRecurring
 }
 
 data class TaskForgeBoard(
