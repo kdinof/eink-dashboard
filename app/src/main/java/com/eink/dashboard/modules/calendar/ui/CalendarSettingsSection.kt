@@ -4,24 +4,31 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.eink.dashboard.dashboard.RefreshReason
-import com.eink.dashboard.dashboard.theme.EinkPalette
-import com.eink.dashboard.dashboard.theme.EinkSpacing
-import com.eink.dashboard.dashboard.ui.EinkChip
-import com.eink.dashboard.dashboard.ui.EinkToggleRow
 import com.eink.dashboard.modules.calendar.CalendarModule
 import com.eink.dashboard.modules.calendar.CalendarSettingsStore
 import com.eink.dashboard.modules.calendar.READ_CALENDAR_PERMISSION
 import com.eink.dashboard.modules.calendar.CalendarSourceMode
 import com.eink.dashboard.modules.calendar.model.CalendarRangeMode
+import com.eink.dashboard.ui.ink.InkAlert
+import com.eink.dashboard.ui.ink.InkButton
+import com.eink.dashboard.ui.ink.InkButtonSize
+import com.eink.dashboard.ui.ink.InkButtonVariant
+import com.eink.dashboard.ui.ink.InkColors
+import com.eink.dashboard.ui.ink.InkDivider
+import com.eink.dashboard.ui.ink.InkHint
+import com.eink.dashboard.ui.ink.InkIcons
+import com.eink.dashboard.ui.ink.InkLabel
+import com.eink.dashboard.ui.ink.InkSegmented
+import com.eink.dashboard.ui.ink.InkSpace
+import com.eink.dashboard.ui.ink.InkSwitchRow
+import com.eink.dashboard.ui.ink.InkType
 import kotlinx.coroutines.launch
 import androidx.compose.runtime.rememberCoroutineScope
 
@@ -60,86 +67,83 @@ fun CalendarSettingsSection(
 
     Column(
         modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(EinkSpacing.sm),
+        verticalArrangement = Arrangement.spacedBy(InkSpace.s3),
     ) {
-        Text(text = "Source", style = MaterialTheme.typography.titleMedium)
-        Row(horizontalArrangement = Arrangement.spacedBy(EinkSpacing.sm)) {
-            CalendarSourceMode.entries.forEach { source ->
-                EinkChip(
-                    label = if (source == CalendarSourceMode.GOOGLE) "Google API" else "Reader",
-                    selected = settings.source == source,
-                    onClick = {
-                        scope.launch {
-                            settingsStore.setSource(source)
-                            module.refresh(RefreshReason.SETTINGS_CHANGED)
-                        }
-                    },
-                )
-            }
-            EinkChip(
-                label = "Refresh calendars",
-                selected = false,
-                onClick = { scope.launch { module.refresh(RefreshReason.SETTINGS_CHANGED) } },
-            )
-        }
-        Text(
-            text = if (module.googleConnected) "Google Calendar connected. Manage OAuth from Remote setup."
+        InkLabel("Source")
+        InkSegmented(
+            options = CalendarSourceMode.entries,
+            selected = settings.source,
+            onSelect = { source ->
+                scope.launch {
+                    settingsStore.setSource(source)
+                    module.refresh(RefreshReason.SETTINGS_CHANGED)
+                }
+            },
+            label = { if (it == CalendarSourceMode.GOOGLE) "Google API" else "Reader" },
+            block = true,
+        )
+        InkHint(
+            if (module.googleConnected) "Google Calendar connected. Manage OAuth from Remote setup."
             else "Connect Google Calendar from the phone web panel.",
-            style = MaterialTheme.typography.labelMedium,
-            color = EinkPalette.InkMuted,
         )
 
         if (settings.source == CalendarSourceMode.DEVICE && !granted) {
-            Text(
-                text = "Calendar access is not granted.",
-                style = MaterialTheme.typography.bodyMedium,
-                color = EinkPalette.InkMuted,
+            InkAlert(
+                title = "Calendar access is not granted",
+                text = "The reader needs permission to read its calendar accounts.",
+                icon = InkIcons.Lock,
+                outline = true,
             )
-            EinkChip(
-                label = "Grant calendar access",
-                selected = false,
+            InkButton(
+                text = "Grant calendar access",
+                icon = InkIcons.Lock,
                 onClick = { permissionLauncher.launch(READ_CALENDAR_PERMISSION) },
             )
             return@Column
         }
 
-        Text(text = "Range", style = MaterialTheme.typography.titleMedium)
-        Row(horizontalArrangement = Arrangement.spacedBy(EinkSpacing.sm)) {
-            CalendarRangeMode.entries.forEach { mode ->
-                EinkChip(
-                    label = mode.label(),
-                    selected = settings.range == mode,
-                    onClick = {
-                        scope.launch {
-                            settingsStore.setRange(mode)
-                            module.refresh(RefreshReason.SETTINGS_CHANGED)
-                        }
-                    },
-                )
-            }
-        }
+        InkLabel("Range")
+        InkSegmented(
+            options = CalendarRangeMode.entries,
+            selected = settings.range,
+            onSelect = { mode ->
+                scope.launch {
+                    settingsStore.setRange(mode)
+                    module.refresh(RefreshReason.SETTINGS_CHANGED)
+                }
+            },
+            label = { it.label() },
+            block = true,
+        )
 
-        Text(text = "Calendars", style = MaterialTheme.typography.titleMedium)
+        InkLabel("Calendars", meta = if (calendars.isEmpty()) null else "${calendars.count { settings.isSelected(it.id) }} selected")
         if (calendars.isEmpty()) {
-            Text(
-                text = "No calendars found on this device.",
-                style = MaterialTheme.typography.bodyMedium,
-                color = EinkPalette.InkMuted,
-            )
+            Text(text = "No calendars found on this device.", style = InkType.small, color = InkColors.Ink3)
         } else {
-            calendars.forEach { calendar ->
-                EinkToggleRow(
-                    label = calendar.displayName.ifBlank { calendar.accountName },
-                    checked = settings.isSelected(calendar.id),
-                    onToggle = { selected ->
-                        scope.launch {
-                            settingsStore.setCalendarSelected(settings.source, calendar.id, selected)
-                            module.refresh(RefreshReason.SETTINGS_CHANGED)
-                        }
-                    },
-                )
+            Column {
+                calendars.forEachIndexed { index, calendar ->
+                    if (index > 0) InkDivider(color = InkColors.Ink4)
+                    InkSwitchRow(
+                        label = calendar.displayName.ifBlank { calendar.accountName },
+                        sub = calendar.accountName.takeIf { calendar.displayName.isNotBlank() && it != calendar.displayName },
+                        checked = settings.isSelected(calendar.id),
+                        onToggle = { selected ->
+                            scope.launch {
+                                settingsStore.setCalendarSelected(settings.source, calendar.id, selected)
+                                module.refresh(RefreshReason.SETTINGS_CHANGED)
+                            }
+                        },
+                    )
+                }
             }
         }
+        InkButton(
+            text = "Refresh calendars",
+            icon = InkIcons.Refresh,
+            variant = InkButtonVariant.Outline,
+            size = InkButtonSize.Sm,
+            onClick = { scope.launch { module.refresh(RefreshReason.SETTINGS_CHANGED) } },
+        )
     }
 }
 

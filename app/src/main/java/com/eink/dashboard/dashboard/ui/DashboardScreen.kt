@@ -12,19 +12,17 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.unit.dp
 import com.eink.dashboard.dashboard.DashboardLayoutSpec
 import com.eink.dashboard.dashboard.DashboardLayoutSpec.Orientation
 import com.eink.dashboard.dashboard.DashboardModule
 import com.eink.dashboard.dashboard.DashboardModuleRegistry
-import com.eink.dashboard.dashboard.theme.EinkPalette
-import com.eink.dashboard.dashboard.theme.EinkSpacing
+import com.eink.dashboard.ui.ink.InkEmpty
+import com.eink.dashboard.ui.ink.InkIcons
+import com.eink.dashboard.ui.ink.InkSpace
 
 /**
  * The dashboard grid. Blocks are placed by the pure [DashboardLayoutSpec] — one
@@ -73,12 +71,12 @@ private fun UpdatedLandscapeDashboard(
     modifier: Modifier,
 ) {
     Column(
-        modifier = modifier.fillMaxSize().padding(EinkSpacing.md),
-        verticalArrangement = Arrangement.spacedBy(EinkSpacing.md),
+        modifier = modifier.fillMaxSize().padding(bottom = InkSpace.s6),
+        verticalArrangement = Arrangement.spacedBy(InkSpace.s5),
     ) {
         Row(
             modifier = Modifier.fillMaxWidth().weight(310f),
-            horizontalArrangement = Arrangement.spacedBy(EinkSpacing.md),
+            horizontalArrangement = Arrangement.spacedBy(InkSpace.s5),
         ) {
             Row(modifier = Modifier.weight(1f).fillMaxHeight()) {
                 plan.topLeft.forEach { id ->
@@ -97,7 +95,7 @@ private fun UpdatedLandscapeDashboard(
         }
         Row(
             modifier = Modifier.fillMaxWidth().weight(499f),
-            horizontalArrangement = Arrangement.spacedBy(EinkSpacing.md),
+            horizontalArrangement = Arrangement.spacedBy(InkSpace.s5),
         ) {
             DashboardRegion(
                 module = plan.bottomLeft?.let(registry::byId),
@@ -132,13 +130,13 @@ private fun GenericDashboard(
         modifier = modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .padding(EinkSpacing.md),
-        verticalArrangement = Arrangement.spacedBy(EinkSpacing.md),
+            .padding(bottom = InkSpace.s6),
+        verticalArrangement = Arrangement.spacedBy(InkSpace.s5),
     ) {
         (0 until layout.rows).forEach { row ->
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(EinkSpacing.md),
+                horizontalArrangement = Arrangement.spacedBy(InkSpace.s5),
             ) {
                 (0 until layout.columns).forEach { col ->
                     val slot = layout.slots.firstOrNull { it.row == row && it.column == col }
@@ -152,20 +150,11 @@ private fun GenericDashboard(
 
 @Composable
 private fun EmptyDashboard(modifier: Modifier) {
-    Column(
-        modifier = modifier.fillMaxSize().padding(EinkSpacing.xl),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Text(
-            text = "No modules enabled",
-            style = MaterialTheme.typography.titleLarge,
-        )
-        Text(
-            text = "Enable blocks in Settings.",
-            style = MaterialTheme.typography.bodyMedium,
-            color = EinkPalette.InkMuted,
-            modifier = Modifier.padding(top = 8.dp),
+    Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        InkEmpty(
+            title = "No blocks enabled",
+            icon = InkIcons.Grid,
+            hint = "Turn blocks on in Settings to fill the board.",
         )
     }
 }

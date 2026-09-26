@@ -2,18 +2,10 @@ package com.eink.dashboard.modules.weather.ui
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -21,19 +13,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.eink.dashboard.dashboard.RefreshReason
-import com.eink.dashboard.dashboard.theme.EinkPalette
-import com.eink.dashboard.dashboard.theme.EinkSpacing
-import com.eink.dashboard.dashboard.ui.EinkChip
 import com.eink.dashboard.modules.weather.LocationMode
 import com.eink.dashboard.modules.weather.WeatherModule
 import com.eink.dashboard.modules.weather.WeatherSettings
 import com.eink.dashboard.modules.weather.WeatherSettingsStore
 import com.eink.dashboard.modules.weather.data.COARSE_LOCATION_PERMISSION
+import com.eink.dashboard.ui.ink.InkButton
+import com.eink.dashboard.ui.ink.InkError
+import com.eink.dashboard.ui.ink.InkHint
+import com.eink.dashboard.ui.ink.InkIcons
+import com.eink.dashboard.ui.ink.InkLabel
+import com.eink.dashboard.ui.ink.InkSegmented
+import com.eink.dashboard.ui.ink.InkSpace
+import com.eink.dashboard.ui.ink.InkTextField
 import kotlinx.coroutines.launch
 
 /**
@@ -67,38 +62,32 @@ fun WeatherSettingsSection(
 
     Column(
         modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(EinkSpacing.sm),
+        verticalArrangement = Arrangement.spacedBy(InkSpace.s3),
     ) {
-        Text(text = "Location", style = MaterialTheme.typography.titleMedium)
-        Row(horizontalArrangement = Arrangement.spacedBy(EinkSpacing.sm)) {
-            LocationMode.entries.forEach { mode ->
-                EinkChip(
-                    label = mode.label(),
-                    selected = settings.locationMode == mode,
-                    onClick = {
-                        if (mode == LocationMode.DEVICE) {
-                            // Opt-in: ask for the coarse permission, then wire it up in the callback.
-                            permissionLauncher.launch(COARSE_LOCATION_PERMISSION)
-                        } else {
-                            scope.launch {
-                                settingsStore.setLocationMode(mode)
-                                module.refresh(RefreshReason.SETTINGS_CHANGED)
-                            }
-                        }
-                    },
-                )
-            }
-        }
+        InkLabel("Location")
+        InkSegmented(
+            options = LocationMode.entries,
+            selected = settings.locationMode,
+            onSelect = { mode ->
+                if (mode == LocationMode.DEVICE) {
+                    // Opt-in: ask for the coarse permission, then wire it up in the callback.
+                    permissionLauncher.launch(COARSE_LOCATION_PERMISSION)
+                } else {
+                    scope.launch {
+                        settingsStore.setLocationMode(mode)
+                        module.refresh(RefreshReason.SETTINGS_CHANGED)
+                    }
+                }
+            },
+            label = { it.label() },
+            block = true,
+        )
 
         if (settings.locationMode == LocationMode.FIXED) {
             FixedLocationEditor(settings = settings, settingsStore = settingsStore, module = module)
         }
 
-        Text(
-            text = "Tashkent works with no permission. Device location is opt-in and reads only a last-known fix.",
-            style = MaterialTheme.typography.labelMedium,
-            color = EinkPalette.InkMuted,
-        )
+        InkHint("Tashkent works with no permission. Device location is opt-in and reads only a last-known fix.")
     }
 }
 
@@ -114,28 +103,28 @@ private fun FixedLocationEditor(
     var label by remember { mutableStateOf(settings.fixedLabel) }
     var status by remember { mutableStateOf<String?>(null) }
 
-    Column(verticalArrangement = Arrangement.spacedBy(EinkSpacing.xs)) {
-        CoordinateField(value = label, onChange = { label = it }, hint = "Label", keyboard = KeyboardType.Text)
-        Row(horizontalArrangement = Arrangement.spacedBy(EinkSpacing.sm)) {
-            CoordinateField(
-                value = lat, onChange = { lat = it; status = null }, hint = "Latitude",
-                keyboard = KeyboardType.Number, modifier = Modifier.weight(1f),
+    Column(verticalArrangement = Arrangement.spacedBy(InkSpace.s3)) {
+        InkTextField(value = label, onValueChange = { label = it }, label = "Label")
+        Row(horizontalArrangement = Arrangement.spacedBy(InkSpace.s3)) {
+            InkTextField(
+                value = lat, onValueChange = { lat = it; status = null }, label = "Latitude",
+                keyboardType = KeyboardType.Number, modifier = Modifier.weight(1f),
             )
-            CoordinateField(
-                value = lon, onChange = { lon = it; status = null }, hint = "Longitude",
-                keyboard = KeyboardType.Number, modifier = Modifier.weight(1f),
+            InkTextField(
+                value = lon, onValueChange = { lon = it; status = null }, label = "Longitude",
+                keyboardType = KeyboardType.Number, modifier = Modifier.weight(1f),
             )
         }
-        EinkChip(
-            label = "Save location",
-            selected = false,
+        InkButton(
+            text = "Save location",
+            icon = InkIcons.Pin,
             onClick = {
                 val latValue = lat.trim().toDoubleOrNull()
                 val lonValue = lon.trim().toDoubleOrNull()
                 if (latValue == null || lonValue == null ||
                     latValue !in -90.0..90.0 || lonValue !in -180.0..180.0
                 ) {
-                    status = "Enter a valid lat (-90..90) and long (-180..180)"
+                    status = INVALID_COORDINATES
                 } else {
                     scope.launch {
                         settingsStore.setFixedLocation(latValue, lonValue, label.trim())
@@ -145,36 +134,11 @@ private fun FixedLocationEditor(
                 }
             },
         )
-        status?.let {
-            Text(text = it, style = MaterialTheme.typography.labelMedium, color = EinkPalette.InkMuted)
-        }
+        status?.let { if (it == INVALID_COORDINATES) InkError(it) else InkHint(it) }
     }
 }
 
-@Composable
-private fun CoordinateField(
-    value: String,
-    onChange: (String) -> Unit,
-    hint: String,
-    keyboard: KeyboardType,
-    modifier: Modifier = Modifier,
-) {
-    Column(modifier = modifier) {
-        Text(text = hint, style = MaterialTheme.typography.labelMedium, color = EinkPalette.InkMuted)
-        BasicTextField(
-            value = value,
-            onValueChange = onChange,
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(keyboardType = keyboard),
-            textStyle = TextStyle(color = EinkPalette.Ink),
-            modifier = Modifier
-                .fillMaxWidth()
-                .border(EinkSpacing.hairline, EinkPalette.Line, RoundedCornerShape(4.dp))
-                .background(EinkPalette.Paper, RoundedCornerShape(4.dp))
-                .padding(horizontal = EinkSpacing.sm, vertical = EinkSpacing.sm),
-        )
-    }
-}
+private const val INVALID_COORDINATES = "Enter a valid lat (-90..90) and long (-180..180)"
 
 private fun LocationMode.label(): String = when (this) {
     LocationMode.PRESET_TASHKENT -> "Tashkent"

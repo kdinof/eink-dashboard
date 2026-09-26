@@ -4,12 +4,20 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>E-Ink Dashboard settings</title>
+  <!-- ink.css + icons.svg are copied from ui-kit/ (node ui-kit/scripts/build.mjs → dist/ink.bundle.css). -->
+  <link rel="stylesheet" href="/ink.css">
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-  <header><div><p class="eyebrow">MEBOOK M103</p><h1>E‑Ink Dashboard</h1></div><span id="connection">Local setup</span></header>
-  <main id="app"><p>Connecting…</p></main>
-  <div id="toast" role="status" aria-live="polite"></div>
+  <main class="ink-page ink-page--bare">
+    <header class="ink-page-header">
+      <p class="ink-page-header__eyebrow">MEEBOOK M103</p>
+      <h1 class="ink-page-header__title">E‑Ink Dashboard</h1>
+      <div class="ink-page-header__action"><span class="ink-badge ink-badge--outline" id="connection">Local setup</span></div>
+    </header>
+    <div id="app" class="ink-stack"><div class="ink-loading" role="status">Connecting<span class="ink-loading__dots"><i></i><i></i><i></i></span></div></div>
+  </main>
+  <div id="toast" class="ink-toast" role="status" aria-live="polite"></div>
   <script type="module" src="/app.js"></script>
 </body>
 </html>

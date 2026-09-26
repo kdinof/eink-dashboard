@@ -6,20 +6,26 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.eink.dashboard.dashboard.theme.EinkPalette
-import com.eink.dashboard.dashboard.theme.EinkSpacing
-import com.eink.dashboard.dashboard.ui.EinkChip
 import com.eink.dashboard.modules.taskforge.TaskForgeModule
 import com.eink.dashboard.modules.taskforge.TaskForgeSettings
 import com.eink.dashboard.modules.taskforge.TaskForgeSettingsStore
 import com.eink.dashboard.modules.taskforge.model.TaskForgeView
+import com.eink.dashboard.ui.ink.InkButton
+import com.eink.dashboard.ui.ink.InkButtonVariant
+import com.eink.dashboard.ui.ink.InkChip
+import com.eink.dashboard.ui.ink.InkChips
+import com.eink.dashboard.ui.ink.InkHint
+import com.eink.dashboard.ui.ink.InkIcons
+import com.eink.dashboard.ui.ink.InkLabel
+import com.eink.dashboard.ui.ink.InkMenu
+import com.eink.dashboard.ui.ink.InkMenuItem
+import com.eink.dashboard.ui.ink.InkSegmented
+import com.eink.dashboard.ui.ink.InkSpace
 import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.ZoneId
@@ -39,58 +45,60 @@ fun TaskForgeSettingsSection(
         uri?.let { scope.launch { module.connectFile(it) } }
     }
 
-    Column(modifier = modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(EinkSpacing.sm)) {
-        Text(
-            text = settings.fileName?.let { "$it · ${if (settings.canWrite) "read/write" else "read-only"}" }
-                ?: "No Markdown file selected",
-            style = MaterialTheme.typography.bodyMedium,
-            color = EinkPalette.InkMuted,
-        )
-        lastRead?.let {
-            Text("Local file updated ${LOCAL_TIME.format(Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault()))}", style = MaterialTheme.typography.labelMedium, color = EinkPalette.Faint)
+    Column(modifier = modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(InkSpace.s3)) {
+        InkMenu {
+            InkMenuItem(
+                label = settings.fileName ?: "No Markdown file selected",
+                icon = InkIcons.Note,
+                value = if (settings.fileName == null) null else if (settings.canWrite) "read/write" else "read-only",
+                divider = false,
+            )
         }
-        Row(horizontalArrangement = Arrangement.spacedBy(EinkSpacing.sm)) {
-            EinkChip(
-                label = if (settings.fileUri == null) "Choose TaskForge.md" else "Change file",
-                selected = false,
+        lastRead?.let {
+            InkHint("Local file updated ${LOCAL_TIME.format(Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault()))}")
+        }
+        Row(horizontalArrangement = Arrangement.spacedBy(InkSpace.s2)) {
+            InkButton(
+                text = if (settings.fileUri == null) "Choose TaskForge.md" else "Change file",
+                icon = InkIcons.Upload,
                 onClick = { picker.launch(arrayOf("text/markdown", "text/plain", "application/octet-stream")) },
             )
             if (settings.fileUri != null) {
-                EinkChip("Disconnect", false, onClick = { scope.launch { module.disconnectFile() } })
+                InkButton(
+                    text = "Disconnect",
+                    icon = InkIcons.Close,
+                    variant = InkButtonVariant.Outline,
+                    onClick = { scope.launch { module.disconnectFile() } },
+                )
             }
         }
 
-        Text("View", style = MaterialTheme.typography.titleMedium)
-        TaskForgeView.entries.chunked(2).forEach { row ->
-            Row(horizontalArrangement = Arrangement.spacedBy(EinkSpacing.sm)) {
-                row.forEach { view ->
-                    EinkChip(view.label(), settings.view == view, onClick = {
-                        scope.launch { module.updateFilter(view, settings.selectedTags, settings.limit) }
-                    })
-                }
-            }
-        }
-
-        Text("Task limit", style = MaterialTheme.typography.titleMedium)
-        Row(horizontalArrangement = Arrangement.spacedBy(EinkSpacing.sm)) {
-            TaskForgeSettings.ALLOWED_LIMITS.sorted().forEach { limit ->
-                EinkChip(limit.toString(), settings.limit == limit, onClick = {
-                    scope.launch { module.updateFilter(settings.view, settings.selectedTags, limit) }
+        InkLabel("View")
+        InkChips {
+            TaskForgeView.entries.forEach { view ->
+                InkChip(view.label(), settings.view == view, outline = true, onClick = {
+                    scope.launch { module.updateFilter(view, settings.selectedTags, settings.limit) }
                 })
             }
         }
 
+        InkLabel("Task limit")
+        InkSegmented(
+            options = TaskForgeSettings.ALLOWED_LIMITS.sorted(),
+            selected = settings.limit,
+            onSelect = { limit -> scope.launch { module.updateFilter(settings.view, settings.selectedTags, limit) } },
+            label = { it.toString() },
+        )
+
         val tags = board?.availableTags.orEmpty().sorted()
         if (tags.isNotEmpty()) {
-            Text("Tags (match any)", style = MaterialTheme.typography.titleMedium)
-            tags.chunked(3).forEach { row ->
-                Row(horizontalArrangement = Arrangement.spacedBy(EinkSpacing.xs)) {
-                    row.forEach { tag ->
-                        EinkChip("#$tag", tag in settings.selectedTags, onClick = {
-                            val updated = if (tag in settings.selectedTags) settings.selectedTags - tag else settings.selectedTags + tag
-                            scope.launch { module.updateFilter(settings.view, updated, settings.limit) }
-                        })
-                    }
+            InkLabel("Tags", meta = "match any")
+            InkChips {
+                tags.forEach { tag ->
+                    InkChip("#$tag", tag in settings.selectedTags, outline = true, onClick = {
+                        val updated = if (tag in settings.selectedTags) settings.selectedTags - tag else settings.selectedTags + tag
+                        scope.launch { module.updateFilter(settings.view, updated, settings.limit) }
+                    })
                 }
             }
         }

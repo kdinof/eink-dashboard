@@ -2,26 +2,13 @@ package com.eink.dashboard.modules.battery
 
 import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.eink.dashboard.core.time.SystemTimeSource
 import com.eink.dashboard.core.time.TimeSource
@@ -30,11 +17,15 @@ import com.eink.dashboard.dashboard.DataWidgetRefreshPolicy
 import com.eink.dashboard.dashboard.ModuleState
 import com.eink.dashboard.dashboard.RefreshPolicy
 import com.eink.dashboard.dashboard.RefreshReason
-import com.eink.dashboard.dashboard.theme.EinkPalette
-import com.eink.dashboard.dashboard.theme.EinkSpacing
 import com.eink.dashboard.modules.battery.data.AndroidBatterySource
 import com.eink.dashboard.modules.battery.data.BatterySource
 import com.eink.dashboard.modules.battery.data.BatteryStatus
+import com.eink.dashboard.ui.ink.InkBadge
+import com.eink.dashboard.ui.ink.InkEyebrow
+import com.eink.dashboard.ui.ink.InkIcons
+import com.eink.dashboard.ui.ink.InkMeter
+import com.eink.dashboard.ui.ink.InkSpace
+import com.eink.dashboard.ui.ink.InkType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -77,48 +68,17 @@ class BatteryModule(
     override fun Content(modifier: Modifier) {
         val reading by status.collectAsStateWithLifecycle()
         Row(
-            modifier = modifier.fillMaxWidth().padding(vertical = EinkSpacing.sm),
+            modifier = modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(EinkSpacing.md),
+            horizontalArrangement = Arrangement.spacedBy(InkSpace.s4),
         ) {
-            BatteryGauge(percent = reading?.percent ?: 0)
-            Text(
-                text = reading?.let { "${it.percent}%" } ?: "—",
-                style = MaterialTheme.typography.displaySmall,
-                color = EinkPalette.Ink,
-            )
-            Text(
-                text = reading?.let { if (it.charging) "CHARGING" else "BATTERY" } ?: "",
-                style = MaterialTheme.typography.labelMedium,
-                color = EinkPalette.InkMuted,
-            )
-        }
-    }
-
-    @Composable
-    private fun BatteryGauge(percent: Int) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Box(
-                modifier = Modifier
-                    .width(54.dp)
-                    .height(28.dp)
-                    .border(EinkSpacing.hairline, EinkPalette.Ink, RoundedCornerShape(3.dp))
-                    .padding(3.dp),
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .fillMaxWidth(percent.coerceIn(0, 100) / 100f)
-                        .clip(RoundedCornerShape(1.dp))
-                        .background(EinkPalette.Ink),
-                )
+            InkMeter(percent = reading?.percent, label = null, large = true)
+            Text(text = reading?.let { "${it.percent}%" } ?: "—", style = InkType.big)
+            if (reading?.charging == true) {
+                InkBadge("Charging", icon = InkIcons.BatteryCharging)
+            } else if (reading != null) {
+                InkEyebrow("On battery")
             }
-            Spacer(Modifier.width(2.dp))
-            Box(
-                modifier = Modifier
-                    .size(width = 3.dp, height = 10.dp)
-                    .background(EinkPalette.Ink),
-            )
         }
     }
 

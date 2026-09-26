@@ -1,16 +1,9 @@
 package com.eink.dashboard.modules.todoist.ui
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -18,16 +11,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.eink.dashboard.dashboard.theme.EinkPalette
-import com.eink.dashboard.dashboard.theme.EinkSpacing
-import com.eink.dashboard.dashboard.ui.EinkChip
 import com.eink.dashboard.modules.todoist.TodoistModule
 import com.eink.dashboard.modules.todoist.TodoistSettingsStore
 import com.eink.dashboard.modules.todoist.model.TodoistView
+import com.eink.dashboard.ui.ink.InkButton
+import com.eink.dashboard.ui.ink.InkButtonVariant
+import com.eink.dashboard.ui.ink.InkIcons
+import com.eink.dashboard.ui.ink.InkLabel
+import com.eink.dashboard.ui.ink.InkSegmented
+import com.eink.dashboard.ui.ink.InkSpace
+import com.eink.dashboard.ui.ink.InkTag
+import com.eink.dashboard.ui.ink.InkTextField
 import kotlinx.coroutines.launch
 
 /**
@@ -53,36 +48,26 @@ fun TodoistSettingsSection(
 
     Column(
         modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(EinkSpacing.sm),
+        verticalArrangement = Arrangement.spacedBy(InkSpace.s3),
     ) {
-        Text(
-            text = if (hasToken) "Token: configured" else "Token: not set",
-            style = MaterialTheme.typography.bodyMedium,
-            color = EinkPalette.InkMuted,
-        )
-
-        BasicTextField(
+        InkTextField(
             value = tokenInput,
             onValueChange = { tokenInput = it; status = null },
-            singleLine = true,
-            visualTransformation = PasswordVisualTransformation(),
-            textStyle = TextStyle(color = EinkPalette.Ink),
-            modifier = Modifier
-                .fillMaxWidth()
-                .border(EinkSpacing.hairline, EinkPalette.Line, RoundedCornerShape(4.dp))
-                .background(EinkPalette.Paper, RoundedCornerShape(4.dp))
-                .padding(horizontal = EinkSpacing.sm, vertical = EinkSpacing.sm),
+            label = "Personal API token",
+            placeholder = if (hasToken) "Configured — enter a new one to replace" else "Paste the token from Todoist settings",
+            password = true,
+            hint = status,
         )
 
-        Row(horizontalArrangement = Arrangement.spacedBy(EinkSpacing.sm)) {
-            EinkChip(
-                label = "Save & verify",
-                selected = false,
+        Row(horizontalArrangement = Arrangement.spacedBy(InkSpace.s2)) {
+            InkButton(
+                text = "Save & verify",
+                icon = InkIcons.Check,
                 onClick = {
                     val entered = tokenInput.trim()
                     if (entered.isEmpty()) {
                         status = "Enter a token first"
-                        return@EinkChip
+                        return@InkButton
                     }
                     scope.launch {
                         val error = module.saveAndVerifyToken(entered)
@@ -93,33 +78,29 @@ fun TodoistSettingsSection(
                 },
             )
             if (hasToken) {
-                EinkChip(
-                    label = "Clear token",
-                    selected = false,
+                InkButton(
+                    text = "Clear token",
+                    icon = InkIcons.Trash,
+                    variant = InkButtonVariant.Outline,
                     onClick = { scope.launch { module.clearToken(); status = "Cleared" } },
                 )
             }
         }
+        InkTag(if (hasToken) "Token configured" else "Token not set", solid = hasToken)
 
-        status?.let {
-            Text(text = it, style = MaterialTheme.typography.labelMedium, color = EinkPalette.InkMuted)
-        }
-
-        Text(text = "View", style = MaterialTheme.typography.titleMedium)
-        Row(horizontalArrangement = Arrangement.spacedBy(EinkSpacing.sm)) {
-            TodoistView.entries.forEach { view ->
-                EinkChip(
-                    label = view.label(),
-                    selected = settings.view == view,
-                    onClick = {
-                        scope.launch {
-                            settingsStore.setView(view)
-                            module.refresh(com.eink.dashboard.dashboard.RefreshReason.SETTINGS_CHANGED)
-                        }
-                    },
-                )
-            }
-        }
+        InkLabel("View")
+        InkSegmented(
+            options = TodoistView.entries,
+            selected = settings.view,
+            onSelect = { view ->
+                scope.launch {
+                    settingsStore.setView(view)
+                    module.refresh(com.eink.dashboard.dashboard.RefreshReason.SETTINGS_CHANGED)
+                }
+            },
+            label = { it.label() },
+            block = true,
+        )
     }
 }
 

@@ -167,6 +167,8 @@ private fun Application.configureRemoteApi(
         get("/") { call.respondAsset(context, "remote/index.html", ContentType.Text.Html) }
         get("/app.js") { call.respondAsset(context, "remote/app.js", ContentType.Application.JavaScript) }
         get("/styles.css") { call.respondAsset(context, "remote/styles.css", ContentType.Text.CSS) }
+        get("/ink.css") { call.respondAsset(context, "remote/ink.css", ContentType.Text.CSS) }
+        get("/icons.svg") { call.respondAsset(context, "remote/icons.svg", ContentType.Image.SVG) }
 
         route("/api/v1") {
             post("/pairings") {

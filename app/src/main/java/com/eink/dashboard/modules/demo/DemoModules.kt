@@ -1,11 +1,6 @@
 package com.eink.dashboard.modules.demo
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -18,8 +13,9 @@ import com.eink.dashboard.dashboard.DashboardModule
 import com.eink.dashboard.dashboard.ModuleState
 import com.eink.dashboard.dashboard.RefreshPolicy
 import com.eink.dashboard.dashboard.RefreshReason
-import com.eink.dashboard.dashboard.theme.EinkPalette
-import com.eink.dashboard.dashboard.theme.EinkSpacing
+import com.eink.dashboard.ui.ink.InkListItem
+import com.eink.dashboard.ui.ink.InkRuledList
+import com.eink.dashboard.ui.ink.InkType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -65,8 +61,8 @@ class DemoClockModule(private val timeSource: TimeSource = SystemTimeSource) : D
         val value by time.collectAsState()
         Text(
             text = value,
-            modifier = modifier.fillMaxWidth().padding(vertical = EinkSpacing.sm),
-            style = MaterialTheme.typography.displaySmall,
+            modifier = modifier.fillMaxWidth(),
+            style = InkType.big,
             textAlign = TextAlign.Center,
         )
     }
@@ -95,15 +91,6 @@ class DemoAgendaModule(private val timeSource: TimeSource = SystemTimeSource) : 
 
     @Composable
     override fun Content(modifier: Modifier) {
-        Column(
-            modifier = modifier.fillMaxWidth().padding(vertical = EinkSpacing.xs),
-            verticalArrangement = Arrangement.spacedBy(EinkSpacing.xs),
-        ) {
-            items.forEach { line ->
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    Text(text = line, style = MaterialTheme.typography.bodyLarge, color = EinkPalette.Ink)
-                }
-            }
-        }
+        InkRuledList(items, modifier = modifier) { line -> InkListItem(title = line) }
     }
 }

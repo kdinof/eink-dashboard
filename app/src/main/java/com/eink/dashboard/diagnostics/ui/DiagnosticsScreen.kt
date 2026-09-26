@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -20,8 +19,19 @@ import com.eink.dashboard.core.time.TimeFormat
 import com.eink.dashboard.dashboard.DashboardModule
 import com.eink.dashboard.dashboard.ModuleState
 import com.eink.dashboard.dashboard.RefreshPolicy
-import com.eink.dashboard.dashboard.theme.EinkPalette
-import com.eink.dashboard.dashboard.theme.EinkSpacing
+import com.eink.dashboard.ui.ink.InkAlert
+import com.eink.dashboard.ui.ink.InkBadge
+import com.eink.dashboard.ui.ink.InkCard
+import com.eink.dashboard.ui.ink.InkCardBody
+import com.eink.dashboard.ui.ink.InkCardHeader
+import com.eink.dashboard.ui.ink.InkColors
+import com.eink.dashboard.ui.ink.InkIcons
+import com.eink.dashboard.ui.ink.InkKv
+import com.eink.dashboard.ui.ink.InkListItem
+import com.eink.dashboard.ui.ink.InkRuledList
+import com.eink.dashboard.ui.ink.InkSpace
+import com.eink.dashboard.ui.ink.InkTag
+import com.eink.dashboard.ui.ink.InkType
 
 /**
  * On-device troubleshooting without a computer attached: confirmed device facts,
@@ -44,40 +54,55 @@ fun DiagnosticsScreen(
         modifier = modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .padding(EinkSpacing.lg),
-        verticalArrangement = Arrangement.spacedBy(EinkSpacing.lg),
+            .padding(bottom = InkSpace.s6),
+        verticalArrangement = Arrangement.spacedBy(InkSpace.s5),
     ) {
         if (hasDemoModules) {
-            Text(
-                text = "⚠ DEMO DATA — sample modules are active. This is not real data.",
-                style = MaterialTheme.typography.titleMedium,
-                color = EinkPalette.Ink,
+            InkAlert(
+                title = "Demo data",
+                text = "Sample modules are active. This is not real data.",
+                icon = InkIcons.Alert,
             )
         }
 
-        Section("Device") {
-            KeyVal("Model", DeviceProfile.MODEL)
-            KeyVal("API / minSdk", DeviceProfile.MIN_SDK.toString())
-            KeyVal("ABI", DeviceProfile.PRIMARY_ABI)
-            KeyVal(
-                "Screen",
-                "${DeviceProfile.SCREEN_WIDTH_PX}×${DeviceProfile.SCREEN_HEIGHT_PX}px · " +
-                    "${DeviceProfile.screenWidthDp}×${DeviceProfile.screenHeightDp}dp @ ${DeviceProfile.DENSITY_DPI}dpi",
-            )
-            KeyVal("Grayscale", DeviceProfile.IS_GRAYSCALE.toString())
+        Row(horizontalArrangement = Arrangement.spacedBy(InkSpace.s5)) {
+            InkCard(modifier = Modifier.weight(1f)) {
+                InkCardHeader(title = "Device", icon = InkIcons.Device, meta = DeviceProfile.MODEL)
+                InkCardBody(spacing = 0.dp) {
+                    InkKv(
+                        listOf(
+                            "Model" to DeviceProfile.MODEL,
+                            "API / minSdk" to DeviceProfile.MIN_SDK.toString(),
+                            "ABI" to DeviceProfile.PRIMARY_ABI,
+                            "Screen" to "${DeviceProfile.SCREEN_WIDTH_PX}×${DeviceProfile.SCREEN_HEIGHT_PX}px · " +
+                                "${DeviceProfile.screenWidthDp}×${DeviceProfile.screenHeightDp}dp @ ${DeviceProfile.DENSITY_DPI}dpi",
+                            "Grayscale" to DeviceProfile.IS_GRAYSCALE.toString(),
+                        ),
+                    )
+                }
+            }
+            InkCard(modifier = Modifier.weight(1f)) {
+                InkCardHeader(title = "Build", icon = InkIcons.Settings, meta = versionName)
+                InkCardBody(spacing = 0.dp) {
+                    InkKv(
+                        listOf(
+                            "Version" to versionName,
+                            "Build type" to buildType,
+                            "Refresh loop" to if (coordinatorRunning) "running (foreground)" else "stopped (background)",
+                        ),
+                    )
+                }
+            }
         }
 
-        Section("Build") {
-            KeyVal("Version", versionName)
-            KeyVal("Build type", buildType)
-            KeyVal("Refresh loop", if (coordinatorRunning) "running (foreground)" else "stopped (background)")
-        }
-
-        Section("Modules (${modules.size})") {
+        InkCard(modifier = Modifier.fillMaxWidth()) {
+            InkCardHeader(title = "Modules", icon = InkIcons.Grid, meta = "${modules.size}")
             if (modules.isEmpty()) {
-                Text("None registered.", style = MaterialTheme.typography.bodyMedium, color = EinkPalette.InkMuted)
+                InkCardBody { Text("None registered.", style = InkType.small, color = InkColors.Ink3) }
             } else {
-                modules.forEach { ModuleRow(it) }
+                InkCardBody(flush = true, spacing = 0.dp) {
+                    InkRuledList(modules) { ModuleRow(it) }
+                }
             }
         }
     }
@@ -86,39 +111,20 @@ fun DiagnosticsScreen(
 @Composable
 private fun ModuleRow(module: DashboardModule) {
     val state by module.state.collectAsStateWithLifecycle()
-    Column(
-        modifier = Modifier.fillMaxWidth().padding(vertical = EinkSpacing.xs),
-        verticalArrangement = Arrangement.spacedBy(2.dp),
-    ) {
-        Text(
-            text = module.id + if (module.isDemo) "  [demo]" else "",
-            style = MaterialTheme.typography.titleMedium,
-        )
-        Text(
-            text = "policy=${module.refreshPolicy.describe()}   state=${state.describe()}",
-            style = MaterialTheme.typography.labelMedium,
-            color = EinkPalette.InkMuted,
-        )
-    }
-}
-
-@Composable
-private fun Section(title: String, content: @Composable () -> Unit) {
-    Column(verticalArrangement = Arrangement.spacedBy(EinkSpacing.sm)) {
-        Text(text = title, style = MaterialTheme.typography.titleLarge)
-        content()
-    }
-}
-
-@Composable
-private fun KeyVal(key: String, value: String) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-    ) {
-        Text(text = key, style = MaterialTheme.typography.bodyMedium, color = EinkPalette.InkMuted)
-        Text(text = value, style = MaterialTheme.typography.bodyMedium)
-    }
+    InkListItem(
+        title = module.id + if (module.isDemo) "  [demo]" else "",
+        sub = "policy=${module.refreshPolicy.describe()}   state=${state.describe()}",
+        strong = true,
+        inset = InkSpace.s3,
+        trailing = {
+            when (val current = state) {
+                is ModuleState.Ok -> InkBadge(if (current.isStale) "Stale" else "OK", outline = current.isStale)
+                is ModuleState.Error -> InkBadge("Error")
+                ModuleState.Loading -> InkTag("Loading")
+                is ModuleState.Empty -> InkTag("Empty")
+            }
+        },
+    )
 }
 
 private fun RefreshPolicy.describe(): String = when (this) {

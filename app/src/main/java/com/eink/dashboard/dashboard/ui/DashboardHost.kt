@@ -1,37 +1,29 @@
 package com.eink.dashboard.dashboard.ui
 
 import android.content.res.Configuration
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.eink.dashboard.dashboard.DashboardViewModel
 import com.eink.dashboard.dashboard.Screen
-import com.eink.dashboard.dashboard.theme.EinkPalette
-import com.eink.dashboard.dashboard.theme.EinkTheme
 import com.eink.dashboard.diagnostics.ui.DiagnosticsScreen
+import com.eink.dashboard.ui.ink.InkChip
+import com.eink.dashboard.ui.ink.InkColors
+import com.eink.dashboard.ui.ink.InkIcons
+import com.eink.dashboard.ui.ink.InkPageHeader
+import com.eink.dashboard.ui.ink.InkSpace
+import com.eink.dashboard.ui.ink.InkTheme
 import com.eink.dashboard.settings.ui.SettingsScreen
 import com.eink.dashboard.remote.RemotePermission
 import com.eink.dashboard.remote.ui.RemoteSetupScreen
@@ -45,14 +37,14 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 /**
- * Root of the single-Activity UI. Draws the Swiss date/navigation header and
- * swaps the body by [Screen] with a plain `when` — no crossfade, no
+ * Root of the single-Activity UI. Draws the Ink page header (section eyebrow,
+ * title, screen chips) and swaps the body by [Screen] with a plain `when` — no crossfade, no
  * navigation animation, because any transition repaints the whole e-ink panel.
  */
 @Composable
 fun DashboardHost(viewModel: DashboardViewModel, modifier: Modifier = Modifier) {
-    EinkTheme {
-        Surface(modifier = modifier.fillMaxSize(), color = EinkPalette.Paper) {
+    InkTheme {
+        Surface(modifier = modifier.fillMaxSize(), color = InkColors.Paper) {
             var screen by remember { mutableStateOf(Screen.DASHBOARD) }
             val settings by viewModel.settings.collectAsStateWithLifecycle()
             val lastTick by viewModel.lastTick.collectAsStateWithLifecycle()
@@ -86,20 +78,20 @@ fun DashboardHost(viewModel: DashboardViewModel, modifier: Modifier = Modifier) 
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 48.dp),
+                    .padding(horizontal = InkSpace.s6),
             ) {
-                SwissHeader(
+                InkShellHeader(
                     epochMs = lastTick,
+                    compact = !isLandscape,
                     current = screen,
                     onSelect = { screen = it },
                 )
-                HeavyDivider()
                 when (screen) {
                     Screen.DASHBOARD -> if (isLandscape) {
-                        SwissBoardScreen(
+                        InkBoardScreen(
                             registry = viewModel.registry,
                             epochMs = lastTick,
-                            modifier = Modifier.fillMaxSize(),
+                            modifier = Modifier.fillMaxSize().padding(bottom = InkSpace.s6),
                         )
                     } else {
                         DashboardScreen(
@@ -141,77 +133,59 @@ fun DashboardHost(viewModel: DashboardViewModel, modifier: Modifier = Modifier) 
     }
 }
 
+/**
+ * `.ink-page-header` for the whole shell: a grey eyebrow naming the section, a
+ * heavy title (today's date on the board) and the screen switcher as `.ink-chip`s
+ * in the action slot — the active screen is the inverted pill.
+ */
 @Composable
-private fun SwissHeader(epochMs: Long, current: Screen, onSelect: (Screen) -> Unit) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(72.dp)
-            .padding(bottom = 10.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.Bottom,
-    ) {
-        Text(
-            text = HEADER_DATE.format(Instant.ofEpochMilli(epochMs).atZone(ZoneId.systemDefault())).uppercase(Locale.ENGLISH),
-            color = EinkPalette.Ink,
-            fontSize = 14.sp,
-            fontWeight = FontWeight.Bold,
-            letterSpacing = 1.6.sp,
-        )
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(24.dp),
-            verticalAlignment = Alignment.Bottom,
-        ) {
-            SwissNavItem("BOARD", current == Screen.DASHBOARD) { onSelect(Screen.DASHBOARD) }
-            SwissNavItem("SETTINGS", current == Screen.SETTINGS) { onSelect(Screen.SETTINGS) }
-            SwissNavItem("REMOTE", current == Screen.REMOTE) { onSelect(Screen.REMOTE) }
-            SwissNavItem("DIAG", current == Screen.DIAGNOSTICS) { onSelect(Screen.DIAGNOSTICS) }
-        }
+private fun InkShellHeader(epochMs: Long, compact: Boolean, current: Screen, onSelect: (Screen) -> Unit) {
+    val title = when (current) {
+        Screen.DASHBOARD -> (if (compact) HEADER_DATE_SHORT else HEADER_DATE)
+            .format(Instant.ofEpochMilli(epochMs).atZone(ZoneId.systemDefault()))
+        Screen.SETTINGS -> "Settings"
+        Screen.REMOTE -> "Remote setup"
+        Screen.DIAGNOSTICS -> "Diagnostics"
     }
-}
-
-@Composable
-private fun SwissNavItem(label: String, selected: Boolean, onClick: () -> Unit) {
-    Column(
-        modifier = Modifier
-            .width(
-                when (label) {
-                    "BOARD" -> 52.dp
-                    "SETTINGS" -> 76.dp
-                    "REMOTE" -> 64.dp
-                    else -> 42.dp
-                },
-            )
-            .clickable(onClick = onClick),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(6.dp),
-    ) {
-        Text(
-            text = label,
-            color = if (selected) EinkPalette.Ink else EinkPalette.InkMuted,
-            fontSize = 12.5.sp,
-            fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium,
-            letterSpacing = 1.7.sp,
-        )
-        if (selected) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(2.dp)
-                    .background(EinkPalette.Ink),
-            )
-        }
-    }
-}
-
-@Composable
-private fun HeavyDivider() {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(3.dp)
-            .background(EinkPalette.Ink),
+    InkPageHeader(
+        title = title,
+        eyebrow = current.eyebrow,
+        action = {
+            Screen.entries.forEach { target ->
+                InkChip(
+                    label = target.navLabel,
+                    icon = target.navIcon,
+                    selected = target == current,
+                    onClick = { onSelect(target) },
+                )
+            }
+        },
     )
 }
 
+private val Screen.eyebrow: String
+    get() = when (this) {
+        Screen.DASHBOARD -> "DAILY BOARD"
+        Screen.SETTINGS -> "CUSTOMIZATION"
+        Screen.REMOTE -> "PHONE PAIRING"
+        Screen.DIAGNOSTICS -> "HARDWARE MANAGEMENT"
+    }
+
+private val Screen.navLabel: String
+    get() = when (this) {
+        Screen.DASHBOARD -> "Board"
+        Screen.SETTINGS -> "Settings"
+        Screen.REMOTE -> "Remote"
+        Screen.DIAGNOSTICS -> "Diag"
+    }
+
+private val Screen.navIcon: ImageVector
+    get() = when (this) {
+        Screen.DASHBOARD -> InkIcons.Grid
+        Screen.SETTINGS -> InkIcons.Settings
+        Screen.REMOTE -> InkIcons.Wifi
+        Screen.DIAGNOSTICS -> InkIcons.Info
+    }
+
 private val HEADER_DATE = DateTimeFormatter.ofPattern("EEEE, d MMMM", Locale.ENGLISH)
+private val HEADER_DATE_SHORT = DateTimeFormatter.ofPattern("EEE, d MMM", Locale.ENGLISH)
