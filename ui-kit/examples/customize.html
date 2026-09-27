@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Настройка — Ink UI</title>
+  <link rel="stylesheet" href="../ink.css">
+  <script src="../ink.js" defer></script>
+  <style>
+    .editor { --gap: var(--space-5); margin-top: var(--space-5); }
+    .doodle { width: 100%; height: auto; aspect-ratio: 3 / 2; color: var(--ink); }
+    .picture { width: 100%; height: auto; aspect-ratio: 16 / 9; color: var(--ink); }
+    .settings { --gap: var(--space-4); }
+  </style>
+</head>
+<body>
+  <header class="ink-appbar">
+    <div class="ink-appbar__start">
+      <a class="ink-appbar__btn" href="library.html" aria-label="Назад"><svg class="ink-icon" aria-hidden="true"><use href="../icons.svg#i-back"/></svg></a>
+    </div>
+    <h1 class="ink-appbar__title">Настройка</h1>
+    <div class="ink-appbar__end"></div>
+  </header>
+
+  <main class="ink-page">
+    <header class="ink-page-header">
+      <p class="ink-page-header__eyebrow">CUSTOMIZATION</p>
+      <h1 class="ink-page-header__title">Настройка</h1>
+      <p class="ink-page-header__sub">Соберите свою карту и отправьте её на экран.</p>
+    </header>
+
+    <div class="ink-stack editor">
+
+      <!-- Свой текст -->
+      <article class="ink-card">
+        <span class="ink-card__tab">Свой текст</span>
+        <div class="ink-card__body ink-stack">
+          <p class="ink-h2">Делайте дни<br>такими, как хотите</p>
+          <hr class="ink-divider">
+          <div class="ink-field">
+            <label class="ink-label" for="c-text">Подпись <span class="ink-label__meta">52 / 120</span></label>
+            <textarea class="ink-textarea ink-textarea--ruled" id="c-text" rows="4">Пусть в суете найдётся минута для себя.
+Медленнее — не страшно.
+Сегодня уже получилось хорошо.</textarea>
+          </div>
+        </div>
+      </article>
+
+      <!-- Рукописная заметка -->
+      <article class="ink-card ink-card--ruled">
+        <header class="ink-card__header ink-card__header--slant">
+          <svg class="ink-icon" aria-hidden="true"><use href="../icons.svg#i-note"/></svg>
+          <h3 class="ink-card__title">Рукописная заметка</h3>
+        </header>
+        <div class="ink-card__body">
+          <svg class="doodle" viewBox="0 0 300 200" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="Рисунок: солнце, дом, цветок и звезда">
+            <!-- sun -->
+            <circle cx="55" cy="55" r="18"/>
+            <path d="M48 52h.1M62 52h.1M47 61q8 7 16 0"/>
+            <path d="M55 22v10M55 78v10M22 55h10M78 55h10M32 32l7 7M71 71l7 7M78 32l-7 7M39 71l-7 7"/>
+            <!-- squiggle -->
+            <path d="M110 40c15-20 30 20 45 0s30 20 45 0 25 10 30 0"/>
+            <!-- heart -->
+            <path d="M265 45c-6-12-24-6-18 8l18 16 18-16c6-14-12-20-18-8z"/>
+            <!-- house -->
+            <path d="M95 175v-50l35-30 35 30v50z"/>
+            <path d="M120 175v-28h20v28M85 132l45-42 45 42"/>
+            <!-- flower -->
+            <circle cx="230" cy="120" r="7"/>
+            <path d="M230 113c-6-14 6-14 0 0M237 120c14-6 14 6 0 0M230 127c6 14-6 14 0 0M223 120c-14 6-14-6 0 0"/>
+            <path d="M230 135v40M230 160q-14-4-18-14M230 152q12-2 16-12"/>
+            <!-- star -->
+            <path d="M272 100l5 10 11 2-8 8 2 11-10-5-10 5 2-11-8-8 11-2z"/>
+            <!-- ground -->
+            <path d="M20 180q30-8 60 0M180 185q40-8 100 0"/>
+          </svg>
+        </div>
+      </article>
+
+      <!-- Своя картинка -->
+      <article class="ink-card">
+        <header class="ink-card__header">
+          <svg class="ink-icon" aria-hidden="true"><use href="../icons.svg#i-image"/></svg>
+          <h3 class="ink-card__title">Своя картинка</h3>
+          <span class="ink-card__meta">1404 × 1872</span>
+        </header>
+        <div class="ink-card__body">
+          <svg class="picture" viewBox="0 0 320 180" role="img" aria-label="Пейзаж: горы и солнце">
+            <rect x="1" y="1" width="318" height="178" fill="none" stroke="currentColor" stroke-width="2"/>
+            <circle cx="245" cy="48" r="18" fill="currentColor"/>
+            <path d="M0 180L85 70l40 45 55-75 80 100 60-40v80z" fill="currentColor"/>
+            <path d="M160 70l20-30 20 30-10-6-10 8-10-8z" style="fill: var(--paper)"/>
+          </svg>
+        </div>
+        <footer class="ink-card__footer">
+          <span>mountains.png</span>
+          <span class="ink-card__meta">Заменить</span>
+        </footer>
+      </article>
+
+      <!-- Параметры -->
+      <article class="ink-card">
+        <header class="ink-card__header">
+          <svg class="ink-icon" aria-hidden="true"><use href="../icons.svg#i-settings"/></svg>
+          <h3 class="ink-card__title">Параметры экрана</h3>
+        </header>
+        <div class="ink-card__body ink-stack settings">
+          <div class="ink-field">
+            <span class="ink-label" id="c-refresh">Обновление</span>
+            <div class="ink-segmented ink-segmented--block" role="radiogroup" aria-labelledby="c-refresh">
+              <label class="ink-segmented__item"><input type="radio" name="c-refresh"> 15 мин</label>
+              <label class="ink-segmented__item"><input type="radio" name="c-refresh" checked> 1 час</label>
+              <label class="ink-segmented__item"><input type="radio" name="c-refresh"> 6 часов</label>
+              <label class="ink-segmented__item"><input type="radio" name="c-refresh"> День</label>
+            </div>
+          </div>
+          <label class="ink-check ink-check--between">Инвертировать <input type="checkbox" class="ink-switch" role="switch"></label>
+          <div class="ink-field">
+            <label class="ink-label" for="c-contrast">Контраст <span class="ink-label__meta">60%</span></label>
+            <input class="ink-slider" id="c-contrast" type="range" min="0" max="100" value="60" style="--fill: 60%">
+            <div class="ink-slider-labels"><span>0</span><span>100</span></div>
+          </div>
+          <div class="ink-row ink-row--between">
+            <span class="ink-label" id="c-lines">Строк на экране</span>
+            <div class="ink-stepper" data-ink-stepper>
+              <button class="ink-stepper__btn" type="button" data-ink-step="-1" aria-label="Меньше">−</button>
+              <input class="ink-stepper__value" type="number" value="5" min="1" max="10" aria-labelledby="c-lines">
+              <button class="ink-stepper__btn" type="button" data-ink-step="1" aria-label="Больше">+</button>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <button class="ink-button ink-button--lg ink-button--block" type="button" onclick="InkUI.toast('Отправлено на устройство')">
+        <svg class="ink-icon" aria-hidden="true"><use href="../icons.svg#i-upload"/></svg> Отправить на устройство
+      </button>
+    </div>
+  </main>
+</body>
+</html>

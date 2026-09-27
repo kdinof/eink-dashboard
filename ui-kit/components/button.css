@@ -1,0 +1,160 @@
+/*
+ * Ink UI — Buttons. Requires tokens.css + base.css.
+ *
+ * Classes:
+ *   .ink-button                 solid ink pill, white bold text ("+ Настроить")
+ *   .ink-button--outline        thick ink frame on paper
+ *   .ink-button--ghost          text only; underline while pressed
+ *   .ink-button--square         small radius rect ("Добавить устройство")
+ *   .ink-button--sm / --lg      sizes (default = --control-md)
+ *   .ink-button--block          full width
+ *   .ink-button--icon           square icon-only button (give it aria-label)
+ *   .ink-button-group           joined buttons, shared frame
+ *   .ink-fab                    round floating action button (fixed bottom-right)
+ *     .ink-fab--static          position: relative (inline demos, previews)
+ * States: :active / [aria-pressed=true] invert, [disabled] / [aria-disabled=true] dashed --ink-4.
+ *
+ * Markup:
+ *   <button class="ink-button ink-button--sm">
+ *     <svg class="ink-icon"><use href="icons.svg#i-plus"/></svg> Настроить
+ *   </button>
+ */
+
+.ink-button {
+  --btn-h: var(--control-md);
+  --btn-px: var(--space-4);
+  --btn-fs: var(--text-sm);
+  --btn-fg: var(--on-ink);
+  --btn-bg: var(--ink);
+  --btn-bd: var(--ink);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  min-height: var(--btn-h);
+  padding: 0 var(--btn-px);
+  margin: 0;
+  border: var(--stroke-bold) solid var(--btn-bd);
+  border-radius: var(--radius-pill);
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  font-family: var(--font-sans);
+  font-size: var(--btn-fs);
+  font-weight: var(--weight-black);
+  line-height: 1;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  text-decoration: none;
+  vertical-align: middle;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color var(--motion), color var(--motion);
+}
+.ink-button > .ink-icon { width: var(--icon-sm); height: var(--icon-sm); stroke-width: 3; }
+
+/* Pressed = confident inversion */
+.ink-button:active,
+.ink-button[aria-pressed="true"] {
+  --btn-bg: var(--paper);
+  --btn-fg: var(--ink);
+}
+
+/* Outline */
+.ink-button--outline { --btn-bg: var(--paper); --btn-fg: var(--ink); }
+.ink-button--outline:active,
+.ink-button--outline[aria-pressed="true"] { --btn-bg: var(--ink); --btn-fg: var(--on-ink); }
+
+/* Ghost */
+.ink-button--ghost {
+  --btn-bg: transparent;
+  --btn-fg: var(--ink);
+  --btn-bd: transparent;
+  --btn-px: var(--space-2);
+  text-underline-offset: var(--space-1);
+  text-decoration-thickness: var(--stroke-bold);
+}
+.ink-button--ghost:active,
+.ink-button--ghost[aria-pressed="true"] {
+  --btn-bg: transparent;
+  --btn-fg: var(--ink);
+  text-decoration-line: underline;
+}
+
+/* Shape & size */
+.ink-button--square { border-radius: var(--radius-sm); }
+.ink-button--sm { --btn-h: var(--control-sm); --btn-px: var(--space-3); --btn-fs: var(--text-xs); }
+.ink-button--lg { --btn-h: var(--control-lg); --btn-px: var(--space-6); --btn-fs: var(--text-md); }
+.ink-button--lg > .ink-icon { width: var(--icon-md); height: var(--icon-md); }
+.ink-button--block { display: flex; width: 100%; }
+.ink-button--icon { width: var(--btn-h); padding: 0; flex: none; }
+.ink-button--icon > .ink-icon { width: var(--icon-md); height: var(--icon-md); stroke-width: 2.5; }
+
+/* The tiny reference buttons are --control-sm tall; keep a --control-md hit area around them */
+.ink-button--sm { position: relative; }
+.ink-button--sm::after {
+  content: "";
+  position: absolute;
+  inset: calc((var(--control-sm) - var(--control-md)) / 2) 0;
+}
+
+/* Disabled */
+.ink-button[disabled],
+.ink-button[aria-disabled="true"] {
+  --btn-bg: var(--paper);
+  --btn-fg: var(--ink-4);
+  --btn-bd: var(--ink-4);
+  border-style: dashed;
+  text-decoration: none;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+.ink-button--ghost[disabled],
+.ink-button--ghost[aria-disabled="true"] { --btn-bd: transparent; --btn-bg: transparent; }
+
+/* Group — joined buttons share one heavy frame */
+.ink-button-group {
+  display: inline-flex;
+  width: fit-content;
+  max-width: 100%;
+  align-items: stretch;
+  border: var(--stroke-bold) solid var(--ink);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+  background: var(--paper);
+}
+.ink-button-group > .ink-button {
+  border: 0;
+  border-radius: 0;
+  --btn-bg: var(--paper);
+  --btn-fg: var(--ink);
+}
+.ink-button-group > .ink-button + .ink-button { border-left: var(--stroke-bold) solid var(--ink); }
+.ink-button-group > .ink-button:active,
+.ink-button-group > .ink-button[aria-pressed="true"] { --btn-bg: var(--ink); --btn-fg: var(--on-ink); }
+.ink-button-group > .ink-button[disabled] { --btn-fg: var(--ink-4); }
+.ink-button-group--square { border-radius: var(--radius-sm); }
+
+/* FAB */
+.ink-fab {
+  position: fixed;
+  right: var(--page-gutter);
+  bottom: calc(var(--tabbar-height) + var(--space-4));
+  z-index: 20;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(var(--control-lg) + var(--space-3));
+  height: calc(var(--control-lg) + var(--space-3));
+  padding: 0;
+  border: var(--stroke-bold) solid var(--ink);
+  border-radius: var(--radius-pill);
+  background: var(--ink);
+  color: var(--on-ink);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.ink-fab > .ink-icon { width: var(--icon-lg); height: var(--icon-lg); stroke-width: 3; }
+.ink-fab:active { background: var(--paper); color: var(--ink); }
+.ink-fab--static { position: static; }

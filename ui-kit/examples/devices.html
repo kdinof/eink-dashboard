@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Устройства — Ink UI</title>
+  <link rel="stylesheet" href="../ink.css">
+  <script src="../ink.js" defer></script>
+  <style>
+    .empty-zone { min-height: calc(var(--space-12) * 7); display: grid; place-items: center; }
+    .variant { --gap: var(--space-4); margin-top: var(--space-8); }
+  </style>
+</head>
+<body>
+  <header class="ink-appbar">
+    <div class="ink-appbar__start"></div>
+    <h1 class="ink-appbar__title">Устройства</h1>
+    <div class="ink-appbar__end"></div>
+  </header>
+
+  <main class="ink-page">
+    <header class="ink-page-header">
+      <p class="ink-page-header__eyebrow">HARDWARE MANAGEMENT</p>
+      <h1 class="ink-page-header__title">Мои устройства</h1>
+      <div class="ink-page-header__action">
+        <button class="ink-button ink-button--sm ink-button--square" type="button" data-ink-open="add-device"><svg class="ink-icon" aria-hidden="true"><use href="../icons.svg#i-plus"/></svg>Добавить устройство</button>
+      </div>
+    </header>
+
+    <!-- Вариант 1: пусто -->
+    <div class="empty-zone">
+      <div class="ink-empty">
+        <div class="ink-empty__icon"><svg class="ink-icon" aria-hidden="true"><use href="../icons.svg#i-device"/></svg></div>
+        <p class="ink-empty__title">Нет устройств</p>
+        <p class="ink-empty__hint">Нажмите «Добавить устройство», чтобы начать</p>
+      </div>
+    </div>
+
+    <!-- Вариант 2: список устройств -->
+    <section class="ink-stack variant" aria-labelledby="dev-list">
+      <div class="ink-section-header">
+        <h2 class="ink-section-header__title" id="dev-list">Подключённые экраны</h2>
+        <span class="ink-section-header__meta">2 устройства</span>
+        <p class="ink-section-header__sub">Второй вариант экрана — когда устройства уже добавлены</p>
+      </div>
+
+      <article class="ink-card">
+        <header class="ink-card__header">
+          <svg class="ink-icon" aria-hidden="true"><use href="../icons.svg#i-device"/></svg>
+          <h3 class="ink-card__title">Экран на кухне</h3>
+          <span class="ink-card__meta">В сети</span>
+        </header>
+        <div class="ink-card__body">
+          <dl class="ink-kv">
+            <div class="ink-kv__row"><dt>Модель</dt><dd>Meebook M103</dd></div>
+            <div class="ink-kv__row"><dt>Батарея</dt><dd><span class="ink-meter" style="--value: 64%"><span class="ink-meter__body"><span class="ink-meter__fill"></span></span><span class="ink-meter__label">64%</span></span></dd></div>
+            <div class="ink-kv__row"><dt>Wi-Fi</dt><dd>Home_5G</dd></div>
+            <div class="ink-kv__row"><dt>Последняя синхронизация</dt><dd>17:35</dd></div>
+          </dl>
+        </div>
+        <footer class="ink-card__footer">
+          <span>Карта: Новости дня</span>
+          <span class="ink-card__meta">Обновление раз в час</span>
+        </footer>
+      </article>
+
+      <article class="ink-card">
+        <header class="ink-card__header">
+          <svg class="ink-icon" aria-hidden="true"><use href="../icons.svg#i-device"/></svg>
+          <h3 class="ink-card__title">Кабинет</h3>
+          <span class="ink-card__meta">Не в сети</span>
+        </header>
+        <div class="ink-card__body">
+          <dl class="ink-kv">
+            <div class="ink-kv__row"><dt>Модель</dt><dd>Meebook M103</dd></div>
+            <div class="ink-kv__row"><dt>Батарея</dt><dd><span class="ink-meter" style="--value: 18%"><span class="ink-meter__body"><span class="ink-meter__fill"></span></span><span class="ink-meter__label">18%</span></span></dd></div>
+            <div class="ink-kv__row"><dt>Wi-Fi</dt><dd>Office</dd></div>
+            <div class="ink-kv__row"><dt>Последняя синхронизация</dt><dd>вчера, 22:10</dd></div>
+          </dl>
+        </div>
+      </article>
+
+      <ul class="ink-menu">
+        <li><a class="ink-menu__item" href="#"><svg class="ink-icon" aria-hidden="true"><use href="../icons.svg#i-wifi"/></svg><span class="ink-menu__label">Сеть Wi-Fi</span><span class="ink-menu__value">Home_5G</span><span class="ink-menu__chevron" aria-hidden="true"></span></a></li>
+        <li><a class="ink-menu__item" href="#"><svg class="ink-icon" aria-hidden="true"><use href="../icons.svg#i-refresh"/></svg><span class="ink-menu__label">Синхронизировать сейчас</span><span class="ink-menu__chevron" aria-hidden="true"></span></a></li>
+        <li><a class="ink-menu__item" href="#"><svg class="ink-icon" aria-hidden="true"><use href="../icons.svg#i-info"/></svg><span class="ink-menu__label">Прошивка</span><span class="ink-menu__value">2.4.1</span></a></li>
+        <li class="ink-menu__divider" role="separator"></li>
+        <li><button class="ink-menu__item ink-menu__item--danger" type="button"><svg class="ink-icon" aria-hidden="true"><use href="../icons.svg#i-trash"/></svg><span class="ink-menu__label">Отвязать устройство</span></button></li>
+      </ul>
+    </section>
+  </main>
+
+  <dialog class="ink-dialog" id="add-device" aria-labelledby="add-device-title">
+      <header class="ink-dialog__header">
+        <h2 class="ink-dialog__title" id="add-device-title">Добавить устройство</h2>
+        <button class="ink-dialog__close" type="button" data-ink-close aria-label="Закрыть"><svg class="ink-icon" aria-hidden="true"><use href="../icons.svg#i-close"/></svg></button>
+      </header>
+      <div class="ink-dialog__body ink-stack">
+        <div class="ink-field">
+          <label class="ink-label" for="d-name">Название</label>
+          <input class="ink-input" id="d-name" placeholder="Например, Экран на кухне" aria-describedby="d-name-hint">
+          <p class="ink-hint" id="d-name-hint">Так устройство будет подписано в списке.</p>
+        </div>
+        <div class="ink-field">
+          <label class="ink-label" for="d-model">Модель</label>
+          <div class="ink-select">
+            <select id="d-model">
+              <option>Meebook M103</option>
+              <option>Meebook M7</option>
+              <option>Kindle Paperwhite</option>
+              <option>Другое</option>
+            </select>
+            <svg class="ink-icon ink-select__chevron" aria-hidden="true"><use href="../icons.svg#i-chevron-down"/></svg>
+          </div>
+        </div>
+      </div>
+      <footer class="ink-dialog__footer">
+        <button class="ink-button ink-button--outline" type="button" data-ink-close>Отмена</button>
+        <button class="ink-button" type="button" data-ink-close="add" onclick="InkUI.toast('Устройство добавлено')">Добавить</button>
+      </footer>
+  </dialog>
+
+  <nav class="ink-tabbar" aria-label="Разделы" data-ink-tabbar>
+    <a class="ink-tabbar__item" href="#">
+      <svg class="ink-icon" aria-hidden="true"><use href="../icons.svg#i-todo"/></svg>
+      <span class="ink-tabbar__label">Задачи</span>
+    </a>
+    <a class="ink-tabbar__item" href="library.html">
+      <svg class="ink-icon" aria-hidden="true"><use href="../icons.svg#i-cards"/></svg>
+      <span class="ink-tabbar__label">Карты</span>
+    </a>
+    <a class="ink-tabbar__item" href="devices.html" aria-current="page">
+      <svg class="ink-icon" aria-hidden="true"><use href="../icons.svg#i-device"/></svg>
+      <span class="ink-tabbar__label">Устройства</span>
+    </a>
+    <a class="ink-tabbar__item" href="#">
+      <svg class="ink-icon" aria-hidden="true"><use href="../icons.svg#i-user"/></svg>
+      <span class="ink-tabbar__label">Профиль</span>
+    </a>
+  </nav>
+</body>
+</html>

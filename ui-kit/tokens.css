@@ -1,0 +1,91 @@
+/*
+ * Ink UI — design tokens.
+ * Monochrome e-ink language: paper white, ink black, a few greys.
+ * Every component reads only these variables; override them on :root
+ * (or on any container) to re-theme.
+ */
+:root {
+  color-scheme: light;
+
+  /* Color — ink on paper. No hues, only luminance steps that survive 16-level grayscale. */
+  --ink: #0a0a0a;          /* primary text, borders, filled surfaces */
+  --ink-2: #3d3d3d;        /* secondary text */
+  --ink-3: #7a7a7a;        /* tertiary text, eyebrows, meta */
+  --ink-4: #b8b8b8;        /* disabled text, hairlines */
+  --paper: #ffffff;        /* page and card background */
+  --paper-2: #f2f2f2;      /* subtle fill: pressed, skeleton, input bg */
+  --paper-3: #e4e4e4;      /* dividers on paper-2 */
+  --on-ink: #ffffff;       /* text on filled ink surfaces */
+
+  /* Typography */
+  --font-sans: "Golos Text", "Inter", "PingFang SC", "Noto Sans SC", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Unbounded", "Golos Text", "Inter", system-ui, sans-serif;
+  --font-serif: "PT Serif", "Noto Serif SC", Georgia, "Times New Roman", serif;
+  --font-mono: "JetBrains Mono", "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+
+  --text-2xs: 10px;  /* eyebrow, tab label */
+  --text-xs: 12px;   /* meta, captions */
+  --text-sm: 14px;   /* descriptions, list items */
+  --text-md: 16px;   /* body */
+  --text-lg: 20px;   /* card title */
+  --text-xl: 26px;   /* section title, big numbers */
+  --text-2xl: 34px;  /* page title */
+  --text-3xl: 48px;  /* big numbers: temperature, date */
+  --text-hero: 120px; /* dashboard clock (.ink-hero) */
+
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-bold: 700;
+  --weight-black: 900;
+
+  --leading-tight: 1.15;
+  --leading-normal: 1.45;
+  --tracking-eyebrow: 0.16em;
+
+  /* Spacing — 4px grid */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-half: 2px;       /* sub-grid step: gaps/insets inside small indicators (badges, meter, progress) */
+
+  /* Strokes — the thick frame is the signature of the style */
+  --stroke-hair: 1px;
+  --stroke: 1.5px;
+  --stroke-bold: 2.5px;
+  --stroke-heavy: 4px;
+
+  /* Radii */
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 14px;
+  --radius-pill: 999px;
+
+  /* Sizes */
+  --control-sm: 28px;
+  --control-md: 36px;
+  --control-lg: 44px;
+  --tabbar-height: 64px;
+  --icon-sm: 14px;
+  --icon-md: 18px;
+  --icon-lg: 24px;
+  --icon-xl: 40px;         /* hero glyph (weather) */
+  --control-xs: 22px;      /* checkbox, radio, slider thumb, trend badge */
+  --badge-h: 20px;         /* tag, counter badge, numbered-list disc */
+  --meter-w: 30px;         /* battery meter body; --lg scales it ×1.6 / ×1.5 */
+  --meter-h: 15px;
+
+  /* Motion — e-ink redraws are slow and ghost; default is no motion.
+     Set to e.g. 120ms on LCD screens. */
+  --motion: 0ms;
+
+  /* Layout */
+  --page-max: 720px;
+  --page-gutter: var(--space-4);
+}

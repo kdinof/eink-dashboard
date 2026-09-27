@@ -1,0 +1,341 @@
+<!-- Ink UI — data & feedback. Fragment for the docs page. -->
+
+<section class="doc-section" id="data">
+  <h2 class="doc-title">Данные</h2>
+  <p class="doc-lead">Котировки, показатели, прогресс, пары ключ–значение, листок календаря и погода. Все числа — табличными цифрами.</p>
+  <div class="doc-demo">
+<article class="ink-card" style="width: 100%; max-width: 380px">
+  <div class="ink-ticker">
+    <div class="ink-ticker__head">
+      <h3 class="ink-ticker__title"><svg class="ink-icon" aria-hidden="true"><use href="icons.svg#i-trend-up"/></svg>Избранные котировки</h3>
+      <span class="ink-ticker__meta"><svg class="ink-icon" aria-hidden="true"><use href="icons.svg#i-clock"/></svg>Обновлено 2026.6.12 16:15</span>
+    </div>
+    <div class="ink-ticker__row">
+      <div class="ink-ticker__name"><span>Сбербанк</span><span class="ink-tag ink-tag--code"><i class="ink-tag__mark"></i>SBER</span></div>
+      <div class="ink-ticker__value">312.40</div>
+      <div class="ink-ticker__change"><span class="ink-badge ink-badge--trend"><svg class="ink-icon" aria-hidden="true"><use href="icons.svg#i-trend-up"/></svg>+1.26%</span></div>
+    </div>
+    <div class="ink-ticker__row">
+      <div class="ink-ticker__name"><span>Газпром</span><span class="ink-tag ink-tag--code"><i class="ink-tag__mark"></i>GAZP</span></div>
+      <div class="ink-ticker__value">168.25</div>
+      <div class="ink-ticker__change"><span class="ink-badge ink-badge--trend"><svg class="ink-icon" aria-hidden="true"><use href="icons.svg#i-trend-up"/></svg>+2.74%</span></div>
+    </div>
+    <div class="ink-ticker__row">
+      <div class="ink-ticker__name"><span>Яндекс</span><span class="ink-tag ink-tag--code"><i class="ink-tag__mark"></i>YDEX</span></div>
+      <div class="ink-ticker__value">4&nbsp;120.00</div>
+      <div class="ink-ticker__change"><span class="ink-badge ink-badge--trend"><svg class="ink-icon" aria-hidden="true"><use href="icons.svg#i-trend-up"/></svg>+1.40%</span></div>
+    </div>
+    <div class="ink-ticker__row">
+      <div class="ink-ticker__name"><span>Лукойл</span><span class="ink-tag ink-tag--code"><i class="ink-tag__mark"></i>LKOH</span></div>
+      <div class="ink-ticker__value">7&nbsp;015.50</div>
+      <div class="ink-ticker__change"><span class="ink-badge ink-badge--trend"><svg class="ink-icon" aria-hidden="true"><use href="icons.svg#i-trend-down"/></svg>−0.39%</span></div>
+    </div>
+    <div class="ink-ticker__row">
+      <div class="ink-ticker__name"><span>Apple</span><span class="ink-tag ink-tag--code"><i class="ink-tag__mark"></i>AAPL</span></div>
+      <div class="ink-ticker__value">229.63</div>
+      <div class="ink-ticker__change"><span class="ink-badge ink-badge--trend"><svg class="ink-icon" aria-hidden="true"><use href="icons.svg#i-trend-up"/></svg>+1.39%</span></div>
+    </div>
+  </div>
+  <div class="ink-ticker__summary"><span>IMOEX</span><span>3&nbsp;031.51</span><span>▲1.12%</span></div>
+</article>
+  </div>
+  <pre class="doc-code"><code>&lt;article class="ink-card" style="width: 100%; max-width: 380px"&gt;
+  &lt;div class="ink-ticker"&gt;
+    &lt;div class="ink-ticker__head"&gt;
+      &lt;h3 class="ink-ticker__title"&gt;&lt;svg class="ink-icon" aria-hidden="true"&gt;&lt;use href="icons.svg#i-trend-up"/&gt;&lt;/svg&gt;Избранные котировки&lt;/h3&gt;
+      &lt;span class="ink-ticker__meta"&gt;&lt;svg class="ink-icon" aria-hidden="true"&gt;&lt;use href="icons.svg#i-clock"/&gt;&lt;/svg&gt;Обновлено 2026.6.12 16:15&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class="ink-ticker__row"&gt;
+      &lt;div class="ink-ticker__name"&gt;&lt;span&gt;Сбербанк&lt;/span&gt;&lt;span class="ink-tag ink-tag--code"&gt;&lt;i class="ink-tag__mark"&gt;&lt;/i&gt;SBER&lt;/span&gt;&lt;/div&gt;
+      &lt;div class="ink-ticker__value"&gt;312.40&lt;/div&gt;
+      &lt;div class="ink-ticker__change"&gt;&lt;span class="ink-badge ink-badge--trend"&gt;&lt;svg class="ink-icon" aria-hidden="true"&gt;&lt;use href="icons.svg#i-trend-up"/&gt;&lt;/svg&gt;+1.26%&lt;/span&gt;&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="ink-ticker__row"&gt;
+      &lt;div class="ink-ticker__name"&gt;&lt;span&gt;Газпром&lt;/span&gt;&lt;span class="ink-tag ink-tag--code"&gt;&lt;i class="ink-tag__mark"&gt;&lt;/i&gt;GAZP&lt;/span&gt;&lt;/div&gt;
+      &lt;div class="ink-ticker__value"&gt;168.25&lt;/div&gt;
+      &lt;div class="ink-ticker__change"&gt;&lt;span class="ink-badge ink-badge--trend"&gt;&lt;svg class="ink-icon" aria-hidden="true"&gt;&lt;use href="icons.svg#i-trend-up"/&gt;&lt;/svg&gt;+2.74%&lt;/span&gt;&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="ink-ticker__row"&gt;
+      &lt;div class="ink-ticker__name"&gt;&lt;span&gt;Яндекс&lt;/span&gt;&lt;span class="ink-tag ink-tag--code"&gt;&lt;i class="ink-tag__mark"&gt;&lt;/i&gt;YDEX&lt;/span&gt;&lt;/div&gt;
+      &lt;div class="ink-ticker__value"&gt;4&amp;nbsp;120.00&lt;/div&gt;
+      &lt;div class="ink-ticker__change"&gt;&lt;span class="ink-badge ink-badge--trend"&gt;&lt;svg class="ink-icon" aria-hidden="true"&gt;&lt;use href="icons.svg#i-trend-up"/&gt;&lt;/svg&gt;+1.40%&lt;/span&gt;&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="ink-ticker__row"&gt;
+      &lt;div class="ink-ticker__name"&gt;&lt;span&gt;Лукойл&lt;/span&gt;&lt;span class="ink-tag ink-tag--code"&gt;&lt;i class="ink-tag__mark"&gt;&lt;/i&gt;LKOH&lt;/span&gt;&lt;/div&gt;
+      &lt;div class="ink-ticker__value"&gt;7&amp;nbsp;015.50&lt;/div&gt;
+      &lt;div class="ink-ticker__change"&gt;&lt;span class="ink-badge ink-badge--trend"&gt;&lt;svg class="ink-icon" aria-hidden="true"&gt;&lt;use href="icons.svg#i-trend-down"/&gt;&lt;/svg&gt;−0.39%&lt;/span&gt;&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="ink-ticker__row"&gt;
+      &lt;div class="ink-ticker__name"&gt;&lt;span&gt;Apple&lt;/span&gt;&lt;span class="ink-tag ink-tag--code"&gt;&lt;i class="ink-tag__mark"&gt;&lt;/i&gt;AAPL&lt;/span&gt;&lt;/div&gt;
+      &lt;div class="ink-ticker__value"&gt;229.63&lt;/div&gt;
+      &lt;div class="ink-ticker__change"&gt;&lt;span class="ink-badge ink-badge--trend"&gt;&lt;svg class="ink-icon" aria-hidden="true"&gt;&lt;use href="icons.svg#i-trend-up"/&gt;&lt;/svg&gt;+1.39%&lt;/span&gt;&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class="ink-ticker__summary"&gt;&lt;span&gt;IMOEX&lt;/span&gt;&lt;span&gt;3&amp;nbsp;031.51&lt;/span&gt;&lt;span&gt;▲1.12%&lt;/span&gt;&lt;/div&gt;
+&lt;/article&gt;</code></pre>
+  <div class="doc-demo">
+<article class="ink-card" style="width: 100%; max-width: 380px">
+  <header class="ink-card__header">
+    <svg class="ink-icon" aria-hidden="true"><use href="icons.svg#i-swap"/></svg>
+    <h3 class="ink-card__title">Курсы валют</h3>
+    <span class="ink-card__meta">ЦБ РФ</span>
+  </header>
+  <div class="ink-ticker">
+    <div class="ink-ticker__row">
+      <div class="ink-ticker__name"><span>Доллар США</span><span class="ink-tag ink-tag--code">USD</span></div>
+      <div class="ink-ticker__value">81.25</div>
+      <div class="ink-ticker__change"><span class="ink-badge ink-badge--trend"><svg class="ink-icon" aria-hidden="true"><use href="icons.svg#i-trend-up"/></svg>+0.32%</span></div>
+    </div>
+    <div class="ink-ticker__row">
+      <div class="ink-ticker__name"><span>Евро</span><span class="ink-tag ink-tag--code">EUR</span></div>
+      <div class="ink-ticker__value">94.10</div>
+      <div class="ink-ticker__change"><span class="ink-badge ink-badge--trend"><svg class="ink-icon" aria-hidden="true"><use href="icons.svg#i-trend-down"/></svg>−0.15%</span></div>
+    </div>
+    <div class="ink-ticker__row">
+      <div class="ink-ticker__name"><span>Юань</span><span class="ink-tag ink-tag--code">CNY</span></div>
+      <div class="ink-ticker__value">11.28</div>
+      <div class="ink-ticker__change"><span class="ink-badge ink-badge--trend"><svg class="ink-icon" aria-hidden="true"><use href="icons.svg#i-trend-up"/></svg>+0.08%</span></div>
+    </div>
+  </div>
+  <footer class="ink-card__footer">
+    <span>Курс к рублю</span>
+    <span class="ink-card__meta">Обновлено 07-10 18:00</span>
+  </footer>
+</article>
+  </div>
+  <pre class="doc-code"><code>&lt;article class="ink-card" style="width: 100%; max-width: 380px"&gt;
+  &lt;header class="ink-card__header"&gt;
+    &lt;svg class="ink-icon" aria-hidden="true"&gt;&lt;use href="icons.svg#i-swap"/&gt;&lt;/svg&gt;
+    &lt;h3 class="ink-card__title"&gt;Курсы валют&lt;/h3&gt;
+    &lt;span class="ink-card__meta"&gt;ЦБ РФ&lt;/span&gt;
+  &lt;/header&gt;
+  &lt;div class="ink-ticker"&gt;
+    &lt;div class="ink-ticker__row"&gt;
+      &lt;div class="ink-ticker__name"&gt;&lt;span&gt;Доллар США&lt;/span&gt;&lt;span class="ink-tag ink-tag--code"&gt;USD&lt;/span&gt;&lt;/div&gt;
+      &lt;div class="ink-ticker__value"&gt;81.25&lt;/div&gt;
+      &lt;div class="ink-ticker__change"&gt;&lt;span class="ink-badge ink-badge--trend"&gt;&lt;svg class="ink-icon" aria-hidden="true"&gt;&lt;use href="icons.svg#i-trend-up"/&gt;&lt;/svg&gt;+0.32%&lt;/span&gt;&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="ink-ticker__row"&gt;
+      &lt;div class="ink-ticker__name"&gt;&lt;span&gt;Евро&lt;/span&gt;&lt;span class="ink-tag ink-tag--code"&gt;EUR&lt;/span&gt;&lt;/div&gt;
+      &lt;div class="ink-ticker__value"&gt;94.10&lt;/div&gt;
+      &lt;div class="ink-ticker__change"&gt;&lt;span class="ink-badge ink-badge--trend"&gt;&lt;svg class="ink-icon" aria-hidden="true"&gt;&lt;use href="icons.svg#i-trend-down"/&gt;&lt;/svg&gt;−0.15%&lt;/span&gt;&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="ink-ticker__row"&gt;
+      &lt;div class="ink-ticker__name"&gt;&lt;span&gt;Юань&lt;/span&gt;&lt;span class="ink-tag ink-tag--code"&gt;CNY&lt;/span&gt;&lt;/div&gt;
+      &lt;div class="ink-ticker__value"&gt;11.28&lt;/div&gt;
+      &lt;div class="ink-ticker__change"&gt;&lt;span class="ink-badge ink-badge--trend"&gt;&lt;svg class="ink-icon" aria-hidden="true"&gt;&lt;use href="icons.svg#i-trend-up"/&gt;&lt;/svg&gt;+0.08%&lt;/span&gt;&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;footer class="ink-card__footer"&gt;
+    &lt;span&gt;Курс к рублю&lt;/span&gt;
+    &lt;span class="ink-card__meta"&gt;Обновлено 07-10 18:00&lt;/span&gt;
+  &lt;/footer&gt;
+&lt;/article&gt;</code></pre>
+  <div class="doc-demo">
+<div class="ink-stat-grid" style="--cols: 2; width: 100%; max-width: 380px">
+  <div class="ink-stat">
+    <span class="ink-stat__label">Steps</span>
+    <span class="ink-stat__value">8&nbsp;412</span>
+    <span class="ink-stat__delta"><svg class="ink-icon" aria-hidden="true"><use href="icons.svg#i-trend-up"/></svg>+12% к вчера</span>
+  </div>
+  <div class="ink-stat">
+    <span class="ink-stat__label">Sleep</span>
+    <span class="ink-stat__value">7.2<span class="ink-stat__unit">ч</span></span>
+    <span class="ink-stat__delta"><svg class="ink-icon" aria-hidden="true"><use href="icons.svg#i-trend-down"/></svg>−0.4 ч</span>
+  </div>
+</div>
+  </div>
+  <pre class="doc-code"><code>&lt;div class="ink-stat-grid" style="--cols: 2; width: 100%; max-width: 380px"&gt;
+  &lt;div class="ink-stat"&gt;
+    &lt;span class="ink-stat__label"&gt;Steps&lt;/span&gt;
+    &lt;span class="ink-stat__value"&gt;8&amp;nbsp;412&lt;/span&gt;
+    &lt;span class="ink-stat__delta"&gt;&lt;svg class="ink-icon" aria-hidden="true"&gt;&lt;use href="icons.svg#i-trend-up"/&gt;&lt;/svg&gt;+12% к вчера&lt;/span&gt;
+  &lt;/div&gt;
+  &lt;div class="ink-stat"&gt;
+    &lt;span class="ink-stat__label"&gt;Sleep&lt;/span&gt;
+    &lt;span class="ink-stat__value"&gt;7.2&lt;span class="ink-stat__unit"&gt;ч&lt;/span&gt;&lt;/span&gt;
+    &lt;span class="ink-stat__delta"&gt;&lt;svg class="ink-icon" aria-hidden="true"&gt;&lt;use href="icons.svg#i-trend-down"/&gt;&lt;/svg&gt;−0.4 ч&lt;/span&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+  <div class="doc-demo">
+<div class="ink-stack" style="width: 100%; max-width: 380px">
+  <div class="ink-kv__row" style="border: 0; padding: 0"><span class="ink-small">Задачи на неделю</span><span class="ink-small ink-strong ink-num">4 / 10</span></div>
+  <div class="ink-progress" role="progressbar" aria-label="Задачи на неделю" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="--value: 40%">
+    <div class="ink-progress__bar"></div>
+  </div>
+  <div class="ink-progress ink-progress--segmented" role="progressbar" aria-label="Синхронизация" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="--value: 70%">
+    <div class="ink-progress__bar"></div>
+  </div>
+  <div class="ink-progress ink-progress--sm" role="progressbar" aria-label="Загрузка" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style="--value: 25%">
+    <div class="ink-progress__bar"></div>
+  </div>
+  <div class="ink-row">
+    <span class="ink-meter" style="--value: 80%"><span class="ink-meter__body"><span class="ink-meter__fill"></span></span><span class="ink-meter__label">80%</span></span>
+    <span class="ink-meter" style="--value: 20%"><span class="ink-meter__body"><span class="ink-meter__fill"></span></span><span class="ink-meter__label">20%</span></span>
+    <span class="ink-meter ink-meter--lg" style="--value: 55%"><span class="ink-meter__body"><span class="ink-meter__fill"></span></span><span class="ink-meter__label">55%</span></span>
+  </div>
+</div>
+  </div>
+  <pre class="doc-code"><code>&lt;div class="ink-stack" style="width: 100%; max-width: 380px"&gt;
+  &lt;div class="ink-kv__row" style="border: 0; padding: 0"&gt;&lt;span class="ink-small"&gt;Задачи на неделю&lt;/span&gt;&lt;span class="ink-small ink-strong ink-num"&gt;4 / 10&lt;/span&gt;&lt;/div&gt;
+  &lt;div class="ink-progress" role="progressbar" aria-label="Задачи на неделю" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="--value: 40%"&gt;
+    &lt;div class="ink-progress__bar"&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class="ink-progress ink-progress--segmented" role="progressbar" aria-label="Синхронизация" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="--value: 70%"&gt;
+    &lt;div class="ink-progress__bar"&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class="ink-progress ink-progress--sm" role="progressbar" aria-label="Загрузка" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style="--value: 25%"&gt;
+    &lt;div class="ink-progress__bar"&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class="ink-row"&gt;
+    &lt;span class="ink-meter" style="--value: 80%"&gt;&lt;span class="ink-meter__body"&gt;&lt;span class="ink-meter__fill"&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="ink-meter__label"&gt;80%&lt;/span&gt;&lt;/span&gt;
+    &lt;span class="ink-meter" style="--value: 20%"&gt;&lt;span class="ink-meter__body"&gt;&lt;span class="ink-meter__fill"&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="ink-meter__label"&gt;20%&lt;/span&gt;&lt;/span&gt;
+    &lt;span class="ink-meter ink-meter--lg" style="--value: 55%"&gt;&lt;span class="ink-meter__body"&gt;&lt;span class="ink-meter__fill"&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="ink-meter__label"&gt;55%&lt;/span&gt;&lt;/span&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+  <div class="doc-demo">
+<article class="ink-card" style="width: 100%; max-width: 380px">
+  <header class="ink-card__header"><svg class="ink-icon" aria-hidden="true"><use href="icons.svg#i-device"/></svg><h3 class="ink-card__title">Экран на кухне</h3></header>
+  <div class="ink-card__body">
+    <dl class="ink-kv">
+      <div class="ink-kv__row"><dt>Модель</dt><dd>Ink 7.5″</dd></div>
+      <div class="ink-kv__row"><dt>Батарея</dt><dd><span class="ink-meter" style="--value: 64%"><span class="ink-meter__body"><span class="ink-meter__fill"></span></span>64%</span></dd></div>
+      <div class="ink-kv__row"><dt>Последняя синхронизация</dt><dd>17:35</dd></div>
+      <div class="ink-kv__row"><dt>Прошивка</dt><dd>2.4.1</dd></div>
+    </dl>
+  </div>
+</article>
+  </div>
+  <pre class="doc-code"><code>&lt;article class="ink-card" style="width: 100%; max-width: 380px"&gt;
+  &lt;header class="ink-card__header"&gt;&lt;svg class="ink-icon" aria-hidden="true"&gt;&lt;use href="icons.svg#i-device"/&gt;&lt;/svg&gt;&lt;h3 class="ink-card__title"&gt;Экран на кухне&lt;/h3&gt;&lt;/header&gt;
+  &lt;div class="ink-card__body"&gt;
+    &lt;dl class="ink-kv"&gt;
+      &lt;div class="ink-kv__row"&gt;&lt;dt&gt;Модель&lt;/dt&gt;&lt;dd&gt;Ink 7.5″&lt;/dd&gt;&lt;/div&gt;
+      &lt;div class="ink-kv__row"&gt;&lt;dt&gt;Батарея&lt;/dt&gt;&lt;dd&gt;&lt;span class="ink-meter" style="--value: 64%"&gt;&lt;span class="ink-meter__body"&gt;&lt;span class="ink-meter__fill"&gt;&lt;/span&gt;&lt;/span&gt;64%&lt;/span&gt;&lt;/dd&gt;&lt;/div&gt;
+      &lt;div class="ink-kv__row"&gt;&lt;dt&gt;Последняя синхронизация&lt;/dt&gt;&lt;dd&gt;17:35&lt;/dd&gt;&lt;/div&gt;
+      &lt;div class="ink-kv__row"&gt;&lt;dt&gt;Прошивка&lt;/dt&gt;&lt;dd&gt;2.4.1&lt;/dd&gt;&lt;/div&gt;
+    &lt;/dl&gt;
+  &lt;/div&gt;
+&lt;/article&gt;</code></pre>
+  <div class="doc-demo">
+<div class="ink-row ink-row--wrap" style="--gap: var(--space-6)">
+  <div class="ink-date-block">
+    <span class="ink-date-block__month">Июль</span>
+    <span class="ink-date-block__day">10</span>
+    <span class="ink-date-block__weekday">пятница</span>
+  </div>
+  <div class="ink-weather">
+    <svg class="ink-icon ink-weather__icon" aria-hidden="true"><use href="icons.svg#i-sun"/></svg>
+    <span class="ink-weather__temp">24°</span>
+    <div class="ink-weather__info">
+      <span class="ink-weather__cond">Ясно</span>
+      <span class="ink-weather__meta">Москва · 18° / 27°</span>
+    </div>
+  </div>
+</div>
+  </div>
+  <pre class="doc-code"><code>&lt;div class="ink-row ink-row--wrap" style="--gap: var(--space-6)"&gt;
+  &lt;div class="ink-date-block"&gt;
+    &lt;span class="ink-date-block__month"&gt;Июль&lt;/span&gt;
+    &lt;span class="ink-date-block__day"&gt;10&lt;/span&gt;
+    &lt;span class="ink-date-block__weekday"&gt;пятница&lt;/span&gt;
+  &lt;/div&gt;
+  &lt;div class="ink-weather"&gt;
+    &lt;svg class="ink-icon ink-weather__icon" aria-hidden="true"&gt;&lt;use href="icons.svg#i-sun"/&gt;&lt;/svg&gt;
+    &lt;span class="ink-weather__temp"&gt;24°&lt;/span&gt;
+    &lt;div class="ink-weather__info"&gt;
+      &lt;span class="ink-weather__cond"&gt;Ясно&lt;/span&gt;
+      &lt;span class="ink-weather__meta"&gt;Москва · 18° / 27°&lt;/span&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+</section>
+
+<section class="doc-section" id="feedback">
+  <h2 class="doc-title">Состояния</h2>
+  <p class="doc-lead">Пустое состояние, цитата, скелетон, баннеры и статичная загрузка — без анимации, чтобы экран e-ink не мерцал.</p>
+  <div class="doc-demo">
+<article class="ink-card ink-card--flat" style="width: 100%; max-width: 380px">
+  <div class="ink-empty">
+    <div class="ink-empty__icon"><svg class="ink-icon" aria-hidden="true"><use href="icons.svg#i-device"/></svg></div>
+    <p class="ink-empty__title">Нет устройств</p>
+    <p class="ink-empty__hint">Нажмите «Добавить устройство», чтобы начать</p>
+  </div>
+</article>
+  </div>
+  <pre class="doc-code"><code>&lt;article class="ink-card ink-card--flat" style="width: 100%; max-width: 380px"&gt;
+  &lt;div class="ink-empty"&gt;
+    &lt;div class="ink-empty__icon"&gt;&lt;svg class="ink-icon" aria-hidden="true"&gt;&lt;use href="icons.svg#i-device"/&gt;&lt;/svg&gt;&lt;/div&gt;
+    &lt;p class="ink-empty__title"&gt;Нет устройств&lt;/p&gt;
+    &lt;p class="ink-empty__hint"&gt;Нажмите «Добавить устройство», чтобы начать&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/article&gt;</code></pre>
+  <div class="doc-demo">
+<figure class="ink-quote" style="width: 100%; max-width: 380px">
+  <figcaption class="ink-quote__caption">Цитата дня</figcaption>
+  <blockquote class="ink-quote__text">Делайте дни такими, какими хотите их видеть.</blockquote>
+  <cite class="ink-quote__cite">— Неизвестный автор</cite>
+</figure>
+  </div>
+  <pre class="doc-code"><code>&lt;figure class="ink-quote" style="width: 100%; max-width: 380px"&gt;
+  &lt;figcaption class="ink-quote__caption"&gt;Цитата дня&lt;/figcaption&gt;
+  &lt;blockquote class="ink-quote__text"&gt;Делайте дни такими, какими хотите их видеть.&lt;/blockquote&gt;
+  &lt;cite class="ink-quote__cite"&gt;— Неизвестный автор&lt;/cite&gt;
+&lt;/figure&gt;</code></pre>
+  <div class="doc-demo">
+<article class="ink-card" style="width: 100%; max-width: 380px" aria-busy="true">
+  <header class="ink-card__header"><h3 class="ink-card__title">Новости дня</h3></header>
+  <div class="ink-card__body ink-skeleton-stack">
+    <span class="ink-skeleton ink-skeleton--title"></span>
+    <span class="ink-skeleton ink-skeleton--text"></span>
+    <span class="ink-skeleton ink-skeleton--text"></span>
+    <span class="ink-skeleton ink-skeleton--text"></span>
+  </div>
+</article>
+  </div>
+  <pre class="doc-code"><code>&lt;article class="ink-card" style="width: 100%; max-width: 380px" aria-busy="true"&gt;
+  &lt;header class="ink-card__header"&gt;&lt;h3 class="ink-card__title"&gt;Новости дня&lt;/h3&gt;&lt;/header&gt;
+  &lt;div class="ink-card__body ink-skeleton-stack"&gt;
+    &lt;span class="ink-skeleton ink-skeleton--title"&gt;&lt;/span&gt;
+    &lt;span class="ink-skeleton ink-skeleton--text"&gt;&lt;/span&gt;
+    &lt;span class="ink-skeleton ink-skeleton--text"&gt;&lt;/span&gt;
+    &lt;span class="ink-skeleton ink-skeleton--text"&gt;&lt;/span&gt;
+  &lt;/div&gt;
+&lt;/article&gt;</code></pre>
+  <div class="doc-demo">
+<div class="ink-stack" style="width: 100%; max-width: 380px">
+  <div class="ink-alert" role="alert">
+    <svg class="ink-icon ink-alert__icon" aria-hidden="true"><use href="icons.svg#i-alert"/></svg>
+    <div class="ink-alert__body">
+      <p class="ink-alert__title">Штормовое предупреждение</p>
+      <p class="ink-alert__text">Порывы ветра до 20 м/с с 18:00 до 23:00.</p>
+    </div>
+  </div>
+  <div class="ink-alert ink-alert--outline" role="status">
+    <svg class="ink-icon ink-alert__icon" aria-hidden="true"><use href="icons.svg#i-info"/></svg>
+    <div class="ink-alert__body">
+      <p class="ink-alert__title">Экран не в сети</p>
+      <p class="ink-alert__text">Последняя синхронизация 3 часа назад.</p>
+    </div>
+  </div>
+  <div class="ink-loading" role="status">Загрузка<span class="ink-loading__dots" aria-hidden="true"><i></i><i></i><i></i></span></div>
+</div>
+  </div>
+  <pre class="doc-code"><code>&lt;div class="ink-stack" style="width: 100%; max-width: 380px"&gt;
+  &lt;div class="ink-alert" role="alert"&gt;
+    &lt;svg class="ink-icon ink-alert__icon" aria-hidden="true"&gt;&lt;use href="icons.svg#i-alert"/&gt;&lt;/svg&gt;
+    &lt;div class="ink-alert__body"&gt;
+      &lt;p class="ink-alert__title"&gt;Штормовое предупреждение&lt;/p&gt;
+      &lt;p class="ink-alert__text"&gt;Порывы ветра до 20 м/с с 18:00 до 23:00.&lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class="ink-alert ink-alert--outline" role="status"&gt;
+    &lt;svg class="ink-icon ink-alert__icon" aria-hidden="true"&gt;&lt;use href="icons.svg#i-info"/&gt;&lt;/svg&gt;
+    &lt;div class="ink-alert__body"&gt;
+      &lt;p class="ink-alert__title"&gt;Экран не в сети&lt;/p&gt;
+      &lt;p class="ink-alert__text"&gt;Последняя синхронизация 3 часа назад.&lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class="ink-loading" role="status"&gt;Загрузка&lt;span class="ink-loading__dots" aria-hidden="true"&gt;&lt;i&gt;&lt;/i&gt;&lt;i&gt;&lt;/i&gt;&lt;i&gt;&lt;/i&gt;&lt;/span&gt;&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+</section>

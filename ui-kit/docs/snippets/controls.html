@@ -1,0 +1,342 @@
+<!-- Ink UI — controls: buttons, chips, tags & badges, forms. Fragment for the docs page. -->
+<section class="doc-section" id="buttons">
+  <h2 class="doc-title">Кнопки</h2>
+  <p class="doc-lead">Сплошная заливка тушью — главное действие; обводка и текст — второстепенные. Нажатие инвертирует.</p>
+  <div class="doc-demo">
+<div class="ink-row ink-row--wrap">
+  <button class="ink-button ink-button--sm"><svg class="ink-icon" aria-hidden="true"><use href="icons.svg#i-plus"/></svg> Настроить</button>
+  <button class="ink-button ink-button--sm ink-button--square"><svg class="ink-icon" aria-hidden="true"><use href="icons.svg#i-plus"/></svg> Добавить устройство</button>
+</div>
+  </div>
+  <pre class="doc-code"><code>&lt;div class="ink-row ink-row--wrap"&gt;
+  &lt;button class="ink-button ink-button--sm"&gt;&lt;svg class="ink-icon" aria-hidden="true"&gt;&lt;use href="icons.svg#i-plus"/&gt;&lt;/svg&gt; Настроить&lt;/button&gt;
+  &lt;button class="ink-button ink-button--sm ink-button--square"&gt;&lt;svg class="ink-icon" aria-hidden="true"&gt;&lt;use href="icons.svg#i-plus"/&gt;&lt;/svg&gt; Добавить устройство&lt;/button&gt;
+&lt;/div&gt;</code></pre>
+  <div class="doc-demo">
+<div class="ink-row ink-row--wrap">
+  <button class="ink-button">Сохранить</button>
+  <button class="ink-button ink-button--outline">Отмена</button>
+  <button class="ink-button ink-button--ghost">Подробнее</button>
+  <button class="ink-button" aria-pressed="true">Нажата</button>
+  <button class="ink-button" disabled>Недоступно</button>
+</div>
+  </div>
+  <pre class="doc-code"><code>&lt;div class="ink-row ink-row--wrap"&gt;
+  &lt;button class="ink-button"&gt;Сохранить&lt;/button&gt;
+  &lt;button class="ink-button ink-button--outline"&gt;Отмена&lt;/button&gt;
+  &lt;button class="ink-button ink-button--ghost"&gt;Подробнее&lt;/button&gt;
+  &lt;button class="ink-button" aria-pressed="true"&gt;Нажата&lt;/button&gt;
+  &lt;button class="ink-button" disabled&gt;Недоступно&lt;/button&gt;
+&lt;/div&gt;</code></pre>
+  <div class="doc-demo">
+<div class="ink-row ink-row--wrap">
+  <button class="ink-button ink-button--sm">Маленькая</button>
+  <button class="ink-button">Обычная</button>
+  <button class="ink-button ink-button--lg">Большая</button>
+</div>
+  </div>
+  <pre class="doc-code"><code>&lt;div class="ink-row ink-row--wrap"&gt;
+  &lt;button class="ink-button ink-button--sm"&gt;Маленькая&lt;/button&gt;
+  &lt;button class="ink-button"&gt;Обычная&lt;/button&gt;
+  &lt;button class="ink-button ink-button--lg"&gt;Большая&lt;/button&gt;
+&lt;/div&gt;</code></pre>
+  <div class="doc-demo">
+<div class="ink-row ink-row--wrap">
+  <button class="ink-button ink-button--icon" aria-label="Добавить"><svg class="ink-icon" aria-hidden="true"><use href="icons.svg#i-plus"/></svg></button>
+  <button class="ink-button ink-button--icon ink-button--outline" aria-label="Поиск"><svg class="ink-icon" aria-hidden="true"><use href="icons.svg#i-search"/></svg></button>
+  <button class="ink-button ink-button--icon ink-button--square ink-button--outline" aria-label="Закрыть"><svg class="ink-icon" aria-hidden="true"><use href="icons.svg#i-close"/></svg></button>
+  <div class="ink-button-group" role="group" aria-label="Период">
+    <button class="ink-button" aria-pressed="true">День</button>
+    <button class="ink-button" aria-pressed="false">Неделя</button>
+    <button class="ink-button" aria-pressed="false">Месяц</button>
+  </div>
+</div>
+  </div>
+  <pre class="doc-code"><code>&lt;div class="ink-row ink-row--wrap"&gt;
+  &lt;button class="ink-button ink-button--icon" aria-label="Добавить"&gt;&lt;svg class="ink-icon" aria-hidden="true"&gt;&lt;use href="icons.svg#i-plus"/&gt;&lt;/svg&gt;&lt;/button&gt;
+  &lt;button class="ink-button ink-button--icon ink-button--outline" aria-label="Поиск"&gt;&lt;svg class="ink-icon" aria-hidden="true"&gt;&lt;use href="icons.svg#i-search"/&gt;&lt;/svg&gt;&lt;/button&gt;
+  &lt;button class="ink-button ink-button--icon ink-button--square ink-button--outline" aria-label="Закрыть"&gt;&lt;svg class="ink-icon" aria-hidden="true"&gt;&lt;use href="icons.svg#i-close"/&gt;&lt;/svg&gt;&lt;/button&gt;
+  &lt;div class="ink-button-group" role="group" aria-label="Период"&gt;
+    &lt;button class="ink-button" aria-pressed="true"&gt;День&lt;/button&gt;
+    &lt;button class="ink-button" aria-pressed="false"&gt;Неделя&lt;/button&gt;
+    &lt;button class="ink-button" aria-pressed="false"&gt;Месяц&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+  <div class="doc-demo">
+<button class="ink-button ink-button--lg ink-button--block ink-button--square"><svg class="ink-icon" aria-hidden="true"><use href="icons.svg#i-check"/></svg> Применить к устройству</button>
+  </div>
+  <pre class="doc-code"><code>&lt;button class="ink-button ink-button--lg ink-button--block ink-button--square"&gt;&lt;svg class="ink-icon" aria-hidden="true"&gt;&lt;use href="icons.svg#i-check"/&gt;&lt;/svg&gt; Применить к устройству&lt;/button&gt;</code></pre>
+  <div class="doc-demo">
+<button class="ink-fab ink-fab--static" aria-label="Создать карточку"><svg class="ink-icon" aria-hidden="true"><use href="icons.svg#i-plus"/></svg></button>
+  </div>
+  <pre class="doc-code"><code>&lt;button class="ink-fab ink-fab--static" aria-label="Создать карточку"&gt;&lt;svg class="ink-icon" aria-hidden="true"&gt;&lt;use href="icons.svg#i-plus"/&gt;&lt;/svg&gt;&lt;/button&gt;</code></pre>
+</section>
+
+<section class="doc-section" id="chips">
+  <h2 class="doc-title">Чипы-фильтры</h2>
+  <p class="doc-lead">Горизонтальный ряд текстовых меток без полосы прокрутки; активная — чёрная «таблетка».</p>
+  <div class="doc-demo">
+<div class="ink-chips" role="tablist" aria-label="Категории">
+  <button class="ink-chip" role="tab" aria-selected="true">Все</button>
+  <button class="ink-chip" role="tab" aria-selected="false">Новости</button>
+  <button class="ink-chip" role="tab" aria-selected="false">Жизнь</button>
+  <button class="ink-chip" role="tab" aria-selected="false">Инфо</button>
+  <button class="ink-chip" role="tab" aria-selected="false">Финансы</button>
+  <button class="ink-chip" role="tab" aria-selected="false">Погода</button>
+  <button class="ink-chip" role="tab" aria-selected="false">Календарь</button>
+</div>
+  </div>
+  <pre class="doc-code"><code>&lt;div class="ink-chips" role="tablist" aria-label="Категории"&gt;
+  &lt;button class="ink-chip" role="tab" aria-selected="true"&gt;Все&lt;/button&gt;
+  &lt;button class="ink-chip" role="tab" aria-selected="false"&gt;Новости&lt;/button&gt;
+  &lt;button class="ink-chip" role="tab" aria-selected="false"&gt;Жизнь&lt;/button&gt;
+  &lt;button class="ink-chip" role="tab" aria-selected="false"&gt;Инфо&lt;/button&gt;
+  &lt;button class="ink-chip" role="tab" aria-selected="false"&gt;Финансы&lt;/button&gt;
+  &lt;button class="ink-chip" role="tab" aria-selected="false"&gt;Погода&lt;/button&gt;
+  &lt;button class="ink-chip" role="tab" aria-selected="false"&gt;Календарь&lt;/button&gt;
+&lt;/div&gt;</code></pre>
+  <div class="doc-demo">
+<div class="ink-chips ink-chips--flush ink-chips--wrap">
+  <button class="ink-chip ink-chip--outline" aria-pressed="true">Акции</button>
+  <button class="ink-chip ink-chip--outline" aria-pressed="false">Валюты</button>
+  <button class="ink-chip ink-chip--outline" aria-pressed="false">Крипто</button>
+</div>
+  </div>
+  <pre class="doc-code"><code>&lt;div class="ink-chips ink-chips--flush ink-chips--wrap"&gt;
+  &lt;button class="ink-chip ink-chip--outline" aria-pressed="true"&gt;Акции&lt;/button&gt;
+  &lt;button class="ink-chip ink-chip--outline" aria-pressed="false"&gt;Валюты&lt;/button&gt;
+  &lt;button class="ink-chip ink-chip--outline" aria-pressed="false"&gt;Крипто&lt;/button&gt;
+&lt;/div&gt;</code></pre>
+</section>
+
+<section class="doc-section" id="tags-badges">
+  <h2 class="doc-title">Теги и бейджи</h2>
+  <p class="doc-lead">Тег — тихая серая метка категории; бейдж — инвертированный блок для даты, тренда и счётчика.</p>
+  <div class="doc-demo">
+<div class="ink-row ink-row--wrap">
+  <span class="ink-tag">Инфо</span>
+  <span class="ink-tag">Финансы</span>
+  <span class="ink-tag ink-tag--solid">Новое</span>
+  <span class="ink-tag ink-tag--code"><i class="ink-tag__mark"></i>600000</span>
+  <span class="ink-tag ink-tag--code"><i class="ink-tag__mark"></i>AAPL</span>
+</div>
+  </div>
+  <pre class="doc-code"><code>&lt;div class="ink-row ink-row--wrap"&gt;
+  &lt;span class="ink-tag"&gt;Инфо&lt;/span&gt;
+  &lt;span class="ink-tag"&gt;Финансы&lt;/span&gt;
+  &lt;span class="ink-tag ink-tag--solid"&gt;Новое&lt;/span&gt;
+  &lt;span class="ink-tag ink-tag--code"&gt;&lt;i class="ink-tag__mark"&gt;&lt;/i&gt;600000&lt;/span&gt;
+  &lt;span class="ink-tag ink-tag--code"&gt;&lt;i class="ink-tag__mark"&gt;&lt;/i&gt;AAPL&lt;/span&gt;
+&lt;/div&gt;</code></pre>
+  <div class="doc-demo">
+<div class="ink-row ink-row--wrap">
+  <span class="ink-badge">10 июля</span>
+  <span class="ink-badge">07.10 пт</span>
+  <span class="ink-badge ink-badge--outline">Черновик</span>
+  <span class="ink-badge ink-badge--trend"><svg class="ink-icon" aria-hidden="true"><use href="icons.svg#i-trend-up"/></svg>+1,26%</span>
+  <span class="ink-badge ink-badge--trend ink-badge--outline"><svg class="ink-icon" aria-hidden="true"><use href="icons.svg#i-trend-down"/></svg>−0,42%</span>
+  <span class="ink-badge ink-badge--round">3</span>
+  <span class="ink-badge ink-badge--round">12</span>
+  <span class="ink-badge-anchor">
+    <button class="ink-button ink-button--icon ink-button--outline" aria-label="Уведомления: 5"><svg class="ink-icon" aria-hidden="true"><use href="icons.svg#i-check"/></svg></button>
+    <span class="ink-badge ink-badge--round" aria-hidden="true">5</span>
+  </span>
+</div>
+  </div>
+  <pre class="doc-code"><code>&lt;div class="ink-row ink-row--wrap"&gt;
+  &lt;span class="ink-badge"&gt;10 июля&lt;/span&gt;
+  &lt;span class="ink-badge"&gt;07.10 пт&lt;/span&gt;
+  &lt;span class="ink-badge ink-badge--outline"&gt;Черновик&lt;/span&gt;
+  &lt;span class="ink-badge ink-badge--trend"&gt;&lt;svg class="ink-icon" aria-hidden="true"&gt;&lt;use href="icons.svg#i-trend-up"/&gt;&lt;/svg&gt;+1,26%&lt;/span&gt;
+  &lt;span class="ink-badge ink-badge--trend ink-badge--outline"&gt;&lt;svg class="ink-icon" aria-hidden="true"&gt;&lt;use href="icons.svg#i-trend-down"/&gt;&lt;/svg&gt;−0,42%&lt;/span&gt;
+  &lt;span class="ink-badge ink-badge--round"&gt;3&lt;/span&gt;
+  &lt;span class="ink-badge ink-badge--round"&gt;12&lt;/span&gt;
+  &lt;span class="ink-badge-anchor"&gt;
+    &lt;button class="ink-button ink-button--icon ink-button--outline" aria-label="Уведомления: 5"&gt;&lt;svg class="ink-icon" aria-hidden="true"&gt;&lt;use href="icons.svg#i-check"/&gt;&lt;/svg&gt;&lt;/button&gt;
+    &lt;span class="ink-badge ink-badge--round" aria-hidden="true"&gt;5&lt;/span&gt;
+  &lt;/span&gt;
+&lt;/div&gt;</code></pre>
+</section>
+
+<section class="doc-section" id="forms">
+  <h2 class="doc-title">Формы</h2>
+  <p class="doc-lead">Толстая рамка, жирная подпись. Ошибка — утолщённая рамка и текст тушью, без цвета.</p>
+  <div class="doc-demo">
+<div class="ink-stack">
+  <div class="ink-field">
+    <label class="ink-label" for="f-name">Название карточки</label>
+    <input class="ink-input" id="f-name" placeholder="Например, Цитата дня" aria-describedby="f-name-hint">
+    <p class="ink-hint" id="f-name-hint">Показывается в библиотеке карточек.</p>
+  </div>
+  <div class="ink-field">
+    <label class="ink-label" for="f-city">Город для предупреждений</label>
+    <input class="ink-input" id="f-city" value="Ташкнт" aria-invalid="true" aria-describedby="f-city-err">
+    <p class="ink-error" id="f-city-err">Город не найден. Проверьте написание.</p>
+  </div>
+  <div class="ink-field">
+    <label class="ink-label" for="f-dis">Идентификатор</label>
+    <input class="ink-input" id="f-dis" value="INK-0042" disabled>
+  </div>
+</div>
+  </div>
+  <pre class="doc-code"><code>&lt;div class="ink-stack"&gt;
+  &lt;div class="ink-field"&gt;
+    &lt;label class="ink-label" for="f-name"&gt;Название карточки&lt;/label&gt;
+    &lt;input class="ink-input" id="f-name" placeholder="Например, Цитата дня" aria-describedby="f-name-hint"&gt;
+    &lt;p class="ink-hint" id="f-name-hint"&gt;Показывается в библиотеке карточек.&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="ink-field"&gt;
+    &lt;label class="ink-label" for="f-city"&gt;Город для предупреждений&lt;/label&gt;
+    &lt;input class="ink-input" id="f-city" value="Ташкнт" aria-invalid="true" aria-describedby="f-city-err"&gt;
+    &lt;p class="ink-error" id="f-city-err"&gt;Город не найден. Проверьте написание.&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="ink-field"&gt;
+    &lt;label class="ink-label" for="f-dis"&gt;Идентификатор&lt;/label&gt;
+    &lt;input class="ink-input" id="f-dis" value="INK-0042" disabled&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+  <div class="doc-demo">
+<div class="ink-search">
+  <svg class="ink-icon ink-search__icon" aria-hidden="true"><use href="icons.svg#i-search"/></svg>
+  <input class="ink-search__input" type="search" placeholder="Поиск карточек" aria-label="Поиск карточек">
+  <button class="ink-search__clear" type="button" aria-label="Очистить"><svg class="ink-icon" aria-hidden="true"><use href="icons.svg#i-close"/></svg></button>
+</div>
+  </div>
+  <pre class="doc-code"><code>&lt;div class="ink-search"&gt;
+  &lt;svg class="ink-icon ink-search__icon" aria-hidden="true"&gt;&lt;use href="icons.svg#i-search"/&gt;&lt;/svg&gt;
+  &lt;input class="ink-search__input" type="search" placeholder="Поиск карточек" aria-label="Поиск карточек"&gt;
+  &lt;button class="ink-search__clear" type="button" aria-label="Очистить"&gt;&lt;svg class="ink-icon" aria-hidden="true"&gt;&lt;use href="icons.svg#i-close"/&gt;&lt;/svg&gt;&lt;/button&gt;
+&lt;/div&gt;</code></pre>
+  <div class="doc-demo">
+<div class="ink-field">
+  <label class="ink-label" for="f-src">Источник новостей</label>
+  <div class="ink-select">
+    <select id="f-src">
+      <option>Главное за день</option>
+      <option>Технологии</option>
+      <option>Экономика</option>
+    </select>
+    <svg class="ink-icon ink-select__chevron" aria-hidden="true"><use href="icons.svg#i-chevron-down"/></svg>
+  </div>
+</div>
+  </div>
+  <pre class="doc-code"><code>&lt;div class="ink-field"&gt;
+  &lt;label class="ink-label" for="f-src"&gt;Источник новостей&lt;/label&gt;
+  &lt;div class="ink-select"&gt;
+    &lt;select id="f-src"&gt;
+      &lt;option&gt;Главное за день&lt;/option&gt;
+      &lt;option&gt;Технологии&lt;/option&gt;
+      &lt;option&gt;Экономика&lt;/option&gt;
+    &lt;/select&gt;
+    &lt;svg class="ink-icon ink-select__chevron" aria-hidden="true"&gt;&lt;use href="icons.svg#i-chevron-down"/&gt;&lt;/svg&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+  <div class="doc-demo">
+<div class="ink-field">
+  <label class="ink-label" for="f-note">Свой текст <span class="ink-label__meta">18 / 60</span></label>
+  <textarea class="ink-textarea ink-textarea--ruled" id="f-note" rows="4">Сделать дни такими,
+какими хочется</textarea>
+</div>
+  </div>
+  <pre class="doc-code"><code>&lt;div class="ink-field"&gt;
+  &lt;label class="ink-label" for="f-note"&gt;Свой текст &lt;span class="ink-label__meta"&gt;18 / 60&lt;/span&gt;&lt;/label&gt;
+  &lt;textarea class="ink-textarea ink-textarea--ruled" id="f-note" rows="4"&gt;Сделать дни такими,
+какими хочется&lt;/textarea&gt;
+&lt;/div&gt;</code></pre>
+  <div class="doc-demo">
+<div class="ink-field">
+  <label class="ink-label" for="f-plain">Комментарий</label>
+  <textarea class="ink-textarea" id="f-plain" placeholder="Необязательно"></textarea>
+</div>
+  </div>
+  <pre class="doc-code"><code>&lt;div class="ink-field"&gt;
+  &lt;label class="ink-label" for="f-plain"&gt;Комментарий&lt;/label&gt;
+  &lt;textarea class="ink-textarea" id="f-plain" placeholder="Необязательно"&gt;&lt;/textarea&gt;
+&lt;/div&gt;</code></pre>
+  <div class="doc-demo">
+<div class="ink-stack" style="--gap: var(--space-1)">
+  <label class="ink-check"><input type="checkbox" class="ink-checkbox" checked> Показывать дату</label>
+  <label class="ink-check"><input type="checkbox" class="ink-checkbox"> Показывать источник</label>
+  <label class="ink-check"><input type="checkbox" class="ink-checkbox" disabled> Недоступно</label>
+  <label class="ink-check"><input type="radio" class="ink-radio" name="f-r" checked> Каждый час</label>
+  <label class="ink-check"><input type="radio" class="ink-radio" name="f-r"> Раз в день</label>
+  <label class="ink-check ink-check--between">Автообновление <input type="checkbox" class="ink-switch" role="switch" checked></label>
+  <label class="ink-check ink-check--between">Ночной режим <input type="checkbox" class="ink-switch" role="switch"></label>
+</div>
+  </div>
+  <pre class="doc-code"><code>&lt;div class="ink-stack" style="--gap: var(--space-1)"&gt;
+  &lt;label class="ink-check"&gt;&lt;input type="checkbox" class="ink-checkbox" checked&gt; Показывать дату&lt;/label&gt;
+  &lt;label class="ink-check"&gt;&lt;input type="checkbox" class="ink-checkbox"&gt; Показывать источник&lt;/label&gt;
+  &lt;label class="ink-check"&gt;&lt;input type="checkbox" class="ink-checkbox" disabled&gt; Недоступно&lt;/label&gt;
+  &lt;label class="ink-check"&gt;&lt;input type="radio" class="ink-radio" name="f-r" checked&gt; Каждый час&lt;/label&gt;
+  &lt;label class="ink-check"&gt;&lt;input type="radio" class="ink-radio" name="f-r"&gt; Раз в день&lt;/label&gt;
+  &lt;label class="ink-check ink-check--between"&gt;Автообновление &lt;input type="checkbox" class="ink-switch" role="switch" checked&gt;&lt;/label&gt;
+  &lt;label class="ink-check ink-check--between"&gt;Ночной режим &lt;input type="checkbox" class="ink-switch" role="switch"&gt;&lt;/label&gt;
+&lt;/div&gt;</code></pre>
+  <div class="doc-demo">
+<div class="ink-segmented" role="radiogroup" aria-label="Размер">
+  <label class="ink-segmented__item"><input type="radio" name="f-seg" checked> S</label>
+  <label class="ink-segmented__item"><input type="radio" name="f-seg"> M</label>
+  <label class="ink-segmented__item"><input type="radio" name="f-seg"> L</label>
+</div>
+<div class="ink-segmented ink-segmented--block" role="tablist">
+  <button class="ink-segmented__item" role="tab" aria-selected="false">День</button>
+  <button class="ink-segmented__item" role="tab" aria-selected="true">Неделя</button>
+  <button class="ink-segmented__item" role="tab" aria-selected="false">Месяц</button>
+</div>
+  </div>
+  <pre class="doc-code"><code>&lt;div class="ink-segmented" role="radiogroup" aria-label="Размер"&gt;
+  &lt;label class="ink-segmented__item"&gt;&lt;input type="radio" name="f-seg" checked&gt; S&lt;/label&gt;
+  &lt;label class="ink-segmented__item"&gt;&lt;input type="radio" name="f-seg"&gt; M&lt;/label&gt;
+  &lt;label class="ink-segmented__item"&gt;&lt;input type="radio" name="f-seg"&gt; L&lt;/label&gt;
+&lt;/div&gt;
+&lt;div class="ink-segmented ink-segmented--block" role="tablist"&gt;
+  &lt;button class="ink-segmented__item" role="tab" aria-selected="false"&gt;День&lt;/button&gt;
+  &lt;button class="ink-segmented__item" role="tab" aria-selected="true"&gt;Неделя&lt;/button&gt;
+  &lt;button class="ink-segmented__item" role="tab" aria-selected="false"&gt;Месяц&lt;/button&gt;
+&lt;/div&gt;</code></pre>
+  <div class="doc-demo">
+<div class="ink-row ink-row--wrap">
+  <div class="ink-stepper" data-ink-stepper>
+    <button class="ink-stepper__btn" type="button" data-ink-step="-1" aria-label="Меньше">−</button>
+    <input class="ink-stepper__value" type="number" value="5" min="1" max="10" aria-label="Количество новостей">
+    <button class="ink-stepper__btn" type="button" data-ink-step="1" aria-label="Больше">+</button>
+  </div>
+  <div class="ink-stepper ink-stepper--outline">
+    <button class="ink-stepper__btn" type="button" data-ink-step="-1" aria-label="Меньше">−</button>
+    <output class="ink-stepper__value">12</output>
+    <button class="ink-stepper__btn" type="button" data-ink-step="1" aria-label="Больше">+</button>
+  </div>
+</div>
+  </div>
+  <pre class="doc-code"><code>&lt;div class="ink-row ink-row--wrap"&gt;
+  &lt;div class="ink-stepper" data-ink-stepper&gt;
+    &lt;button class="ink-stepper__btn" type="button" data-ink-step="-1" aria-label="Меньше"&gt;−&lt;/button&gt;
+    &lt;input class="ink-stepper__value" type="number" value="5" min="1" max="10" aria-label="Количество новостей"&gt;
+    &lt;button class="ink-stepper__btn" type="button" data-ink-step="1" aria-label="Больше"&gt;+&lt;/button&gt;
+  &lt;/div&gt;
+  &lt;div class="ink-stepper ink-stepper--outline"&gt;
+    &lt;button class="ink-stepper__btn" type="button" data-ink-step="-1" aria-label="Меньше"&gt;−&lt;/button&gt;
+    &lt;output class="ink-stepper__value"&gt;12&lt;/output&gt;
+    &lt;button class="ink-stepper__btn" type="button" data-ink-step="1" aria-label="Больше"&gt;+&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+  <div class="doc-demo">
+<div class="ink-field">
+  <label class="ink-label" for="f-contrast">Контраст <span class="ink-label__meta">40%</span></label>
+  <input class="ink-slider" id="f-contrast" type="range" min="0" max="100" value="40" style="--fill: 40%">
+  <div class="ink-slider-labels"><span>0</span><span>100</span></div>
+</div>
+  </div>
+  <pre class="doc-code"><code>&lt;div class="ink-field"&gt;
+  &lt;label class="ink-label" for="f-contrast"&gt;Контраст &lt;span class="ink-label__meta"&gt;40%&lt;/span&gt;&lt;/label&gt;
+  &lt;input class="ink-slider" id="f-contrast" type="range" min="0" max="100" value="40" style="--fill: 40%"&gt;
+  &lt;div class="ink-slider-labels"&gt;&lt;span&gt;0&lt;/span&gt;&lt;span&gt;100&lt;/span&gt;&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+  <h3>Задачи</h3>
+  <div class="doc-demo doc-demo--column">
+    <label class="ink-check ink-check--task"><input type="checkbox" class="ink-checkbox" checked> Оплатить интернет</label>
+    <label class="ink-check ink-check--task"><input type="checkbox" class="ink-checkbox"> Купить молоко и хлеб</label>
+  </div>
+  <pre class="doc-code"><code>&lt;label class="ink-check ink-check--task"&gt;&lt;input type="checkbox" class="ink-checkbox" checked&gt; Оплатить интернет&lt;/label&gt;</code></pre>
+</section>

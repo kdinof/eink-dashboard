@@ -1,0 +1,182 @@
+/*
+ * Ink UI — lists & dividers. Requires tokens.css, base.css.
+ *
+ * Classes
+ *   .ink-list                      vertical list (<ul>/<ol>)
+ *     --ruled                      hairline separators between items, like notebook paper
+ *     --numbered                   CSS counter drawn as solid black circle with white digit
+ *     --timeline                   small grey date line above bold text ("Этот день в истории");
+ *                                  titles clamp to 2 lines here (1 line elsewhere)
+ *     --inset                      horizontal padding on items (use inside flush card bodies)
+ *   .ink-list__item                one row
+ *   .ink-list__content             text column (title + sub)
+ *   .ink-list__title               main line (clamped to 1 line; add .ink-clamp-2 to override)
+ *   .ink-list__sub                 grey meta line: "Источник · 17:35"
+ *   .ink-list__date                timeline date (only in --timeline)
+ *   .ink-list__leading             optional left slot (icon, avatar)
+ *   .ink-list__trailing            right-side content (value, badge, chevron)
+ *
+ *   .ink-divider                   hairline rule (<hr> or <div role="separator">)
+ *     --bold                       thick ink rule
+ *     --dashed                     dashed rule
+ *     --label                      rule with a centred label (put text inside a <div>)
+ *
+ * Markup
+ *   <ol class="ink-list ink-list--numbered ink-list--ruled">
+ *     <li class="ink-list__item">
+ *       <div class="ink-list__content">
+ *         <p class="ink-list__title">Заголовок новости</p>
+ *         <p class="ink-list__sub">Источник · 17:35</p>
+ *       </div>
+ *       <span class="ink-list__trailing">…</span>
+ *     </li>
+ *   </ol>
+ *   <div class="ink-divider ink-divider--label" role="separator">Вчера</div>
+ */
+
+.ink-list {
+  --ink-list-inset: 0px;
+  --ink-list-rule: var(--ink-3);
+
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  min-width: 0;
+}
+
+.ink-list__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: var(--control-md);
+  padding: var(--space-2) var(--ink-list-inset);
+  min-width: 0;
+}
+
+.ink-list__content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-half);
+}
+
+.ink-list__title {
+  margin: 0;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-tight);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
+}
+.ink-list__title.ink-clamp-2 { -webkit-line-clamp: 2; }
+
+.ink-list__sub {
+  margin: 0;
+  font-size: var(--text-xs);
+  line-height: var(--leading-tight);
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ink-list__leading { flex: none; display: inline-flex; align-items: center; }
+
+.ink-list__trailing {
+  flex: none;
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Modifiers ---------- */
+
+.ink-list--inset { --ink-list-inset: var(--space-3); }
+
+.ink-list--ruled > .ink-list__item + .ink-list__item {
+  border-top: var(--stroke-hair) solid var(--ink-list-rule);
+}
+
+.ink-list--numbered { counter-reset: ink-list; }
+.ink-list--numbered > .ink-list__item { counter-increment: ink-list; }
+.ink-list--numbered > .ink-list__item::before {
+  content: counter(ink-list);
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  width: var(--badge-h);
+  height: var(--badge-h);
+  border-radius: var(--radius-pill);
+  background: var(--ink);
+  color: var(--on-ink);
+  font-size: var(--text-2xs);
+  font-weight: var(--weight-bold);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.ink-list--timeline > .ink-list__item {
+  flex-wrap: wrap;
+  align-items: baseline;
+  row-gap: 0;
+  min-height: 0;
+  padding-block: var(--space-1) var(--space-2);
+}
+.ink-list__date {
+  flex: 1 0 100%;
+  font-size: var(--text-2xs);
+  line-height: var(--leading-normal);
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.ink-list--timeline .ink-list__title {
+  font-weight: var(--weight-bold);
+  -webkit-line-clamp: 2;
+}
+
+/* ---------- Divider ---------- */
+
+.ink-divider {
+  display: block;
+  height: 0;
+  margin: var(--space-3) 0;
+  border: 0;
+  border-top: var(--stroke-hair) solid var(--ink);
+  color: var(--ink-3);
+}
+.ink-divider--bold { border-top-width: var(--stroke-bold); }
+.ink-divider--dashed { border-top-style: dashed; }
+
+.ink-divider--label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  height: auto;
+  border-top: 0;
+  font-size: var(--text-2xs);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  line-height: 1;
+  white-space: nowrap;
+}
+.ink-divider--label::before,
+.ink-divider--label::after {
+  content: "";
+  flex: 1;
+  border-top: var(--stroke-hair) solid var(--ink);
+}
+.ink-divider--label.ink-divider--bold::before,
+.ink-divider--label.ink-divider--bold::after { border-top-width: var(--stroke-bold); }
+.ink-divider--label.ink-divider--dashed::before,
+.ink-divider--label.ink-divider--dashed::after { border-top-style: dashed; }

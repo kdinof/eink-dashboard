@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Карты — Ink UI</title>
+  <link rel="stylesheet" href="../ink.css">
+  <script src="../ink.js" defer></script>
+  <style>
+    .gallery { --gap: var(--space-5); margin-top: var(--space-4); }
+  </style>
+</head>
+<body>
+  <header class="ink-appbar">
+    <div class="ink-appbar__start"></div>
+    <h1 class="ink-appbar__title">Карты</h1>
+    <div class="ink-appbar__end">
+      <button class="ink-appbar__btn" type="button" aria-label="Ещё"><svg class="ink-icon" aria-hidden="true"><use href="../icons.svg#i-more"/></svg></button>
+    </div>
+  </header>
+
+  <main class="ink-page">
+    <header class="ink-page-header">
+      <p class="ink-page-header__eyebrow">INK CARD LIBRARY</p>
+      <h1 class="ink-page-header__title">Избранные карты</h1>
+      <div class="ink-page-header__action">
+        <a class="ink-button ink-button--sm" href="customize.html"><svg class="ink-icon" aria-hidden="true"><use href="../icons.svg#i-plus"/></svg>Настроить</a>
+      </div>
+    </header>
+
+    <div class="ink-chips" role="tablist" aria-label="Категории" data-ink-chips>
+      <button class="ink-chip" role="tab" aria-selected="true">Все</button>
+      <button class="ink-chip" role="tab" aria-selected="false">Новости</button>
+      <button class="ink-chip" role="tab" aria-selected="false">Жизнь</button>
+      <button class="ink-chip" role="tab" aria-selected="false">Инфо</button>
+      <button class="ink-chip" role="tab" aria-selected="false">Финансы</button>
+    </div>
+
+    <div class="ink-stack gallery">
+
+      <!-- Цитата дня -->
+      <a class="ink-tile" href="#">
+        <div class="ink-tile__preview">
+          <article class="ink-card ink-card--double">
+            <figure class="ink-quote">
+              <figcaption class="ink-quote__caption">Цитата дня</figcaption>
+              <blockquote class="ink-quote__text">Многое из того, что мы считали незабываемым, забывается именно в те дни, которые мы так берегли.</blockquote>
+              <cite class="ink-quote__cite">— Суп для души</cite>
+            </figure>
+          </article>
+        </div>
+        <div class="ink-tile__head">
+          <h3 class="ink-tile__title">Цитата дня</h3>
+          <span class="ink-tile__tag"><span class="ink-tag">Инфо</span></span>
+        </div>
+        <p class="ink-tile__desc">Одна фраза, которая тронет сердце, обновляется каждый день автоматически</p>
+      </a>
+
+      <!-- Этот день в истории -->
+      <a class="ink-tile" href="#">
+        <div class="ink-tile__preview">
+          <article class="ink-card">
+            <header class="ink-card__header">
+              <svg class="ink-icon" aria-hidden="true"><use href="../icons.svg#i-book"/></svg>
+              <h3 class="ink-card__title">Этот день в истории</h3>
+              <span class="ink-card__meta">10 июля</span>
+            </header>
+            <div class="ink-card__body ink-card__body--flush">
+              <ol class="ink-list ink-list--timeline ink-list--ruled ink-list--inset">
+                <li class="ink-list__item">
+                  <span class="ink-list__date">138 г. · 10 июля</span>
+                  <div class="ink-list__content"><p class="ink-list__title">Умер римский император Адриан</p></div>
+                </li>
+                <li class="ink-list__item">
+                  <span class="ink-list__date">1040 г. · 10 июля</span>
+                  <div class="ink-list__content"><p class="ink-list__title">Леди Годива проехала по улицам Ковентри</p></div>
+                </li>
+                <li class="ink-list__item">
+                  <span class="ink-list__date">1584 г. · 10 июля</span>
+                  <div class="ink-list__content"><p class="ink-list__title">Убит Вильгельм Оранский, лидер голландской революции</p></div>
+                </li>
+                <li class="ink-list__item">
+                  <span class="ink-list__date">1856 г. · 10 июля</span>
+                  <div class="ink-list__content"><p class="ink-list__title">Родился изобретатель Никола Тесла</p></div>
+                </li>
+              </ol>
+            </div>
+          </article>
+        </div>
+        <div class="ink-tile__head">
+          <h3 class="ink-tile__title">Этот день в истории</h3>
+          <span class="ink-tile__tag"><span class="ink-tag">Инфо</span></span>
+        </div>
+        <p class="ink-tile__desc">Каждый день — главные события прошлого, обновляется автоматически</p>
+      </a>
+
+      <!-- Новости дня · Главное -->
+      <a class="ink-tile" href="#">
+        <div class="ink-tile__preview">
+          <div class="ink-card-wrap">
+            <span class="ink-card__tab ink-card__tab--end">07.10 Пт</span>
+            <article class="ink-card">
+              <header class="ink-card__header">
+                <h3 class="ink-card__title">Новости дня · Главное</h3>
+              </header>
+              <div class="ink-card__body ink-card__body--flush">
+                <ol class="ink-list ink-list--numbered ink-list--ruled ink-list--inset">
+                  <li class="ink-list__item">
+                    <div class="ink-list__content">
+                      <p class="ink-list__title">Новые правила парковки в центре вступят в силу с августа</p>
+                      <p class="ink-list__sub">РИА Новости · 17:35</p>
+                    </div>
+                  </li>
+                  <li class="ink-list__item">
+                    <div class="ink-list__content">
+                      <p class="ink-list__title">В метро открыли три станции Большой кольцевой линии</p>
+                      <p class="ink-list__sub">ТАСС · 17:30</p>
+                    </div>
+                  </li>
+                  <li class="ink-list__item">
+                    <div class="ink-list__content">
+                      <p class="ink-list__title">Репортаж: как город готовится к сезону ливней</p>
+                      <p class="ink-list__sub">Коммерсантъ · 17:26</p>
+                    </div>
+                  </li>
+                  <li class="ink-list__item">
+                    <div class="ink-list__content">
+                      <p class="ink-list__title">От Волги до Байкала: маршрут нового туристического поезда</p>
+                      <p class="ink-list__sub">РБК · 17:22</p>
+                    </div>
+                  </li>
+                  <li class="ink-list__item">
+                    <div class="ink-list__content">
+                      <p class="ink-list__title">Учёные нашли способ продлить срок службы аккумуляторов</p>
+                      <p class="ink-list__sub">Наука · 17:20</p>
+                    </div>
+                  </li>
+                </ol>
+              </div>
+              <footer class="ink-card__footer">
+                <span>Сводка заголовков</span>
+                <span class="ink-card__meta">Обновлено 07-10 18:00</span>
+              </footer>
+            </article>
+          </div>
+        </div>
+        <div class="ink-tile__head">
+          <h3 class="ink-tile__title">Новости дня</h3>
+          <span class="ink-tile__tag"><span class="ink-tag">Новости</span></span>
+        </div>
+        <p class="ink-tile__desc">Пять главных заголовков дня из проверенных источников</p>
+      </a>
+
+      <!-- Погодные предупреждения -->
+      <a class="ink-tile" href="#">
+        <div class="ink-tile__preview">
+          <div class="ink-card-wrap">
+            <span class="ink-card__tab ink-card__tab--end">07.10 Пт</span>
+            <article class="ink-card">
+              <header class="ink-card__header">
+                <svg class="ink-icon" aria-hidden="true"><use href="../icons.svg#i-alert"/></svg>
+                <h3 class="ink-card__title">Погодные предупреждения</h3>
+              </header>
+              <div class="ink-empty">
+                <div class="ink-empty__icon"><svg class="ink-icon" aria-hidden="true"><use href="../icons.svg#i-pin"/></svg></div>
+                <p class="ink-empty__title">Место не настроено</p>
+                <p class="ink-empty__hint">Выберите город в настройках шаблона</p>
+              </div>
+              <footer class="ink-card__footer">
+                <span>Центр оповещений</span>
+                <span class="ink-card__meta">Обновлено 07-10 18:00</span>
+              </footer>
+            </article>
+          </div>
+        </div>
+        <div class="ink-tile__head">
+          <h3 class="ink-tile__title">Погодные предупреждения</h3>
+          <span class="ink-tile__tag"><span class="ink-tag">Инфо</span></span>
+        </div>
+        <p class="ink-tile__desc">Действующие метеопредупреждения для выбранного города</p>
+      </a>
+
+      <!-- Акции -->
+      <a class="ink-tile" href="#">
+        <div class="ink-tile__preview">
+          <article class="ink-card">
+            <div class="ink-ticker">
+              <div class="ink-ticker__head">
+                <h3 class="ink-ticker__title"><svg class="ink-icon" aria-hidden="true"><use href="../icons.svg#i-trend-up"/></svg>Избранные котировки</h3>
+                <span class="ink-ticker__meta"><svg class="ink-icon" aria-hidden="true"><use href="../icons.svg#i-clock"/></svg>2026.6.12 16:15</span>
+              </div>
+              <div class="ink-ticker__row">
+                <div class="ink-ticker__name"><span>Сбербанк</span><span class="ink-tag ink-tag--code"><i class="ink-tag__mark"></i>SBER</span></div>
+                <div class="ink-ticker__value">312.40</div>
+                <div class="ink-ticker__change"><span class="ink-badge ink-badge--trend"><svg class="ink-icon" aria-hidden="true"><use href="../icons.svg#i-trend-up"/></svg>+1.26%</span></div>
+              </div>
+              <div class="ink-ticker__row">
+                <div class="ink-ticker__name"><span>Газпром</span><span class="ink-tag ink-tag--code"><i class="ink-tag__mark"></i>GAZP</span></div>
+                <div class="ink-ticker__value">168.25</div>
+                <div class="ink-ticker__change"><span class="ink-badge ink-badge--trend"><svg class="ink-icon" aria-hidden="true"><use href="../icons.svg#i-trend-up"/></svg>+2.74%</span></div>
+              </div>
+              <div class="ink-ticker__row">
+                <div class="ink-ticker__name"><span>Яндекс</span><span class="ink-tag ink-tag--code"><i class="ink-tag__mark"></i>YDEX</span></div>
+                <div class="ink-ticker__value">4&nbsp;120.00</div>
+                <div class="ink-ticker__change"><span class="ink-badge ink-badge--trend"><svg class="ink-icon" aria-hidden="true"><use href="../icons.svg#i-trend-up"/></svg>+1.40%</span></div>
+              </div>
+              <div class="ink-ticker__row">
+                <div class="ink-ticker__name"><span>Лукойл</span><span class="ink-tag ink-tag--code"><i class="ink-tag__mark"></i>LKOH</span></div>
+                <div class="ink-ticker__value">7&nbsp;015.50</div>
+                <div class="ink-ticker__change"><span class="ink-badge ink-badge--trend"><svg class="ink-icon" aria-hidden="true"><use href="../icons.svg#i-trend-down"/></svg>−0.39%</span></div>
+              </div>
+            </div>
+            <div class="ink-ticker__summary"><span>IMOEX</span><span>3&nbsp;031.51</span><span>▲1.12%</span></div>
+          </article>
+        </div>
+        <div class="ink-tile__head">
+          <h3 class="ink-tile__title">Акции</h3>
+          <span class="ink-tile__tag"><span class="ink-tag">Финансы</span></span>
+        </div>
+        <p class="ink-tile__desc">Цены и изменения избранных бумаг в реальном времени, до 4 позиций</p>
+      </a>
+
+      <!-- Курсы валют -->
+      <a class="ink-tile" href="#">
+        <div class="ink-tile__preview">
+          <article class="ink-card">
+            <header class="ink-card__header">
+              <svg class="ink-icon" aria-hidden="true"><use href="../icons.svg#i-swap"/></svg>
+              <h3 class="ink-card__title">Курсы валют</h3>
+              <span class="ink-card__meta">ЦБ РФ</span>
+            </header>
+            <div class="ink-ticker">
+              <div class="ink-ticker__row">
+                <div class="ink-ticker__name"><span>Доллар США</span><span class="ink-tag ink-tag--code">USD</span></div>
+                <div class="ink-ticker__value">81.25</div>
+                <div class="ink-ticker__change"><span class="ink-badge ink-badge--trend"><svg class="ink-icon" aria-hidden="true"><use href="../icons.svg#i-trend-up"/></svg>+0.32%</span></div>
+              </div>
+              <div class="ink-ticker__row">
+                <div class="ink-ticker__name"><span>Евро</span><span class="ink-tag ink-tag--code">EUR</span></div>
+                <div class="ink-ticker__value">94.10</div>
+                <div class="ink-ticker__change"><span class="ink-badge ink-badge--trend"><svg class="ink-icon" aria-hidden="true"><use href="../icons.svg#i-trend-down"/></svg>−0.15%</span></div>
+              </div>
+              <div class="ink-ticker__row">
+                <div class="ink-ticker__name"><span>Юань</span><span class="ink-tag ink-tag--code">CNY</span></div>
+                <div class="ink-ticker__value">11.28</div>
+                <div class="ink-ticker__change"><span class="ink-badge ink-badge--trend"><svg class="ink-icon" aria-hidden="true"><use href="../icons.svg#i-trend-up"/></svg>+0.08%</span></div>
+              </div>
+            </div>
+            <footer class="ink-card__footer">
+              <span>Курс к рублю</span>
+              <span class="ink-card__meta">Обновлено 07-10 18:00</span>
+            </footer>
+          </article>
+        </div>
+        <div class="ink-tile__head">
+          <h3 class="ink-tile__title">Курсы валют</h3>
+          <span class="ink-tile__tag"><span class="ink-tag">Финансы</span></span>
+        </div>
+        <p class="ink-tile__desc">Официальные курсы основных валют к рублю</p>
+      </a>
+
+    </div>
+  </main>
+
+  <nav class="ink-tabbar" aria-label="Разделы" data-ink-tabbar>
+    <a class="ink-tabbar__item" href="#">
+      <svg class="ink-icon" aria-hidden="true"><use href="../icons.svg#i-todo"/></svg>
+      <span class="ink-tabbar__label">Задачи</span>
+    </a>
+    <a class="ink-tabbar__item" href="library.html" aria-current="page">
+      <svg class="ink-icon" aria-hidden="true"><use href="../icons.svg#i-cards"/></svg>
+      <span class="ink-tabbar__label">Карты</span>
+    </a>
+    <a class="ink-tabbar__item" href="devices.html">
+      <svg class="ink-icon" aria-hidden="true"><use href="../icons.svg#i-device"/></svg>
+      <span class="ink-tabbar__label">Устройства</span>
+    </a>
+    <a class="ink-tabbar__item" href="#">
+      <svg class="ink-icon" aria-hidden="true"><use href="../icons.svg#i-user"/></svg>
+      <span class="ink-tabbar__label">Профиль</span>
+    </a>
+  </nav>
+</body>
+</html>

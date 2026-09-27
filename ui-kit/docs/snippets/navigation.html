@@ -1,0 +1,289 @@
+<!-- Ink UI — navigation & overlays. Styles: components/header.css, components/nav.css, components/overlay.css -->
+<section class="doc-section" id="headers">
+  <h2 class="doc-title">Заголовки</h2>
+  <p class="doc-lead">Панель приложения, заголовок страницы с англ. подписью и заголовок раздела (в т.ч. чёрной полосой).</p>
+  <div class="doc-demo">
+<header class="ink-appbar ink-appbar--bordered">
+  <div class="ink-appbar__start">
+    <button class="ink-appbar__btn" type="button" aria-label="Назад"><svg class="ink-icon"><use href="icons.svg#i-back"/></svg></button>
+  </div>
+  <h1 class="ink-appbar__title">Мои карты</h1>
+  <div class="ink-appbar__end">
+    <button class="ink-appbar__btn" type="button" aria-label="Ещё"><svg class="ink-icon"><use href="icons.svg#i-more"/></svg></button>
+  </div>
+</header>
+  </div>
+  <pre class="doc-code"><code>&lt;header class=&quot;ink-appbar ink-appbar--bordered&quot;&gt;
+  &lt;div class=&quot;ink-appbar__start&quot;&gt;
+    &lt;button class=&quot;ink-appbar__btn&quot; type=&quot;button&quot; aria-label=&quot;Назад&quot;&gt;&lt;svg class=&quot;ink-icon&quot;&gt;&lt;use href=&quot;icons.svg#i-back&quot;/&gt;&lt;/svg&gt;&lt;/button&gt;
+  &lt;/div&gt;
+  &lt;h1 class=&quot;ink-appbar__title&quot;&gt;Мои карты&lt;/h1&gt;
+  &lt;div class=&quot;ink-appbar__end&quot;&gt;
+    &lt;button class=&quot;ink-appbar__btn&quot; type=&quot;button&quot; aria-label=&quot;Ещё&quot;&gt;&lt;svg class=&quot;ink-icon&quot;&gt;&lt;use href=&quot;icons.svg#i-more&quot;/&gt;&lt;/svg&gt;&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/header&gt;</code></pre>
+  <div class="doc-demo">
+<header class="ink-page-header">
+  <p class="ink-page-header__eyebrow">INK CARD LIBRARY</p>
+  <h1 class="ink-page-header__title">Избранные карты</h1>
+  <div class="ink-page-header__action">
+    <button class="ink-button ink-button--sm" type="button"><svg class="ink-icon"><use href="icons.svg#i-plus"/></svg>Своя</button>
+  </div>
+</header>
+<header class="ink-page-header">
+  <p class="ink-page-header__eyebrow">HARDWARE MANAGEMENT</p>
+  <h1 class="ink-page-header__title">Мои устройства</h1>
+  <div class="ink-page-header__action">
+    <button class="ink-button ink-button--sm ink-button--square" type="button"><svg class="ink-icon"><use href="icons.svg#i-plus"/></svg>Добавить</button>
+  </div>
+  <p class="ink-page-header__sub">Экраны, привязанные к вашему аккаунту.</p>
+</header>
+  </div>
+  <pre class="doc-code"><code>&lt;header class=&quot;ink-page-header&quot;&gt;
+  &lt;p class=&quot;ink-page-header__eyebrow&quot;&gt;INK CARD LIBRARY&lt;/p&gt;
+  &lt;h1 class=&quot;ink-page-header__title&quot;&gt;Избранные карты&lt;/h1&gt;
+  &lt;div class=&quot;ink-page-header__action&quot;&gt;
+    &lt;button class=&quot;ink-button ink-button--sm&quot; type=&quot;button&quot;&gt;&lt;svg class=&quot;ink-icon&quot;&gt;&lt;use href=&quot;icons.svg#i-plus&quot;/&gt;&lt;/svg&gt;Своя&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/header&gt;
+&lt;header class=&quot;ink-page-header&quot;&gt;
+  &lt;p class=&quot;ink-page-header__eyebrow&quot;&gt;HARDWARE MANAGEMENT&lt;/p&gt;
+  &lt;h1 class=&quot;ink-page-header__title&quot;&gt;Мои устройства&lt;/h1&gt;
+  &lt;div class=&quot;ink-page-header__action&quot;&gt;
+    &lt;button class=&quot;ink-button ink-button--sm ink-button--square&quot; type=&quot;button&quot;&gt;&lt;svg class=&quot;ink-icon&quot;&gt;&lt;use href=&quot;icons.svg#i-plus&quot;/&gt;&lt;/svg&gt;Добавить&lt;/button&gt;
+  &lt;/div&gt;
+  &lt;p class=&quot;ink-page-header__sub&quot;&gt;Экраны, привязанные к вашему аккаунту.&lt;/p&gt;
+&lt;/header&gt;</code></pre>
+  <div class="doc-demo">
+<div class="ink-section-header">
+  <h2 class="ink-section-header__title">Этот день в истории</h2>
+  <a class="ink-section-header__meta" href="#">Все</a>
+  <p class="ink-section-header__sub">Каждый день — события прошлого, обновляется автоматически</p>
+</div>
+<div class="ink-section-header ink-section-header--band">
+  <h2 class="ink-section-header__title">Главные новости · Заголовки</h2>
+  <span class="ink-section-header__meta">10.07 Пт</span>
+</div>
+  </div>
+  <pre class="doc-code"><code>&lt;div class=&quot;ink-section-header&quot;&gt;
+  &lt;h2 class=&quot;ink-section-header__title&quot;&gt;Этот день в истории&lt;/h2&gt;
+  &lt;a class=&quot;ink-section-header__meta&quot; href=&quot;#&quot;&gt;Все&lt;/a&gt;
+  &lt;p class=&quot;ink-section-header__sub&quot;&gt;Каждый день — события прошлого, обновляется автоматически&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ink-section-header ink-section-header--band&quot;&gt;
+  &lt;h2 class=&quot;ink-section-header__title&quot;&gt;Главные новости · Заголовки&lt;/h2&gt;
+  &lt;span class=&quot;ink-section-header__meta&quot;&gt;10.07 Пт&lt;/span&gt;
+&lt;/div&gt;</code></pre>
+</section>
+<section class="doc-section" id="navigation">
+  <h2 class="doc-title">Навигация</h2>
+  <p class="doc-lead">Нижняя панель вкладок (активная — инверсный блок выше панели), вкладки, хлебные крошки, постраничная навигация и меню.</p>
+  <div class="doc-demo">
+<div class="doc-phone">
+  <nav class="ink-tabbar ink-tabbar--static" aria-label="Разделы" data-ink-tabbar>
+    <a class="ink-tabbar__item" href="#">
+      <svg class="ink-icon"><use href="icons.svg#i-todo"/></svg>
+      <span class="ink-tabbar__label">Задачи</span>
+    </a>
+    <a class="ink-tabbar__item" href="#" aria-current="page">
+      <svg class="ink-icon"><use href="icons.svg#i-cards"/></svg>
+      <span class="ink-tabbar__label">Карты</span>
+    </a>
+    <a class="ink-tabbar__item" href="#">
+      <svg class="ink-icon"><use href="icons.svg#i-device"/></svg>
+      <span class="ink-tabbar__label">Устройства</span>
+    </a>
+    <a class="ink-tabbar__item" href="#">
+      <svg class="ink-icon"><use href="icons.svg#i-user"/></svg>
+      <span class="ink-tabbar__label">Профиль</span>
+    </a>
+  </nav>
+</div>
+  </div>
+  <pre class="doc-code"><code>&lt;div class=&quot;doc-phone&quot;&gt;
+  &lt;nav class=&quot;ink-tabbar ink-tabbar--static&quot; aria-label=&quot;Разделы&quot; data-ink-tabbar&gt;
+    &lt;a class=&quot;ink-tabbar__item&quot; href=&quot;#&quot;&gt;
+      &lt;svg class=&quot;ink-icon&quot;&gt;&lt;use href=&quot;icons.svg#i-todo&quot;/&gt;&lt;/svg&gt;
+      &lt;span class=&quot;ink-tabbar__label&quot;&gt;Задачи&lt;/span&gt;
+    &lt;/a&gt;
+    &lt;a class=&quot;ink-tabbar__item&quot; href=&quot;#&quot; aria-current=&quot;page&quot;&gt;
+      &lt;svg class=&quot;ink-icon&quot;&gt;&lt;use href=&quot;icons.svg#i-cards&quot;/&gt;&lt;/svg&gt;
+      &lt;span class=&quot;ink-tabbar__label&quot;&gt;Карты&lt;/span&gt;
+    &lt;/a&gt;
+    &lt;a class=&quot;ink-tabbar__item&quot; href=&quot;#&quot;&gt;
+      &lt;svg class=&quot;ink-icon&quot;&gt;&lt;use href=&quot;icons.svg#i-device&quot;/&gt;&lt;/svg&gt;
+      &lt;span class=&quot;ink-tabbar__label&quot;&gt;Устройства&lt;/span&gt;
+    &lt;/a&gt;
+    &lt;a class=&quot;ink-tabbar__item&quot; href=&quot;#&quot;&gt;
+      &lt;svg class=&quot;ink-icon&quot;&gt;&lt;use href=&quot;icons.svg#i-user&quot;/&gt;&lt;/svg&gt;
+      &lt;span class=&quot;ink-tabbar__label&quot;&gt;Профиль&lt;/span&gt;
+    &lt;/a&gt;
+  &lt;/nav&gt;
+&lt;/div&gt;</code></pre>
+  <div class="doc-demo">
+<div class="ink-tabs" role="tablist" data-ink-tabs>
+  <button class="ink-tabs__tab" role="tab" id="t-all" aria-selected="true" aria-controls="p-all">Все</button>
+  <button class="ink-tabs__tab" role="tab" id="t-news" aria-selected="false" aria-controls="p-news" tabindex="-1">Новости</button>
+  <button class="ink-tabs__tab" role="tab" id="t-life" aria-selected="false" aria-controls="p-life" tabindex="-1">Жизнь</button>
+  <button class="ink-tabs__tab" role="tab" id="t-fin" aria-selected="false" aria-controls="p-fin" tabindex="-1">Финансы</button>
+</div>
+<div class="ink-tab-panel" role="tabpanel" id="p-all" aria-labelledby="t-all">Все карты библиотеки.</div>
+<div class="ink-tab-panel" role="tabpanel" id="p-news" aria-labelledby="t-news" hidden>Новости и заголовки.</div>
+<div class="ink-tab-panel" role="tabpanel" id="p-life" aria-labelledby="t-life" hidden>Погода, цитаты, заметки.</div>
+<div class="ink-tab-panel" role="tabpanel" id="p-fin" aria-labelledby="t-fin" hidden>Котировки и курсы валют.</div>
+  </div>
+  <pre class="doc-code"><code>&lt;div class=&quot;ink-tabs&quot; role=&quot;tablist&quot; data-ink-tabs&gt;
+  &lt;button class=&quot;ink-tabs__tab&quot; role=&quot;tab&quot; id=&quot;t-all&quot; aria-selected=&quot;true&quot; aria-controls=&quot;p-all&quot;&gt;Все&lt;/button&gt;
+  &lt;button class=&quot;ink-tabs__tab&quot; role=&quot;tab&quot; id=&quot;t-news&quot; aria-selected=&quot;false&quot; aria-controls=&quot;p-news&quot; tabindex=&quot;-1&quot;&gt;Новости&lt;/button&gt;
+  &lt;button class=&quot;ink-tabs__tab&quot; role=&quot;tab&quot; id=&quot;t-life&quot; aria-selected=&quot;false&quot; aria-controls=&quot;p-life&quot; tabindex=&quot;-1&quot;&gt;Жизнь&lt;/button&gt;
+  &lt;button class=&quot;ink-tabs__tab&quot; role=&quot;tab&quot; id=&quot;t-fin&quot; aria-selected=&quot;false&quot; aria-controls=&quot;p-fin&quot; tabindex=&quot;-1&quot;&gt;Финансы&lt;/button&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ink-tab-panel&quot; role=&quot;tabpanel&quot; id=&quot;p-all&quot; aria-labelledby=&quot;t-all&quot;&gt;Все карты библиотеки.&lt;/div&gt;
+&lt;div class=&quot;ink-tab-panel&quot; role=&quot;tabpanel&quot; id=&quot;p-news&quot; aria-labelledby=&quot;t-news&quot; hidden&gt;Новости и заголовки.&lt;/div&gt;
+&lt;div class=&quot;ink-tab-panel&quot; role=&quot;tabpanel&quot; id=&quot;p-life&quot; aria-labelledby=&quot;t-life&quot; hidden&gt;Погода, цитаты, заметки.&lt;/div&gt;
+&lt;div class=&quot;ink-tab-panel&quot; role=&quot;tabpanel&quot; id=&quot;p-fin&quot; aria-labelledby=&quot;t-fin&quot; hidden&gt;Котировки и курсы валют.&lt;/div&gt;</code></pre>
+  <div class="doc-demo">
+<nav class="ink-breadcrumbs" aria-label="Навигация">
+  <ol>
+    <li><a href="#">Главная</a></li>
+    <li><a href="#">Устройства</a></li>
+    <li><span aria-current="page">Кухонный экран</span></li>
+  </ol>
+</nav>
+  </div>
+  <pre class="doc-code"><code>&lt;nav class=&quot;ink-breadcrumbs&quot; aria-label=&quot;Навигация&quot;&gt;
+  &lt;ol&gt;
+    &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Главная&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Устройства&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;span aria-current=&quot;page&quot;&gt;Кухонный экран&lt;/span&gt;&lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/nav&gt;</code></pre>
+  <div class="doc-demo">
+<nav aria-label="Страницы">
+  <ul class="ink-pagination">
+    <li><a class="ink-pagination__item" href="#" aria-label="Предыдущая"><svg class="ink-icon"><use href="icons.svg#i-chevron-left"/></svg></a></li>
+    <li><a class="ink-pagination__item" href="#">1</a></li>
+    <li><a class="ink-pagination__item" href="#" aria-current="page">2</a></li>
+    <li><a class="ink-pagination__item" href="#">3</a></li>
+    <li><span class="ink-pagination__gap">…</span></li>
+    <li><a class="ink-pagination__item" href="#">7</a></li>
+    <li><a class="ink-pagination__item" href="#" aria-label="Следующая"><svg class="ink-icon"><use href="icons.svg#i-chevron-right"/></svg></a></li>
+  </ul>
+</nav>
+<nav class="ink-pager" aria-label="Страницы">
+  <a class="ink-pager__btn" href="#" aria-label="Предыдущая">‹</a>
+  <span class="ink-pager__status"><b>2</b> / 7</span>
+  <a class="ink-pager__btn" href="#" aria-label="Следующая">›</a>
+</nav>
+  </div>
+  <pre class="doc-code"><code>&lt;nav aria-label=&quot;Страницы&quot;&gt;
+  &lt;ul class=&quot;ink-pagination&quot;&gt;
+    &lt;li&gt;&lt;a class=&quot;ink-pagination__item&quot; href=&quot;#&quot; aria-label=&quot;Предыдущая&quot;&gt;&lt;svg class=&quot;ink-icon&quot;&gt;&lt;use href=&quot;icons.svg#i-chevron-left&quot;/&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a class=&quot;ink-pagination__item&quot; href=&quot;#&quot;&gt;1&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a class=&quot;ink-pagination__item&quot; href=&quot;#&quot; aria-current=&quot;page&quot;&gt;2&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a class=&quot;ink-pagination__item&quot; href=&quot;#&quot;&gt;3&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;span class=&quot;ink-pagination__gap&quot;&gt;…&lt;/span&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a class=&quot;ink-pagination__item&quot; href=&quot;#&quot;&gt;7&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a class=&quot;ink-pagination__item&quot; href=&quot;#&quot; aria-label=&quot;Следующая&quot;&gt;&lt;svg class=&quot;ink-icon&quot;&gt;&lt;use href=&quot;icons.svg#i-chevron-right&quot;/&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/nav&gt;
+&lt;nav class=&quot;ink-pager&quot; aria-label=&quot;Страницы&quot;&gt;
+  &lt;a class=&quot;ink-pager__btn&quot; href=&quot;#&quot; aria-label=&quot;Предыдущая&quot;&gt;‹&lt;/a&gt;
+  &lt;span class=&quot;ink-pager__status&quot;&gt;&lt;b&gt;2&lt;/b&gt; / 7&lt;/span&gt;
+  &lt;a class=&quot;ink-pager__btn&quot; href=&quot;#&quot; aria-label=&quot;Следующая&quot;&gt;›&lt;/a&gt;
+&lt;/nav&gt;</code></pre>
+  <div class="doc-demo">
+<ul class="ink-menu">
+  <li><a class="ink-menu__item" href="#"><svg class="ink-icon"><use href="icons.svg#i-device"/></svg><span class="ink-menu__label">Мои устройства</span><span class="ink-menu__value">2</span><span class="ink-menu__chevron" aria-hidden="true"></span></a></li>
+  <li><a class="ink-menu__item" href="#"><svg class="ink-icon"><use href="icons.svg#i-settings"/></svg><span class="ink-menu__label">Настройки</span><span class="ink-menu__chevron" aria-hidden="true"></span></a></li>
+  <li><a class="ink-menu__item" href="#"><svg class="ink-icon"><use href="icons.svg#i-info"/></svg><span class="ink-menu__label">О приложении</span><span class="ink-menu__value">v1.0</span></a></li>
+  <li class="ink-menu__divider" role="separator"></li>
+  <li><button class="ink-menu__item ink-menu__item--danger" type="button"><svg class="ink-icon"><use href="icons.svg#i-close"/></svg><span class="ink-menu__label">Выйти</span></button></li>
+</ul>
+  </div>
+  <pre class="doc-code"><code>&lt;ul class=&quot;ink-menu&quot;&gt;
+  &lt;li&gt;&lt;a class=&quot;ink-menu__item&quot; href=&quot;#&quot;&gt;&lt;svg class=&quot;ink-icon&quot;&gt;&lt;use href=&quot;icons.svg#i-device&quot;/&gt;&lt;/svg&gt;&lt;span class=&quot;ink-menu__label&quot;&gt;Мои устройства&lt;/span&gt;&lt;span class=&quot;ink-menu__value&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;ink-menu__chevron&quot; aria-hidden=&quot;true&quot;&gt;&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a class=&quot;ink-menu__item&quot; href=&quot;#&quot;&gt;&lt;svg class=&quot;ink-icon&quot;&gt;&lt;use href=&quot;icons.svg#i-settings&quot;/&gt;&lt;/svg&gt;&lt;span class=&quot;ink-menu__label&quot;&gt;Настройки&lt;/span&gt;&lt;span class=&quot;ink-menu__chevron&quot; aria-hidden=&quot;true&quot;&gt;&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a class=&quot;ink-menu__item&quot; href=&quot;#&quot;&gt;&lt;svg class=&quot;ink-icon&quot;&gt;&lt;use href=&quot;icons.svg#i-info&quot;/&gt;&lt;/svg&gt;&lt;span class=&quot;ink-menu__label&quot;&gt;О приложении&lt;/span&gt;&lt;span class=&quot;ink-menu__value&quot;&gt;v1.0&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+  &lt;li class=&quot;ink-menu__divider&quot; role=&quot;separator&quot;&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;button class=&quot;ink-menu__item ink-menu__item--danger&quot; type=&quot;button&quot;&gt;&lt;svg class=&quot;ink-icon&quot;&gt;&lt;use href=&quot;icons.svg#i-close&quot;/&gt;&lt;/svg&gt;&lt;span class=&quot;ink-menu__label&quot;&gt;Выйти&lt;/span&gt;&lt;/button&gt;&lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+</section>
+<section class="doc-section" id="overlays">
+  <h2 class="doc-title">Оверлеи</h2>
+  <p class="doc-lead">Модальный диалог с чёрной шапкой, нижняя шторка, тост, поповер и подсказка. Без теней и размытия.</p>
+  <div class="doc-demo">
+<button class="ink-button" type="button" data-ink-open="demo-dialog">Открыть диалог</button>
+<button class="ink-button" type="button" data-ink-open="demo-sheet">Открыть шторку</button>
+<dialog class="ink-dialog" id="demo-dialog" aria-labelledby="demo-dialog-title">
+  <header class="ink-dialog__header">
+    <h2 class="ink-dialog__title" id="demo-dialog-title">Удалить карту?</h2>
+    <button class="ink-dialog__close" type="button" data-ink-close aria-label="Закрыть"><svg class="ink-icon"><use href="icons.svg#i-close"/></svg></button>
+  </header>
+  <div class="ink-dialog__body">Карта «Этот день в истории» исчезнет со всех устройств. Действие нельзя отменить.</div>
+  <footer class="ink-dialog__footer">
+    <button class="ink-button ink-button--outline" type="button" data-ink-close>Отмена</button>
+    <button class="ink-button" type="button" data-ink-close>Удалить</button>
+  </footer>
+</dialog>
+<dialog class="ink-dialog ink-dialog--sheet" id="demo-sheet" aria-labelledby="demo-sheet-title">
+  <span class="ink-dialog__handle" aria-hidden="true"></span>
+  <header class="ink-dialog__header">
+    <h2 class="ink-dialog__title" id="demo-sheet-title">Добавить карту</h2>
+    <button class="ink-dialog__close" type="button" data-ink-close aria-label="Закрыть"><svg class="ink-icon"><use href="icons.svg#i-close"/></svg></button>
+  </header>
+  <div class="ink-dialog__body">Выберите устройство, на котором появится карта.</div>
+  <footer class="ink-dialog__footer">
+    <button class="ink-button" type="button" data-ink-close>Готово</button>
+  </footer>
+</dialog>
+  </div>
+  <pre class="doc-code"><code>&lt;button class=&quot;ink-button&quot; type=&quot;button&quot; data-ink-open=&quot;demo-dialog&quot;&gt;Открыть диалог&lt;/button&gt;
+&lt;button class=&quot;ink-button&quot; type=&quot;button&quot; data-ink-open=&quot;demo-sheet&quot;&gt;Открыть шторку&lt;/button&gt;
+&lt;dialog class=&quot;ink-dialog&quot; id=&quot;demo-dialog&quot; aria-labelledby=&quot;demo-dialog-title&quot;&gt;
+  &lt;header class=&quot;ink-dialog__header&quot;&gt;
+    &lt;h2 class=&quot;ink-dialog__title&quot; id=&quot;demo-dialog-title&quot;&gt;Удалить карту?&lt;/h2&gt;
+    &lt;button class=&quot;ink-dialog__close&quot; type=&quot;button&quot; data-ink-close aria-label=&quot;Закрыть&quot;&gt;&lt;svg class=&quot;ink-icon&quot;&gt;&lt;use href=&quot;icons.svg#i-close&quot;/&gt;&lt;/svg&gt;&lt;/button&gt;
+  &lt;/header&gt;
+  &lt;div class=&quot;ink-dialog__body&quot;&gt;Карта «Этот день в истории» исчезнет со всех устройств. Действие нельзя отменить.&lt;/div&gt;
+  &lt;footer class=&quot;ink-dialog__footer&quot;&gt;
+    &lt;button class=&quot;ink-button ink-button--outline&quot; type=&quot;button&quot; data-ink-close&gt;Отмена&lt;/button&gt;
+    &lt;button class=&quot;ink-button&quot; type=&quot;button&quot; data-ink-close&gt;Удалить&lt;/button&gt;
+  &lt;/footer&gt;
+&lt;/dialog&gt;
+&lt;dialog class=&quot;ink-dialog ink-dialog--sheet&quot; id=&quot;demo-sheet&quot; aria-labelledby=&quot;demo-sheet-title&quot;&gt;
+  &lt;span class=&quot;ink-dialog__handle&quot; aria-hidden=&quot;true&quot;&gt;&lt;/span&gt;
+  &lt;header class=&quot;ink-dialog__header&quot;&gt;
+    &lt;h2 class=&quot;ink-dialog__title&quot; id=&quot;demo-sheet-title&quot;&gt;Добавить карту&lt;/h2&gt;
+    &lt;button class=&quot;ink-dialog__close&quot; type=&quot;button&quot; data-ink-close aria-label=&quot;Закрыть&quot;&gt;&lt;svg class=&quot;ink-icon&quot;&gt;&lt;use href=&quot;icons.svg#i-close&quot;/&gt;&lt;/svg&gt;&lt;/button&gt;
+  &lt;/header&gt;
+  &lt;div class=&quot;ink-dialog__body&quot;&gt;Выберите устройство, на котором появится карта.&lt;/div&gt;
+  &lt;footer class=&quot;ink-dialog__footer&quot;&gt;
+    &lt;button class=&quot;ink-button&quot; type=&quot;button&quot; data-ink-close&gt;Готово&lt;/button&gt;
+  &lt;/footer&gt;
+&lt;/dialog&gt;</code></pre>
+  <div class="doc-demo">
+<button class="ink-button" type="button" onclick="InkUI.toast('Карта сохранена')">Показать тост</button>
+<!-- Разметка, которую создаёт InkUI.toast(): -->
+<div class="ink-toast" role="status" data-open="false"><svg class="ink-icon"><use href="icons.svg#i-check"/></svg>Карта сохранена</div>
+  </div>
+  <pre class="doc-code"><code>&lt;button class=&quot;ink-button&quot; type=&quot;button&quot; onclick=&quot;InkUI.toast(&#x27;Карта сохранена&#x27;)&quot;&gt;Показать тост&lt;/button&gt;
+&lt;!-- Разметка, которую создаёт InkUI.toast(): --&gt;
+&lt;div class=&quot;ink-toast&quot; role=&quot;status&quot; data-open=&quot;false&quot;&gt;&lt;svg class=&quot;ink-icon&quot;&gt;&lt;use href=&quot;icons.svg#i-check&quot;/&gt;&lt;/svg&gt;Карта сохранена&lt;/div&gt;</code></pre>
+  <div class="doc-demo">
+<div class="ink-popover">
+  <strong class="ink-popover__title">Обновление</strong>
+  Экран перерисовывается раз в 15 минут.
+</div>
+<div class="ink-popover ink-popover--top ink-popover--start">Стрелка снизу слева</div>
+<span class="ink-tooltip">Подсказка</span>
+<span class="ink-tooltip ink-tooltip--top">Сверху</span>
+  </div>
+  <pre class="doc-code"><code>&lt;div class=&quot;ink-popover&quot;&gt;
+  &lt;strong class=&quot;ink-popover__title&quot;&gt;Обновление&lt;/strong&gt;
+  Экран перерисовывается раз в 15 минут.
+&lt;/div&gt;
+&lt;div class=&quot;ink-popover ink-popover--top ink-popover--start&quot;&gt;Стрелка снизу слева&lt;/div&gt;
+&lt;span class=&quot;ink-tooltip&quot;&gt;Подсказка&lt;/span&gt;
+&lt;span class=&quot;ink-tooltip ink-tooltip--top&quot;&gt;Сверху&lt;/span&gt;</code></pre>
+</section>

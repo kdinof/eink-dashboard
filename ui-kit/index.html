@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ink UI</title>
+  <link rel="stylesheet" href="ink.css">
+  <link rel="stylesheet" href="docs/docs.css">
+</head>
+<body>
+<div class="doc-layout">
+  <nav class="doc-nav" aria-label="Разделы">
+    <div class="doc-nav__brand">
+      <div class="ink-eyebrow">E-INK UI KIT</div>
+      <div class="ink-h2">Ink UI</div>
+    </div>
+    <div class="doc-nav__links">
+      <div class="doc-nav__group ink-eyebrow">Основа</div>
+      <a href="#start">Подключение</a>
+      <a href="#colors">Цвета</a>
+      <a href="#typography">Типографика</a>
+      <a href="#spacing">Отступы и штрихи</a>
+      <a href="#icons">Иконки</a>
+      <div class="doc-nav__group ink-eyebrow">Контролы</div>
+      <a href="#buttons">Кнопки</a>
+      <a href="#chips">Чипы</a>
+      <a href="#tags-badges">Теги и бейджи</a>
+      <a href="#forms">Формы</a>
+      <div class="doc-nav__group ink-eyebrow">Поверхности</div>
+      <a href="#cards">Карточки</a>
+      <a href="#tiles">Плитки</a>
+      <a href="#lists">Списки</a>
+      <a href="#data">Данные</a>
+      <a href="#feedback">Состояния</a>
+      <div class="doc-nav__group ink-eyebrow">Навигация</div>
+      <a href="#headers">Заголовки</a>
+      <a href="#navigation">Навигация</a>
+      <a href="#overlays">Оверлеи</a>
+      <div class="doc-nav__group ink-eyebrow">Прочее</div>
+      <a href="#js">JavaScript</a>
+      <a href="#examples">Примеры экранов</a>
+    </div>
+  </nav>
+
+  <main class="doc-main">
+    <header class="doc-hero">
+      <div class="ink-eyebrow">INK CARD DESIGN LANGUAGE</div>
+      <h1 class="ink-display">Ink UI</h1>
+      <p>Монохромный UI-кит в эстетике e-ink: белая бумага, чёрные чернила, толстые рамки и инверсия вместо цвета.
+        Чистые CSS и vanilla JS, без сборки и зависимостей. Анимации по умолчанию выключены, чтобы экран не оставлял шлейфов.</p>
+    </header>
+
+    <section class="doc-section" id="start">
+      <h2 class="doc-title">Подключение</h2>
+      <p class="doc-lead">Один CSS-файл, одна опциональная JS-библиотека и спрайт иконок. Страница должна открываться через HTTP: из <code>file://</code> спрайт не загрузится.</p>
+<pre class="doc-code"><code>&lt;link rel="stylesheet" href="ui-kit/ink.css"&gt;
+&lt;script src="ui-kit/ink.js" defer&gt;&lt;/script&gt;
+
+&lt;svg class="ink-icon"&gt;&lt;use href="ui-kit/icons.svg#i-plus"/&gt;&lt;/svg&gt;
+
+&lt;!-- Своя тема: переопределите токены --&gt;
+&lt;style&gt;:root { --paper: #f4f1e8; --radius-sm: 0; --motion: 120ms; }&lt;/style&gt;</code></pre>
+    </section>
+
+    <section class="doc-section" id="colors">
+      <h2 class="doc-title">Цвета</h2>
+      <p class="doc-lead">Цвета нет, есть только ступени яркости, которые не сливаются на 16-уровневом сером e-ink. Иерархию задают толщина начертания, инверсия и толщина штриха.</p>
+      <div class="doc-demo"><div class="doc-swatches" id="swatches"></div></div>
+<pre class="doc-code"><code>--ink  --ink-2  --ink-3  --ink-4  --paper  --paper-2  --paper-3  --on-ink</code></pre>
+    </section>
+
+    <section class="doc-section" id="typography">
+      <h2 class="doc-title">Типографика</h2>
+      <p class="doc-lead">Жирный гротеск для заголовков, над ними надстрочник-eyebrow капсом с разрядкой. Для чисел используются табличные цифры.</p>
+      <div class="doc-demo doc-demo--column">
+        <div class="doc-type-row"><code>.ink-eyebrow</code><span class="ink-eyebrow">INK CARD LIBRARY</span></div>
+        <div class="doc-type-row"><code>.ink-display</code><span class="ink-display">Ink UI</span></div>
+        <div class="doc-type-row"><code>.ink-h1</code><span class="ink-h1">Избранные карты</span></div>
+        <div class="doc-type-row"><code>.ink-h2</code><span class="ink-h2">Этот день в истории</span></div>
+        <div class="doc-type-row"><code>.ink-h3</code><span class="ink-h3">Цитата дня</span></div>
+        <div class="doc-type-row"><code>.ink-body</code><span class="ink-body">Делайте дни такими, какими хотите их видеть.</span></div>
+        <div class="doc-type-row"><code>.ink-small</code><span class="ink-small">Каждый день — одна цитата, обновляется автоматически.</span></div>
+        <div class="doc-type-row"><code>.ink-caption</code><span class="ink-caption">РИА Новости · 17:35</span></div>
+        <div class="doc-type-row"><code>.ink-serif</code><span class="ink-serif ink-body">Мы думаем, что никогда не забудем.</span></div>
+        <div class="doc-type-row"><code>.ink-hero</code><span class="ink-hero">07:26</span></div>
+        <div class="doc-type-row"><code>.ink-num</code><span class="ink-num ink-h2">4 031.51</span></div>
+      </div>
+<pre class="doc-code"><code>&lt;div class="ink-eyebrow"&gt;INK CARD LIBRARY&lt;/div&gt;
+&lt;h1 class="ink-h1"&gt;Избранные карты&lt;/h1&gt;
+&lt;span class="ink-num"&gt;4 031.51&lt;/span&gt;</code></pre>
+    </section>
+
+    <section class="doc-section" id="spacing">
+      <h2 class="doc-title">Отступы, штрихи, радиусы</h2>
+      <p class="doc-lead">Сетка 4px. Толстая рамка <code>--stroke-bold</code> — главный узнаваемый элемент стиля.</p>
+      <div class="doc-demo doc-demo--column">
+        <div class="doc-scale" id="space-scale"></div>
+        <div class="doc-scale" id="stroke-scale"></div>
+      </div>
+<pre class="doc-code"><code>--space-1…12   --stroke-hair / --stroke / --stroke-bold / --stroke-heavy
+--radius-xs / sm / md / lg / pill   --control-sm / md / lg   --motion: 0ms</code></pre>
+    </section>
+
+    <div data-snippet="docs/snippets/icons.html"></div>
+    <div data-snippet="docs/snippets/controls.html"></div>
+    <div data-snippet="docs/snippets/cards.html"></div>
+    <div data-snippet="docs/snippets/data.html"></div>
+    <div data-snippet="docs/snippets/navigation.html"></div>
+    <div data-snippet="docs/snippets/js.html"></div>
+    <div data-snippet="docs/snippets/examples.html"></div>
+  </main>
+</div>
+
+<script>
+  // Swatches and scales are generated from the live tokens, so docs never drift from tokens.css.
+  (function () {
+    var css = getComputedStyle(document.documentElement);
+    var colors = ['ink', 'ink-2', 'ink-3', 'ink-4', 'paper', 'paper-2', 'paper-3', 'on-ink'];
+    document.getElementById('swatches').innerHTML = colors.map(function (name) {
+      var v = css.getPropertyValue('--' + name).trim();
+      return '<div class="doc-swatch"><div class="doc-swatch__chip" style="background:var(--' + name + ')"></div>' +
+        '<div class="doc-swatch__label"><strong>--' + name + '</strong><code>' + v + '</code></div></div>';
+    }).join('');
+    function scale(id, prefix, names, height) {
+      document.getElementById(id).innerHTML = names.map(function (n) {
+        var v = css.getPropertyValue('--' + prefix + n).trim();
+        var style = height ? 'width:120px;height:var(--' + prefix + n + ')' : 'width:var(--' + prefix + n + ')';
+        return '<div class="doc-scale__row"><code>--' + prefix + n + '</code><div class="doc-scale__bar" style="' + style + '"></div><span>' + v + '</span></div>';
+      }).join('');
+    }
+    scale('space-scale', 'space', ['-1', '-2', '-3', '-4', '-5', '-6', '-8', '-10', '-12']);
+    scale('stroke-scale', 'stroke', ['-hair', '', '-bold', '-heavy'], true);
+  })();
+
+  // Snippets are plain HTML fragments; load them, then initialise ink.js behaviours.
+  (function () {
+    var slots = [].slice.call(document.querySelectorAll('[data-snippet]'));
+    Promise.all(slots.map(function (slot) {
+      return fetch(slot.dataset.snippet).then(function (r) { return r.ok ? r.text() : ''; })
+        .then(function (html) { slot.outerHTML = html; })
+        .catch(function () { slot.innerHTML = '<p class="doc-warn">Не удалось загрузить ' + slot.dataset.snippet + '. Откройте страницу через HTTP-сервер.</p>'; });
+    })).then(function () {
+      if (window.InkUI) window.InkUI.init(document);
+      if (location.hash) { var t = document.querySelector(location.hash); if (t) t.scrollIntoView(); }
+    });
+  })();
+</script>
+<script src="ink.js"></script>
+</body>
+</html>

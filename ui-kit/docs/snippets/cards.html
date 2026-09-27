@@ -1,0 +1,426 @@
+<!-- Ink UI — surfaces: cards, tiles, lists. Fragment for the docs page. -->
+
+<section class="doc-section" id="cards">
+  <h2 class="doc-title">Карточки</h2>
+  <p class="doc-lead">Толстая рамка тушью, чёрные ленты заголовка и подвала, инверсия для акцента. Модификаторы: <code>--double</code>, <code>--flat</code>, <code>--inverted</code>, <code>--ruled</code>, <code>--dashed</code>.</p>
+  <div class="doc-demo">
+<article class="ink-card ink-card--double" style="width: 100%; max-width: 380px">
+  <figure class="ink-quote">
+    <figcaption class="ink-quote__caption">Цитата дня</figcaption>
+    <blockquote class="ink-quote__text">Многое из того, что мы считали незабываемым, забывается именно в те дни, которые мы так берегли.</blockquote>
+    <cite class="ink-quote__cite">— Суп для души</cite>
+  </figure>
+</article>
+  </div>
+  <pre class="doc-code"><code>&lt;article class="ink-card ink-card--double" style="width: 100%; max-width: 380px"&gt;
+  &lt;figure class="ink-quote"&gt;
+    &lt;figcaption class="ink-quote__caption"&gt;Цитата дня&lt;/figcaption&gt;
+    &lt;blockquote class="ink-quote__text"&gt;Многое из того, что мы считали незабываемым, забывается именно в те дни, которые мы так берегли.&lt;/blockquote&gt;
+    &lt;cite class="ink-quote__cite"&gt;— Суп для души&lt;/cite&gt;
+  &lt;/figure&gt;
+&lt;/article&gt;</code></pre>
+  <div class="doc-demo">
+<article class="ink-card ink-card--ruled" style="width: 100%; max-width: 380px">
+  <header class="ink-card__header ink-card__header--slant">
+    <svg class="ink-icon" aria-hidden="true"><use href="icons.svg#i-note"/></svg>
+    <h3 class="ink-card__title">Рукописная заметка</h3>
+  </header>
+  <div class="ink-card__body ink-serif">
+    <p>Купить молоко и хлеб.</p>
+    <p>Позвонить маме в воскресенье.</p>
+    <p>Медленнее — это тоже нормально.</p>
+    <p>Сегодня уже получилось хорошо.</p>
+  </div>
+</article>
+  </div>
+  <pre class="doc-code"><code>&lt;article class="ink-card ink-card--ruled" style="width: 100%; max-width: 380px"&gt;
+  &lt;header class="ink-card__header ink-card__header--slant"&gt;
+    &lt;svg class="ink-icon" aria-hidden="true"&gt;&lt;use href="icons.svg#i-note"/&gt;&lt;/svg&gt;
+    &lt;h3 class="ink-card__title"&gt;Рукописная заметка&lt;/h3&gt;
+  &lt;/header&gt;
+  &lt;div class="ink-card__body ink-serif"&gt;
+    &lt;p&gt;Купить молоко и хлеб.&lt;/p&gt;
+    &lt;p&gt;Позвонить маме в воскресенье.&lt;/p&gt;
+    &lt;p&gt;Медленнее — это тоже нормально.&lt;/p&gt;
+    &lt;p&gt;Сегодня уже получилось хорошо.&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/article&gt;</code></pre>
+  <div class="doc-demo">
+<article class="ink-card" style="width: 100%; max-width: 380px">
+  <span class="ink-card__tab">Свой текст</span>
+  <div class="ink-card__body">
+    <p class="ink-h2">Проживать дни<br>так, как нравится</p>
+    <hr class="ink-divider">
+    <p class="ink-serif ink-small ink-muted">Пусть в суете найдётся минута для себя.<br>Медленнее — не страшно.</p>
+  </div>
+</article>
+  </div>
+  <pre class="doc-code"><code>&lt;article class="ink-card" style="width: 100%; max-width: 380px"&gt;
+  &lt;span class="ink-card__tab"&gt;Свой текст&lt;/span&gt;
+  &lt;div class="ink-card__body"&gt;
+    &lt;p class="ink-h2"&gt;Проживать дни&lt;br&gt;так, как нравится&lt;/p&gt;
+    &lt;hr class="ink-divider"&gt;
+    &lt;p class="ink-serif ink-small ink-muted"&gt;Пусть в суете найдётся минута для себя.&lt;br&gt;Медленнее — не страшно.&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/article&gt;</code></pre>
+  <div class="doc-demo">
+<div class="ink-card-wrap" style="width: 100%; max-width: 380px">
+  <span class="ink-card__tab ink-card__tab--end">07.10 Пт</span>
+  <article class="ink-card">
+  <header class="ink-card__header">
+    <h3 class="ink-card__title">Новости дня · Главное</h3>
+  </header>
+  <div class="ink-card__body ink-card__body--flush">
+    <ol class="ink-list ink-list--numbered ink-list--ruled ink-list--inset">
+      <li class="ink-list__item">
+        <div class="ink-list__content">
+          <p class="ink-list__title">Новые правила парковки в центре вступят в силу с августа</p>
+          <p class="ink-list__sub">РИА Новости · 17:35</p>
+        </div>
+      </li>
+      <li class="ink-list__item">
+        <div class="ink-list__content">
+          <p class="ink-list__title">В метро открыли три станции Большой кольцевой линии</p>
+          <p class="ink-list__sub">ТАСС · 17:30</p>
+        </div>
+      </li>
+      <li class="ink-list__item">
+        <div class="ink-list__content">
+          <p class="ink-list__title">Репортаж: как город готовится к сезону ливней</p>
+          <p class="ink-list__sub">Коммерсантъ · 17:26</p>
+        </div>
+      </li>
+      <li class="ink-list__item">
+        <div class="ink-list__content">
+          <p class="ink-list__title">От Волги до Байкала: маршрут нового туристического поезда</p>
+          <p class="ink-list__sub">РБК · 17:22</p>
+        </div>
+      </li>
+      <li class="ink-list__item">
+        <div class="ink-list__content">
+          <p class="ink-list__title">Учёные нашли способ продлить срок службы аккумуляторов</p>
+          <p class="ink-list__sub">Наука · 17:20</p>
+        </div>
+      </li>
+    </ol>
+  </div>
+  <footer class="ink-card__footer">
+    <span>Сводка</span>
+    <span class="ink-card__meta">Обновлено 07-10 18:00</span>
+  </footer>
+</article>
+  </div>
+  <pre class="doc-code"><code>&lt;div class="ink-card-wrap" style="width: 100%; max-width: 380px"&gt;
+  &lt;span class="ink-card__tab ink-card__tab--end"&gt;07.10 Пт&lt;/span&gt;
+  &lt;article class="ink-card"&gt;
+  &lt;header class="ink-card__header"&gt;
+    &lt;h3 class="ink-card__title"&gt;Новости дня · Главное&lt;/h3&gt;
+  &lt;/header&gt;
+  &lt;div class="ink-card__body ink-card__body--flush"&gt;
+    &lt;ol class="ink-list ink-list--numbered ink-list--ruled ink-list--inset"&gt;
+      &lt;li class="ink-list__item"&gt;
+        &lt;div class="ink-list__content"&gt;
+          &lt;p class="ink-list__title"&gt;Новые правила парковки в центре вступят в силу с августа&lt;/p&gt;
+          &lt;p class="ink-list__sub"&gt;РИА Новости · 17:35&lt;/p&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li class="ink-list__item"&gt;
+        &lt;div class="ink-list__content"&gt;
+          &lt;p class="ink-list__title"&gt;В метро открыли три станции Большой кольцевой линии&lt;/p&gt;
+          &lt;p class="ink-list__sub"&gt;ТАСС · 17:30&lt;/p&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li class="ink-list__item"&gt;
+        &lt;div class="ink-list__content"&gt;
+          &lt;p class="ink-list__title"&gt;Репортаж: как город готовится к сезону ливней&lt;/p&gt;
+          &lt;p class="ink-list__sub"&gt;Коммерсантъ · 17:26&lt;/p&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li class="ink-list__item"&gt;
+        &lt;div class="ink-list__content"&gt;
+          &lt;p class="ink-list__title"&gt;От Волги до Байкала: маршрут нового туристического поезда&lt;/p&gt;
+          &lt;p class="ink-list__sub"&gt;РБК · 17:22&lt;/p&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li class="ink-list__item"&gt;
+        &lt;div class="ink-list__content"&gt;
+          &lt;p class="ink-list__title"&gt;Учёные нашли способ продлить срок службы аккумуляторов&lt;/p&gt;
+          &lt;p class="ink-list__sub"&gt;Наука · 17:20&lt;/p&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+    &lt;/ol&gt;
+  &lt;/div&gt;
+  &lt;footer class="ink-card__footer"&gt;
+    &lt;span&gt;Сводка&lt;/span&gt;
+    &lt;span class="ink-card__meta"&gt;Обновлено 07-10 18:00&lt;/span&gt;
+  &lt;/footer&gt;
+&lt;/article&gt;</code></pre>
+  <div class="doc-demo">
+<article class="ink-card" style="width: 100%; max-width: 380px">
+  <header class="ink-card__header">
+    <svg class="ink-icon" aria-hidden="true"><use href="icons.svg#i-book"/></svg>
+    <h3 class="ink-card__title">Этот день в истории</h3>
+    <span class="ink-card__meta">10 июля</span>
+  </header>
+  <div class="ink-card__body ink-card__body--flush">
+    <ol class="ink-list ink-list--timeline ink-list--ruled ink-list--inset">
+      <li class="ink-list__item">
+        <span class="ink-list__date">138 г. · 10 июля</span>
+        <div class="ink-list__content"><p class="ink-list__title">Умер римский император Адриан</p></div>
+      </li>
+      <li class="ink-list__item">
+        <span class="ink-list__date">1040 г. · 10 июля</span>
+        <div class="ink-list__content"><p class="ink-list__title">Леди Годива проехала по улицам Ковентри</p></div>
+      </li>
+      <li class="ink-list__item">
+        <span class="ink-list__date">1584 г. · 10 июля</span>
+        <div class="ink-list__content"><p class="ink-list__title">Убит Вильгельм Оранский, лидер голландской революции</p></div>
+      </li>
+      <li class="ink-list__item">
+        <span class="ink-list__date">1856 г. · 10 июля</span>
+        <div class="ink-list__content"><p class="ink-list__title">Родился изобретатель Никола Тесла</p></div>
+      </li>
+    </ol>
+  </div>
+</article>
+  </div>
+  <pre class="doc-code"><code>&lt;article class="ink-card" style="width: 100%; max-width: 380px"&gt;
+  &lt;header class="ink-card__header"&gt;
+    &lt;svg class="ink-icon" aria-hidden="true"&gt;&lt;use href="icons.svg#i-book"/&gt;&lt;/svg&gt;
+    &lt;h3 class="ink-card__title"&gt;Этот день в истории&lt;/h3&gt;
+    &lt;span class="ink-card__meta"&gt;10 июля&lt;/span&gt;
+  &lt;/header&gt;
+  &lt;div class="ink-card__body ink-card__body--flush"&gt;
+    &lt;ol class="ink-list ink-list--timeline ink-list--ruled ink-list--inset"&gt;
+      &lt;li class="ink-list__item"&gt;
+        &lt;span class="ink-list__date"&gt;138 г. · 10 июля&lt;/span&gt;
+        &lt;div class="ink-list__content"&gt;&lt;p class="ink-list__title"&gt;Умер римский император Адриан&lt;/p&gt;&lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li class="ink-list__item"&gt;
+        &lt;span class="ink-list__date"&gt;1040 г. · 10 июля&lt;/span&gt;
+        &lt;div class="ink-list__content"&gt;&lt;p class="ink-list__title"&gt;Леди Годива проехала по улицам Ковентри&lt;/p&gt;&lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li class="ink-list__item"&gt;
+        &lt;span class="ink-list__date"&gt;1584 г. · 10 июля&lt;/span&gt;
+        &lt;div class="ink-list__content"&gt;&lt;p class="ink-list__title"&gt;Убит Вильгельм Оранский, лидер голландской революции&lt;/p&gt;&lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li class="ink-list__item"&gt;
+        &lt;span class="ink-list__date"&gt;1856 г. · 10 июля&lt;/span&gt;
+        &lt;div class="ink-list__content"&gt;&lt;p class="ink-list__title"&gt;Родился изобретатель Никола Тесла&lt;/p&gt;&lt;/div&gt;
+      &lt;/li&gt;
+    &lt;/ol&gt;
+  &lt;/div&gt;
+&lt;/article&gt;</code></pre>
+  <div class="doc-demo">
+<div class="ink-card-wrap" style="width: 100%; max-width: 380px">
+  <span class="ink-card__tab ink-card__tab--end">07.10 Пт</span>
+  <article class="ink-card">
+  <header class="ink-card__header">
+    <h3 class="ink-card__title">Погодные предупреждения</h3>
+  </header>
+  <div class="ink-card__body ink-card__body--center">
+    <p>Место не настроено</p>
+    <p class="ink-caption">Выберите город в настройках шаблона</p>
+  </div>
+  <footer class="ink-card__footer">
+    <span>Центр оповещений</span>
+    <span class="ink-card__meta">Обновлено 07-10 18:00</span>
+  </footer>
+  </article>
+</div>
+  </div>
+  <pre class="doc-code"><code>&lt;div class="ink-card-wrap" style="width: 100%; max-width: 380px"&gt;
+  &lt;span class="ink-card__tab ink-card__tab--end"&gt;07.10 Пт&lt;/span&gt;
+  &lt;article class="ink-card"&gt;
+  &lt;header class="ink-card__header"&gt;
+    &lt;h3 class="ink-card__title"&gt;Погодные предупреждения&lt;/h3&gt;
+  &lt;/header&gt;
+  &lt;div class="ink-card__body ink-card__body--center"&gt;
+    &lt;p&gt;Место не настроено&lt;/p&gt;
+    &lt;p class="ink-caption"&gt;Выберите город в настройках шаблона&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;footer class="ink-card__footer"&gt;
+    &lt;span&gt;Центр оповещений&lt;/span&gt;
+    &lt;span class="ink-card__meta"&gt;Обновлено 07-10 18:00&lt;/span&gt;
+  &lt;/footer&gt;
+  &lt;/article&gt;
+&lt;/div&gt;</code></pre>
+  <div class="doc-demo">
+<div class="ink-grid" style="--cols: 2; width: 100%; max-width: 520px">
+  <article class="ink-card ink-card--flat">
+    <header class="ink-card__header"><h3 class="ink-card__title">Плоская</h3></header>
+    <div class="ink-card__body ink-small">Тонкая рамка для вложенных блоков.</div>
+  </article>
+  <article class="ink-card ink-card--inverted">
+    <header class="ink-card__header"><h3 class="ink-card__title">Акцент</h3></header>
+    <div class="ink-card__body ink-small">Инверсия — для главного.</div>
+  </article>
+  <button class="ink-card ink-card--dashed" type="button" style="grid-column: 1 / -1">
+    <svg class="ink-icon" aria-hidden="true"><use href="icons.svg#i-plus"/></svg>
+    Добавить карточку
+  </button>
+</div>
+  </div>
+  <pre class="doc-code"><code>&lt;div class="ink-grid" style="--cols: 2; width: 100%; max-width: 520px"&gt;
+  &lt;article class="ink-card ink-card--flat"&gt;
+    &lt;header class="ink-card__header"&gt;&lt;h3 class="ink-card__title"&gt;Плоская&lt;/h3&gt;&lt;/header&gt;
+    &lt;div class="ink-card__body ink-small"&gt;Тонкая рамка для вложенных блоков.&lt;/div&gt;
+  &lt;/article&gt;
+  &lt;article class="ink-card ink-card--inverted"&gt;
+    &lt;header class="ink-card__header"&gt;&lt;h3 class="ink-card__title"&gt;Акцент&lt;/h3&gt;&lt;/header&gt;
+    &lt;div class="ink-card__body ink-small"&gt;Инверсия — для главного.&lt;/div&gt;
+  &lt;/article&gt;
+  &lt;button class="ink-card ink-card--dashed" type="button" style="grid-column: 1 / -1"&gt;
+    &lt;svg class="ink-icon" aria-hidden="true"&gt;&lt;use href="icons.svg#i-plus"/&gt;&lt;/svg&gt;
+    Добавить карточку
+  &lt;/button&gt;
+&lt;/div&gt;</code></pre>
+</section>
+
+<section class="doc-section" id="tiles">
+  <h2 class="doc-title">Плитки</h2>
+  <p class="doc-lead">Элемент галереи: превью карточки в тонкой скруглённой рамке, жирное название, серое описание в одну строку и тег справа.</p>
+  <div class="doc-demo">
+<div class="ink-grid" style="--cols: 1; width: 100%; max-width: 400px">
+  <a class="ink-tile" href="#tiles">
+    <div class="ink-tile__preview">
+      <article class="ink-card ink-card--double">
+        <figure class="ink-quote">
+          <figcaption class="ink-quote__caption">Цитата дня</figcaption>
+          <blockquote class="ink-quote__text">Медленнее — это тоже нормально.</blockquote>
+          <cite class="ink-quote__cite">— Суп для души</cite>
+        </figure>
+      </article>
+    </div>
+    <div class="ink-tile__head">
+      <h3 class="ink-tile__title">Цитата дня</h3>
+      <span class="ink-tile__tag"><span class="ink-tag">Инфо</span></span>
+    </div>
+    <p class="ink-tile__desc">Короткая мотивирующая фраза, обновляется каждый день автоматически</p>
+  </a>
+  <a class="ink-tile" href="#tiles">
+    <div class="ink-tile__preview">
+      <article class="ink-card">
+        <div class="ink-ticker">
+          <div class="ink-ticker__row">
+            <div class="ink-ticker__name"><span>Сбербанк</span><span class="ink-tag ink-tag--code"><i class="ink-tag__mark"></i>SBER</span></div>
+            <div class="ink-ticker__value">312.40</div>
+            <div class="ink-ticker__change"><span class="ink-badge ink-badge--trend"><svg class="ink-icon" aria-hidden="true"><use href="icons.svg#i-trend-up"/></svg>+1.26%</span></div>
+          </div>
+        </div>
+        <div class="ink-ticker__summary"><span>IMOEX</span><span>3&nbsp;031.51</span><span>▲1.12%</span></div>
+      </article>
+    </div>
+    <div class="ink-tile__head">
+      <h3 class="ink-tile__title">Акции</h3>
+      <span class="ink-tile__tag"><span class="ink-tag">Финансы</span></span>
+    </div>
+    <p class="ink-tile__desc">Цены и изменения избранных бумаг в реальном времени, до 4 позиций</p>
+  </a>
+</div>
+  </div>
+  <pre class="doc-code"><code>&lt;div class="ink-grid" style="--cols: 1; width: 100%; max-width: 400px"&gt;
+  &lt;a class="ink-tile" href="#tiles"&gt;
+    &lt;div class="ink-tile__preview"&gt;
+      &lt;article class="ink-card ink-card--double"&gt;
+        &lt;figure class="ink-quote"&gt;
+          &lt;figcaption class="ink-quote__caption"&gt;Цитата дня&lt;/figcaption&gt;
+          &lt;blockquote class="ink-quote__text"&gt;Медленнее — это тоже нормально.&lt;/blockquote&gt;
+          &lt;cite class="ink-quote__cite"&gt;— Суп для души&lt;/cite&gt;
+        &lt;/figure&gt;
+      &lt;/article&gt;
+    &lt;/div&gt;
+    &lt;div class="ink-tile__head"&gt;
+      &lt;h3 class="ink-tile__title"&gt;Цитата дня&lt;/h3&gt;
+      &lt;span class="ink-tile__tag"&gt;&lt;span class="ink-tag"&gt;Инфо&lt;/span&gt;&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;p class="ink-tile__desc"&gt;Короткая мотивирующая фраза, обновляется каждый день автоматически&lt;/p&gt;
+  &lt;/a&gt;
+  &lt;a class="ink-tile" href="#tiles"&gt;
+    &lt;div class="ink-tile__preview"&gt;
+      &lt;article class="ink-card"&gt;
+        &lt;div class="ink-ticker"&gt;
+          &lt;div class="ink-ticker__row"&gt;
+            &lt;div class="ink-ticker__name"&gt;&lt;span&gt;Сбербанк&lt;/span&gt;&lt;span class="ink-tag ink-tag--code"&gt;&lt;i class="ink-tag__mark"&gt;&lt;/i&gt;SBER&lt;/span&gt;&lt;/div&gt;
+            &lt;div class="ink-ticker__value"&gt;312.40&lt;/div&gt;
+            &lt;div class="ink-ticker__change"&gt;&lt;span class="ink-badge ink-badge--trend"&gt;&lt;svg class="ink-icon" aria-hidden="true"&gt;&lt;use href="icons.svg#i-trend-up"/&gt;&lt;/svg&gt;+1.26%&lt;/span&gt;&lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class="ink-ticker__summary"&gt;&lt;span&gt;IMOEX&lt;/span&gt;&lt;span&gt;3&amp;nbsp;031.51&lt;/span&gt;&lt;span&gt;▲1.12%&lt;/span&gt;&lt;/div&gt;
+      &lt;/article&gt;
+    &lt;/div&gt;
+    &lt;div class="ink-tile__head"&gt;
+      &lt;h3 class="ink-tile__title"&gt;Акции&lt;/h3&gt;
+      &lt;span class="ink-tile__tag"&gt;&lt;span class="ink-tag"&gt;Финансы&lt;/span&gt;&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;p class="ink-tile__desc"&gt;Цены и изменения избранных бумаг в реальном времени, до 4 позиций&lt;/p&gt;
+  &lt;/a&gt;
+&lt;/div&gt;</code></pre>
+</section>
+
+<section class="doc-section" id="lists">
+  <h2 class="doc-title">Списки и разделители</h2>
+  <p class="doc-lead">Линованные строки как в тетради, нумерация чёрными кружками, лента дат. Разделитель — тонкий, жирный, пунктирный или с подписью.</p>
+  <div class="doc-demo">
+<div class="ink-stack" style="width: 100%; max-width: 380px">
+  <ul class="ink-list ink-list--ruled">
+    <li class="ink-list__item">
+      <div class="ink-list__content">
+        <p class="ink-list__title">Планёрка команды</p>
+        <p class="ink-list__sub">Календарь · 10:00</p>
+      </div>
+      <span class="ink-list__trailing">30 мин</span>
+    </li>
+    <li class="ink-list__item">
+      <div class="ink-list__content">
+        <p class="ink-list__title">Ревью макетов дашборда</p>
+        <p class="ink-list__sub">Календарь · 14:30</p>
+      </div>
+      <span class="ink-list__trailing"><span class="ink-badge">Скоро</span></span>
+    </li>
+    <li class="ink-list__item">
+      <span class="ink-list__leading"><svg class="ink-icon" aria-hidden="true"><use href="icons.svg#i-device"/></svg></span>
+      <div class="ink-list__content">
+        <p class="ink-list__title">Экран на кухне</p>
+        <p class="ink-list__sub">В сети · 17:35</p>
+      </div>
+      <span class="ink-list__trailing"><svg class="ink-icon" aria-hidden="true"><use href="icons.svg#i-chevron-right"/></svg></span>
+    </li>
+  </ul>
+  <hr class="ink-divider">
+  <hr class="ink-divider ink-divider--bold">
+  <hr class="ink-divider ink-divider--dashed">
+  <div class="ink-divider ink-divider--label" role="separator">Вчера</div>
+</div>
+  </div>
+  <pre class="doc-code"><code>&lt;div class="ink-stack" style="width: 100%; max-width: 380px"&gt;
+  &lt;ul class="ink-list ink-list--ruled"&gt;
+    &lt;li class="ink-list__item"&gt;
+      &lt;div class="ink-list__content"&gt;
+        &lt;p class="ink-list__title"&gt;Планёрка команды&lt;/p&gt;
+        &lt;p class="ink-list__sub"&gt;Календарь · 10:00&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;span class="ink-list__trailing"&gt;30 мин&lt;/span&gt;
+    &lt;/li&gt;
+    &lt;li class="ink-list__item"&gt;
+      &lt;div class="ink-list__content"&gt;
+        &lt;p class="ink-list__title"&gt;Ревью макетов дашборда&lt;/p&gt;
+        &lt;p class="ink-list__sub"&gt;Календарь · 14:30&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;span class="ink-list__trailing"&gt;&lt;span class="ink-badge"&gt;Скоро&lt;/span&gt;&lt;/span&gt;
+    &lt;/li&gt;
+    &lt;li class="ink-list__item"&gt;
+      &lt;span class="ink-list__leading"&gt;&lt;svg class="ink-icon" aria-hidden="true"&gt;&lt;use href="icons.svg#i-device"/&gt;&lt;/svg&gt;&lt;/span&gt;
+      &lt;div class="ink-list__content"&gt;
+        &lt;p class="ink-list__title"&gt;Экран на кухне&lt;/p&gt;
+        &lt;p class="ink-list__sub"&gt;В сети · 17:35&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;span class="ink-list__trailing"&gt;&lt;svg class="ink-icon" aria-hidden="true"&gt;&lt;use href="icons.svg#i-chevron-right"/&gt;&lt;/svg&gt;&lt;/span&gt;
+    &lt;/li&gt;
+  &lt;/ul&gt;
+  &lt;hr class="ink-divider"&gt;
+  &lt;hr class="ink-divider ink-divider--bold"&gt;
+  &lt;hr class="ink-divider ink-divider--dashed"&gt;
+  &lt;div class="ink-divider ink-divider--label" role="separator"&gt;Вчера&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+</section>

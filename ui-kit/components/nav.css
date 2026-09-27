@@ -1,0 +1,357 @@
+/*
+ * Ink UI — navigation.
+ *
+ * Classes:
+ *   .ink-tabbar                 fixed bottom tab bar (paper, hairline top border)
+ *   .ink-tabbar--static         position: relative (inline demos, previews)
+ *   .ink-tabbar__item           icon over tiny label; [aria-current="page"] = inverted block that pops above the bar
+ *   .ink-tabbar__label
+ *
+ *   .ink-tabs                   underlined tab list (role="tablist"), JS: data-ink-tabs
+ *   .ink-tabs__tab              [aria-selected="true"] = bold + heavy ink underline
+ *   .ink-tab-panel              [hidden] panels
+ *
+ *   .ink-breadcrumbs            ol of links, last is [aria-current="page"]
+ *
+ *   .ink-pagination             numbered squares, current [aria-current="page"] inverted
+ *   .ink-pagination__item       a / button / span
+ *   .ink-pagination__gap        "…"
+ *   .ink-pager                  "‹ 2 / 7 ›"
+ *   .ink-pager__btn, .ink-pager__status
+ *
+ *   .ink-menu                   framed vertical list of actions (settings list)
+ *   .ink-menu__item             row: icon + label + trailing value/chevron; inverted while pressed
+ *   .ink-menu__label, .ink-menu__value, .ink-menu__chevron
+ *   .ink-menu__item--danger     destructive action: black label, icon framed in a solid ink square
+ *                               with a paper-coloured stroke (monochrome, no red)
+ *   .ink-menu__divider          <li role="separator">: thick ink rule between groups
+ *
+ * Markup:
+ *   <nav class="ink-tabbar" data-ink-tabbar>
+ *     <a class="ink-tabbar__item" href="#" aria-current="page">
+ *       <svg class="ink-icon"><use href="icons.svg#i-cards"/></svg><span class="ink-tabbar__label">Карты</span>
+ *     </a> …
+ *   </nav>
+ *
+ *   <div class="ink-tabs" role="tablist" data-ink-tabs>
+ *     <button class="ink-tabs__tab" role="tab" aria-selected="true" aria-controls="p1">Все</button> …
+ *   </div>
+ *   <div class="ink-tab-panel" role="tabpanel" id="p1">…</div>
+ *
+ *   <ul class="ink-menu">
+ *     <li><a class="ink-menu__item" href="#"><svg class="ink-icon"><use href="icons.svg#i-settings"/></svg>
+ *       <span class="ink-menu__label">Настройки</span><span class="ink-menu__value">Вкл.</span>
+ *       <span class="ink-menu__chevron" aria-hidden="true"></span></a></li>
+ *   </ul>
+ */
+
+/* ---------- Tab bar ---------- */
+
+.ink-tabbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 30;
+  display: flex;
+  align-items: stretch;
+  height: calc(var(--tabbar-height) + env(safe-area-inset-bottom, 0px));
+  padding: 0 var(--space-2) env(safe-area-inset-bottom, 0px);
+  background: var(--paper);
+  border-top: var(--stroke-hair) solid var(--ink);
+}
+.ink-tabbar--static { position: relative; z-index: auto; }
+
+.ink-tabbar__item {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-1);
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  text-decoration: none;
+  font: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+.ink-tabbar__item .ink-icon { width: var(--icon-md); height: var(--icon-md); }
+.ink-tabbar__label {
+  font-size: var(--text-2xs);
+  font-weight: var(--weight-medium);
+  line-height: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+/* Active: solid ink block, taller than the bar, popping above its top edge. */
+.ink-tabbar__item[aria-current="page"] {
+  margin-top: calc(-1 * var(--space-4));
+  margin-bottom: var(--space-2);
+  background: var(--ink);
+  color: var(--on-ink);
+  border-radius: var(--radius-xs);
+}
+.ink-tabbar__item[aria-current="page"] .ink-icon { stroke-width: 2.5; }
+.ink-tabbar__item[aria-current="page"] .ink-tabbar__label { font-weight: var(--weight-black); }
+.ink-tabbar__item:not([aria-current="page"]):active { background: var(--paper-2); }
+
+/* ---------- Tabs ---------- */
+
+.ink-tabs {
+  display: flex;
+  gap: var(--space-5);
+  overflow-x: auto;
+  scrollbar-width: none;
+  border-bottom: var(--stroke-hair) solid var(--ink-4);
+}
+.ink-tabs::-webkit-scrollbar { display: none; }
+
+.ink-tabs__tab {
+  position: relative;
+  flex: none;
+  min-height: var(--control-lg);
+  padding: 0 var(--space-1);
+  border: 0;
+  background: transparent;
+  color: var(--ink-3);
+  font-size: var(--text-md);
+  font-weight: var(--weight-medium);
+  white-space: nowrap;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+.ink-tabs__tab[aria-selected="true"],
+.ink-tabs__tab[aria-current="page"] {
+  color: var(--ink);
+  font-weight: var(--weight-black);
+}
+.ink-tabs__tab[aria-selected="true"]::after,
+.ink-tabs__tab[aria-current="page"]::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(-1 * var(--stroke-hair));
+  height: var(--stroke-heavy);
+  background: var(--ink);
+}
+.ink-tabs__tab[disabled] { color: var(--ink-4); cursor: default; }
+
+.ink-tab-panel { padding: var(--space-4) 0; }
+.ink-tab-panel[hidden] { display: none; }
+
+/* ---------- Breadcrumbs ---------- */
+
+.ink-breadcrumbs ol,
+ol.ink-breadcrumbs,
+.ink-breadcrumbs ul {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ink-breadcrumbs li {
+  display: inline-flex;
+  align-items: center;
+  font-size: var(--text-sm);
+  color: var(--ink-3);
+}
+.ink-breadcrumbs li + li::before {
+  content: "/";
+  margin: 0 var(--space-2);
+  color: var(--ink-4);
+  font-weight: var(--weight-bold);
+}
+.ink-breadcrumbs a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--control-md);
+  color: var(--ink-2);
+  text-decoration: underline;
+  text-decoration-thickness: var(--stroke-hair);
+  text-underline-offset: calc(var(--space-1) - var(--stroke-hair));
+}
+.ink-breadcrumbs [aria-current="page"] {
+  color: var(--ink);
+  font-weight: var(--weight-bold);
+  text-decoration: none;
+}
+
+/* ---------- Pagination ---------- */
+
+.ink-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ink-pagination__item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--control-md);
+  height: var(--control-md);
+  padding: 0 var(--space-2);
+  border: var(--stroke-bold) solid var(--ink);
+  border-radius: var(--radius-xs);
+  background: var(--paper);
+  color: var(--ink);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  font-variant-numeric: tabular-nums;
+  text-decoration: none;
+}
+.ink-pagination__item .ink-icon { width: var(--icon-sm); height: var(--icon-sm); stroke-width: 2.5; }
+.ink-pagination__item[aria-current="page"],
+.ink-pagination__item:active {
+  background: var(--ink);
+  color: var(--on-ink);
+  font-weight: var(--weight-black);
+}
+.ink-pagination__item[disabled],
+.ink-pagination__item[aria-disabled="true"] {
+  border-color: var(--ink-4);
+  color: var(--ink-4);
+  background: var(--paper);
+  pointer-events: none;
+}
+.ink-pagination__gap {
+  min-width: var(--space-4);
+  text-align: center;
+  color: var(--ink-3);
+  font-weight: var(--weight-bold);
+}
+
+/* Pager: ‹ 2 / 7 › */
+.ink-pager {
+  display: inline-flex;
+  align-items: stretch;
+  border: var(--stroke-bold) solid var(--ink);
+  border-radius: var(--radius-sm);
+  background: var(--paper);
+}
+.ink-pager__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--control-lg);
+  min-height: var(--control-md);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-black);
+  line-height: 1;
+  text-decoration: none;
+}
+.ink-pager__btn:first-child { border-right: var(--stroke-bold) solid var(--ink); }
+.ink-pager__btn:last-child { border-left: var(--stroke-bold) solid var(--ink); }
+.ink-pager__btn:active { background: var(--ink); color: var(--on-ink); }
+.ink-pager__btn[disabled],
+.ink-pager__btn[aria-disabled="true"] { color: var(--ink-4); pointer-events: none; }
+.ink-pager__status {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 var(--space-4);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.ink-pager__status b,
+.ink-pager__status strong { font-weight: var(--weight-black); margin-right: 0.25em; }
+
+/* ---------- Menu ---------- */
+
+.ink-menu {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: var(--stroke-bold) solid var(--ink);
+  border-radius: var(--radius-md);
+  background: var(--paper);
+  overflow: hidden;
+}
+.ink-menu > li + li { border-top: var(--stroke-hair) solid var(--ink-4); }
+
+.ink-menu__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  min-height: var(--control-lg);
+  padding: var(--space-3) var(--space-4);
+  border: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: inherit;
+  font-size: var(--text-md);
+  text-align: left;
+  text-decoration: none;
+}
+.ink-menu__item:active { background: var(--ink); color: var(--on-ink); }
+.ink-menu__item:active .ink-menu__value { color: var(--on-ink); }
+.ink-menu__item[disabled],
+.ink-menu__item[aria-disabled="true"] { color: var(--ink-4); pointer-events: none; }
+
+.ink-menu__label {
+  flex: 1;
+  min-width: 0;
+  font-weight: var(--weight-medium);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ink-menu__value {
+  flex: none;
+  font-size: var(--text-sm);
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+.ink-menu__chevron {
+  flex: none;
+  width: var(--space-2);
+  height: var(--space-2);
+  margin-right: var(--space-1);
+  border-top: var(--stroke-bold) solid currentColor;
+  border-right: var(--stroke-bold) solid currentColor;
+  transform: rotate(45deg);
+}
+
+.ink-menu__item--danger { font-weight: var(--weight-black); }
+.ink-menu__item--danger .ink-menu__label { font-weight: var(--weight-black); }
+/* Framed icon: small solid ink square, icon drawn in paper. Pressed row is ink, so the square flips. */
+.ink-menu__item--danger > .ink-icon {
+  box-sizing: content-box;
+  width: var(--icon-sm);
+  height: var(--icon-sm);
+  padding: calc((var(--control-sm) - var(--icon-sm)) / 2);
+  border-radius: var(--radius-xs);
+  background: var(--ink);
+  color: var(--on-ink);
+  stroke-width: 2.75;
+}
+.ink-menu__item--danger:active > .ink-icon { background: var(--on-ink); color: var(--ink); }
+
+/* Divider: `.ink-menu > li.ink-menu__divider` (0,2,1) outranks the row rule `.ink-menu > li + li` (0,1,2),
+   so no !important is needed. The row right after it drops its own hairline. */
+.ink-menu__divider,
+.ink-menu > li.ink-menu__divider {
+  height: 0;
+  border-top: var(--stroke-bold) solid var(--ink);
+}
+.ink-menu > .ink-menu__divider + li { border-top: 0; }

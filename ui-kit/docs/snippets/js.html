@@ -1,0 +1,118 @@
+<!-- Ink UI — JavaScript behaviours (ink.js). -->
+<section class="doc-section" id="js">
+  <h2 class="doc-title">JavaScript</h2>
+  <p class="doc-lead">ink.js — без зависимостей, без анимаций. Подключите в конце страницы: поведение включается по data-атрибутам на DOMContentLoaded, повторная инициализация безопасна.</p>
+  <pre class="doc-code"><code>&lt;script src=&quot;ink.js&quot;&gt;&lt;/script&gt;
+
+&lt;script&gt;
+  // После вставки разметки (fetch, шаблоны) — инициализировать новый фрагмент:
+  InkUI.init(container);   // root по умолчанию — document
+  // Уже обработанные узлы помечаются data-ink-init и пропускаются.
+&lt;/script&gt;</code></pre>
+  <h3 class="ink-h3">API</h3>
+  <pre class="doc-code"><code>InkUI.init(root?)              // связать поведение внутри root, возвращает root
+InkUI.toast(message, {duration}) // показать уведомление, duration по умолчанию 2500 мс (0 — не скрывать)
+InkUI.open(idOrDialog)         // открыть &lt;dialog&gt; через showModal()
+InkUI.close(idOrDialog)        // закрыть &lt;dialog&gt;
+
+// Событие ink:change всплывает от контейнера; detail = { value, item }
+el.addEventListener(&#x27;ink:change&#x27;, e =&gt; console.log(e.detail.value));</code></pre>
+</section>
+<section class="doc-section" id="js-chips">
+  <h2 class="doc-title">Чипы и сегменты</h2>
+  <p class="doc-lead">[data-ink-chips] и [data-ink-segmented]: одиночный выбор. Кнопкам с role="tab" ставится aria-selected, остальным — aria-pressed; value берётся из data-value (иначе из текста).</p>
+  <pre class="doc-code"><code>&lt;div class=&quot;ink-chips&quot; role=&quot;tablist&quot; data-ink-chips&gt;
+  &lt;button class=&quot;ink-chip&quot; role=&quot;tab&quot; aria-selected=&quot;true&quot; data-value=&quot;all&quot;&gt;Все&lt;/button&gt;
+  &lt;button class=&quot;ink-chip&quot; role=&quot;tab&quot; aria-selected=&quot;false&quot; data-value=&quot;news&quot;&gt;Новости&lt;/button&gt;
+  &lt;button class=&quot;ink-chip&quot; role=&quot;tab&quot; aria-selected=&quot;false&quot; data-value=&quot;finance&quot;&gt;Финансы&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;ink-segmented&quot; data-ink-segmented&gt;
+  &lt;button class=&quot;ink-segmented__item&quot; type=&quot;button&quot; aria-pressed=&quot;true&quot; data-value=&quot;day&quot;&gt;День&lt;/button&gt;
+  &lt;button class=&quot;ink-segmented__item&quot; type=&quot;button&quot; aria-pressed=&quot;false&quot; data-value=&quot;week&quot;&gt;Неделя&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+  document.querySelector(&#x27;[data-ink-chips]&#x27;)
+    .addEventListener(&#x27;ink:change&#x27;, e =&gt; filterCards(e.detail.value));
+&lt;/script&gt;</code></pre>
+</section>
+<section class="doc-section" id="js-tabs">
+  <h2 class="doc-title">Вкладки</h2>
+  <p class="doc-lead">[data-ink-tabs]: кнопки с aria-controls переключают aria-selected и атрибут hidden у панелей. Клавиши ←/→ (↑/↓), Home, End перемещают выбор; активна только одна кнопка в порядке Tab (roving tabindex).</p>
+  <pre class="doc-code"><code>&lt;div class=&quot;ink-tabs&quot; role=&quot;tablist&quot; data-ink-tabs&gt;
+  &lt;button class=&quot;ink-tabs__tab&quot; role=&quot;tab&quot; aria-selected=&quot;true&quot; aria-controls=&quot;tab-today&quot;&gt;Сегодня&lt;/button&gt;
+  &lt;button class=&quot;ink-tabs__tab&quot; role=&quot;tab&quot; aria-selected=&quot;false&quot; aria-controls=&quot;tab-week&quot;&gt;Неделя&lt;/button&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ink-tab-panel&quot; role=&quot;tabpanel&quot; id=&quot;tab-today&quot;&gt;…&lt;/div&gt;
+&lt;div class=&quot;ink-tab-panel&quot; role=&quot;tabpanel&quot; id=&quot;tab-week&quot; hidden&gt;…&lt;/div&gt;</code></pre>
+</section>
+<section class="doc-section" id="js-tabbar">
+  <h2 class="doc-title">Нижняя навигация</h2>
+  <p class="doc-lead">[data-ink-tabbar]: по нажатию на ссылку или кнопку ставит ей aria-current="page", снимает с остальных и генерирует ink:change (value — data-value, иначе href).</p>
+  <pre class="doc-code"><code>&lt;nav class=&quot;ink-tabbar&quot; data-ink-tabbar&gt;
+  &lt;a class=&quot;ink-tabbar__item&quot; href=&quot;#todo&quot; data-value=&quot;todo&quot;&gt;
+    &lt;svg class=&quot;ink-icon&quot;&gt;&lt;use href=&quot;icons.svg#i-todo&quot;/&gt;&lt;/svg&gt;&lt;span class=&quot;ink-tabbar__label&quot;&gt;Дела&lt;/span&gt;
+  &lt;/a&gt;
+  &lt;a class=&quot;ink-tabbar__item&quot; href=&quot;#cards&quot; data-value=&quot;cards&quot; aria-current=&quot;page&quot;&gt;
+    &lt;svg class=&quot;ink-icon&quot;&gt;&lt;use href=&quot;icons.svg#i-cards&quot;/&gt;&lt;/svg&gt;&lt;span class=&quot;ink-tabbar__label&quot;&gt;Карты&lt;/span&gt;
+  &lt;/a&gt;
+  &lt;a class=&quot;ink-tabbar__item&quot; href=&quot;#device&quot; data-value=&quot;device&quot;&gt;
+    &lt;svg class=&quot;ink-icon&quot;&gt;&lt;use href=&quot;icons.svg#i-device&quot;/&gt;&lt;/svg&gt;&lt;span class=&quot;ink-tabbar__label&quot;&gt;Устройство&lt;/span&gt;
+  &lt;/a&gt;
+&lt;/nav&gt;</code></pre>
+</section>
+<section class="doc-section" id="js-dialog">
+  <h2 class="doc-title">Диалоги</h2>
+  <p class="doc-lead">[data-ink-open="id"] открывает <dialog id> через showModal(). Любой [data-ink-close] внутри закрывает его (значение атрибута уходит в dialog.returnValue), клик по подложке — тоже; Esc работает нативно.</p>
+  <pre class="doc-code"><code>&lt;button class=&quot;ink-button&quot; type=&quot;button&quot; data-ink-open=&quot;confirm-delete&quot;&gt;Удалить&lt;/button&gt;
+
+&lt;dialog class=&quot;ink-dialog&quot; id=&quot;confirm-delete&quot; aria-labelledby=&quot;confirm-delete-title&quot;&gt;
+  &lt;header class=&quot;ink-dialog__header&quot;&gt;
+    &lt;h2 class=&quot;ink-dialog__title&quot; id=&quot;confirm-delete-title&quot;&gt;Удалить карту?&lt;/h2&gt;
+    &lt;button class=&quot;ink-dialog__close&quot; type=&quot;button&quot; data-ink-close aria-label=&quot;Закрыть&quot;&gt;
+      &lt;svg class=&quot;ink-icon&quot;&gt;&lt;use href=&quot;icons.svg#i-close&quot;/&gt;&lt;/svg&gt;
+    &lt;/button&gt;
+  &lt;/header&gt;
+  &lt;div class=&quot;ink-dialog__body&quot;&gt;Карта исчезнет с экрана устройства.&lt;/div&gt;
+  &lt;footer class=&quot;ink-dialog__footer&quot;&gt;
+    &lt;button class=&quot;ink-button ink-button--outline&quot; type=&quot;button&quot; data-ink-close&gt;Отмена&lt;/button&gt;
+    &lt;button class=&quot;ink-button&quot; type=&quot;button&quot; data-ink-close=&quot;ok&quot;&gt;Удалить&lt;/button&gt;
+  &lt;/footer&gt;
+&lt;/dialog&gt;
+
+&lt;script&gt;
+  document.getElementById(&#x27;confirm-delete&#x27;)
+    .addEventListener(&#x27;close&#x27;, e =&gt; { if (e.target.returnValue === &#x27;ok&#x27;) removeCard(); });
+&lt;/script&gt;</code></pre>
+</section>
+<section class="doc-section" id="js-toast">
+  <h2 class="doc-title">Уведомление</h2>
+  <p class="doc-lead">InkUI.toast(message, {duration}) — один общий элемент .ink-toast (role="status") в body; видим при data-open="true". Повторный вызов заменяет текст и перезапускает таймер.</p>
+  <div class="doc-demo">
+<button class="ink-button" type="button" onclick="InkUI.toast('Сохранено')">Показать уведомление</button>
+  </div>
+  <pre class="doc-code"><code>&lt;button class=&quot;ink-button&quot; type=&quot;button&quot; onclick=&quot;InkUI.toast(&#x27;Сохранено&#x27;)&quot;&gt;Показать уведомление&lt;/button&gt;</code></pre>
+  <pre class="doc-code"><code>InkUI.toast(&#x27;Карта отправлена на устройство&#x27;);
+InkUI.toast(&#x27;Нет соединения&#x27;, { duration: 5000 });
+InkUI.toast(&#x27;Синхронизация…&#x27;, { duration: 0 }); // висит до следующего вызова</code></pre>
+</section>
+<section class="doc-section" id="js-stepper">
+  <h2 class="doc-title">Степпер</h2>
+  <p class="doc-lead">[data-ink-stepper]: кнопки [data-ink-step="-1"] и [data-ink-step="1"] меняют input[type=number] на step, соблюдая min/max; на границе кнопка получает disabled. На input генерируются input и change, на контейнере — ink:change.</p>
+  <pre class="doc-code"><code>&lt;div class=&quot;ink-stepper&quot; data-ink-stepper&gt;
+  &lt;button class=&quot;ink-stepper__btn&quot; type=&quot;button&quot; data-ink-step=&quot;-1&quot; aria-label=&quot;Меньше&quot;&gt;
+    &lt;svg class=&quot;ink-icon&quot;&gt;&lt;use href=&quot;icons.svg#i-minus&quot;/&gt;&lt;/svg&gt;
+  &lt;/button&gt;
+  &lt;input class=&quot;ink-stepper__value&quot; type=&quot;number&quot; value=&quot;15&quot; min=&quot;5&quot; max=&quot;60&quot; step=&quot;5&quot; aria-label=&quot;Интервал, мин&quot;&gt;
+  &lt;button class=&quot;ink-stepper__btn&quot; type=&quot;button&quot; data-ink-step=&quot;1&quot; aria-label=&quot;Больше&quot;&gt;
+    &lt;svg class=&quot;ink-icon&quot;&gt;&lt;use href=&quot;icons.svg#i-plus&quot;/&gt;&lt;/svg&gt;
+  &lt;/button&gt;
+&lt;/div&gt;</code></pre>
+</section>
+<section class="doc-section" id="js-clock">
+  <h2 class="doc-title">Часы</h2>
+  <p class="doc-lead">[data-ink-clock] выводит HH:MM (24 ч) и обновляется ровно на границе минуты — без посекундных перерисовок. data-format="date" даёт дату через Intl ru-RU: «26 сентября, сб». Текст меняется только при реальном изменении; у <time> обновляется datetime.</p>
+  <pre class="doc-code"><code>&lt;time class=&quot;ink-num&quot; data-ink-clock&gt;17:18&lt;/time&gt;
+&lt;span class=&quot;ink-caption&quot; data-ink-clock data-format=&quot;date&quot;&gt;&lt;/span&gt;</code></pre>
+</section>

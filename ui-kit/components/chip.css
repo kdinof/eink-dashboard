@@ -1,0 +1,207 @@
+/*
+ * Ink UI — Chips, tags, badges. Requires tokens.css + base.css.
+ *
+ * Classes:
+ *   .ink-chips                  horizontal scrolling filter row (no scrollbar), bleeds into the page gutter
+ *     .ink-chips--flush         no gutter bleed (inside cards / padded containers)
+ *     .ink-chips--wrap          wrap onto several lines instead of scrolling
+ *   .ink-chip                   plain text label; [aria-selected=true] / [aria-pressed=true] /
+ *                               .is-active = solid black pill with white bold text
+ *   .ink-chip--outline          chip with a thin frame when not selected
+ *   .ink-tag                    small outline pill, grey border + grey text ("Инфо")
+ *   .ink-tag--solid             inverted tag
+ *   .ink-tag--code              tiny boxed monospace code ("600000"), optional
+ *     .ink-tag__mark            leading tiny square marker
+ *   .ink-badge                  solid ink rectangle, white bold text ("10 июля")
+ *   .ink-badge--outline         framed variant
+ *   .ink-badge--round           counter: circle / pill number
+ *   .ink-badge--dot             bare dot (no text)
+ *   .ink-badge--trend           trend badge with icon ("↗ +1,26%")
+ *   .ink-badge-anchor           position:relative wrapper; a --round / --dot badge inside sits on its top-right corner
+ *
+ * Markup:
+ *   <div class="ink-chips" role="tablist">
+ *     <button class="ink-chip" role="tab" aria-selected="true">Все</button>
+ *     <button class="ink-chip" role="tab" aria-selected="false">Новости</button>
+ *   </div>
+ *   <span class="ink-tag">Инфо</span>
+ *   <span class="ink-tag ink-tag--code"><i class="ink-tag__mark"></i>600000</span>
+ *   <span class="ink-badge ink-badge--trend"><svg class="ink-icon"><use href="icons.svg#i-trend-up"/></svg>+1,26%</span>
+ */
+
+/* ---------- Chips ---------- */
+
+.ink-chips {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  margin: 0 calc(var(--page-gutter) * -1);
+  padding: var(--space-1) var(--page-gutter);
+}
+.ink-chips::-webkit-scrollbar { display: none; }
+.ink-chips--flush { margin: 0; padding-left: 0; padding-right: 0; }
+.ink-chips--wrap { flex-wrap: wrap; overflow: visible; }
+
+.ink-chip {
+  flex: none;
+  scroll-snap-align: start;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  min-height: var(--control-md);
+  min-width: calc(var(--control-md) + var(--space-6));
+  padding: 0 var(--space-4);
+  margin: 0;
+  border: var(--stroke-bold) solid transparent;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  line-height: 1;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.ink-chip > .ink-icon { width: var(--icon-sm); height: var(--icon-sm); }
+.ink-chip:active { background: var(--paper-2); }
+
+.ink-chip[aria-selected="true"],
+.ink-chip[aria-pressed="true"],
+.ink-chip[aria-current="true"],
+.ink-chip.is-active {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--on-ink);
+  font-weight: var(--weight-black);
+}
+
+.ink-chip--outline { border-width: var(--stroke); border-color: var(--ink-4); }
+.ink-chip--outline[aria-selected="true"],
+.ink-chip--outline[aria-pressed="true"],
+.ink-chip--outline.is-active { border-width: var(--stroke-bold); }
+
+.ink-chip[disabled] { color: var(--ink-4); cursor: not-allowed; }
+
+/* ---------- Tags ---------- */
+
+.ink-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  flex: none;
+  height: var(--badge-h);
+  padding: 0 var(--space-2);
+  border: var(--stroke) solid var(--ink-4);
+  border-radius: var(--radius-pill);
+  background: var(--paper);
+  color: var(--ink-3);
+  font-size: var(--text-2xs);
+  font-weight: var(--weight-medium);
+  line-height: 1;
+  white-space: nowrap;
+}
+.ink-tag > .ink-icon { width: 1em; height: 1em; } /* = --text-2xs */
+
+.ink-tag--solid {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--on-ink);
+  font-weight: var(--weight-bold);
+}
+
+.ink-tag--code {
+  height: auto;
+  padding: var(--stroke-hair) var(--space-1);
+  border: var(--stroke-hair) solid var(--ink-3);
+  border-radius: var(--radius-xs);
+  color: var(--ink-2);
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  font-weight: var(--weight-medium);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+.ink-tag__mark {
+  display: inline-block;
+  width: calc(var(--space-2) - var(--stroke-hair));
+  height: calc(var(--space-2) - var(--stroke-hair));
+  flex: none;
+  border: var(--stroke-hair) solid currentColor;
+  border-radius: calc(var(--radius-xs) / 2);
+  font-style: normal;
+}
+.ink-tag__mark--solid { background: currentColor; }
+
+/* ---------- Badges ---------- */
+
+.ink-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--space-half) * 1.5);
+  flex: none;
+  min-height: var(--badge-h);
+  padding: var(--space-half) var(--space-2);
+  border: var(--stroke) solid var(--ink);
+  border-radius: var(--radius-xs);
+  background: var(--ink);
+  color: var(--on-ink);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  line-height: 1;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.ink-badge > .ink-icon { width: 1em; height: 1em; stroke-width: 2.5; } /* = --text-xs */
+
+.ink-badge--outline { background: var(--paper); color: var(--ink); border-width: var(--stroke-bold); }
+
+.ink-badge--round {
+  min-width: var(--badge-h);
+  height: var(--badge-h);
+  min-height: 0;
+  padding: 0 calc(var(--space-1) + var(--stroke-hair));
+  border-radius: var(--radius-pill);
+  font-size: var(--text-2xs);
+  font-weight: var(--weight-black);
+}
+.ink-badge--dot {
+  width: var(--space-2);
+  height: var(--space-2);
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  border-radius: var(--radius-pill);
+}
+
+.ink-badge--trend {
+  min-width: calc(var(--space-8) * 2);
+  min-height: var(--control-xs);
+  padding: var(--space-half) var(--space-2) var(--space-half) calc(var(--space-1) + var(--space-half));
+  justify-content: space-between;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-black);
+  letter-spacing: 0.01em;
+}
+.ink-badge--trend.ink-badge--outline { color: var(--ink); }
+
+/* Badge pinned to the corner of an icon / button */
+.ink-badge-anchor { position: relative; display: inline-flex; }
+.ink-badge-anchor > .ink-badge--round,
+.ink-badge-anchor > .ink-badge--dot {
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(40%, -40%);
+  border-color: var(--paper);
+}

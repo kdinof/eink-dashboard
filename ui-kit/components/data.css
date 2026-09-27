@@ -1,0 +1,423 @@
+/*
+ * Ink UI — data display. Requires tokens.css, base.css (and chip.css for .ink-tag / .ink-badge in rows).
+ *
+ * Classes
+ *   .ink-ticker                    quotes / FX table (stack of rows)
+ *   .ink-ticker__head              header row: .ink-ticker__title left, .ink-ticker__meta right (clock + time)
+ *   .ink-ticker__title             bold title, optional leading icon
+ *   .ink-ticker__meta              grey small meta with icon
+ *   .ink-ticker__row               one instrument: name/code | value | change
+ *   .ink-ticker__name              bold instrument name; put an .ink-tag--code under it
+ *   .ink-ticker__value             big tabular number, right aligned
+ *   .ink-ticker__change            holds an .ink-badge ("↗ +1.26%")
+ *   .ink-ticker__summary           black band: "IMOEX 3 031.51 ▲1.12%"
+ *
+ *   .ink-stat                      label eyebrow + big number + delta
+ *   .ink-stat__label / __value / __unit / __delta
+ *   .ink-stat-grid                 grid of stats (--cols, default 2), hairline cells
+ *     .ink-stat-grid--flush        inner dividers only (no outer edges); applied automatically as a
+ *                                  direct child of .ink-card or .ink-card__body--flush
+ *
+ *   .ink-progress                  thick bordered track (role="progressbar", style="--value: 40%")
+ *   .ink-progress__bar             solid ink fill
+ *     .ink-progress--segmented     10 discrete blocks, fill snaps to whole blocks
+ *     .ink-progress--sm            thin variant
+ *   .ink-meter                     battery-like gauge (style="--value: 60%")
+ *   .ink-meter__body               battery outline with a nub; holds .ink-meter__fill
+ *   .ink-meter__fill               solid ink level
+ *   .ink-meter__label              text next to the body ("82%")
+ *     .ink-meter--lg               bigger body with a bold frame
+ *
+ *   .ink-kv                        key/value list (<dl>)
+ *   .ink-kv__row                   <div> wrapping <dt> + <dd>
+ *
+ *   .ink-date-block                calendar leaf: __month (band), __day (big), __weekday
+ *
+ *   .ink-weather                   compact weather: __icon, __temp, __info > __cond + __meta
+ *
+ * Markup
+ *   <div class="ink-ticker__row">
+ *     <div class="ink-ticker__name">Сбербанк <span class="ink-tag ink-tag--code">SBER</span></div>
+ *     <div class="ink-ticker__value">312.40</div>
+ *     <div class="ink-ticker__change"><span class="ink-badge">↗ +1.26%</span></div>
+ *   </div>
+ *   <div class="ink-progress" role="progressbar" aria-valuenow="40" style="--value: 40%">
+ *     <div class="ink-progress__bar"></div>
+ *   </div>
+ */
+
+/* ---------- Ticker ---------- */
+
+.ink-ticker {
+  container: ink-ticker / inline-size;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.ink-ticker__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-1) var(--space-3);
+  padding: var(--space-2) var(--space-3);
+}
+.ink-ticker .ink-ticker__title {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  font-size: var(--text-md);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-tight);
+}
+.ink-ticker__meta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin-left: auto;
+  font-size: var(--text-xs);
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+.ink-ticker__meta .ink-icon { width: var(--icon-sm); height: var(--icon-sm); }
+
+.ink-ticker__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto calc(var(--space-8) * 2 + var(--space-5)); /* 84px: fits a trend badge */
+  align-items: center;
+  column-gap: var(--space-3);
+  min-height: var(--control-lg);
+  padding: var(--space-2) var(--space-3);
+  border-top: var(--stroke-hair) solid var(--ink-3);
+}
+.ink-ticker__head + .ink-ticker__row { border-top-color: var(--ink); }
+
+.ink-ticker__name {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-half);
+  min-width: 0;
+  font-size: var(--text-md);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-tight);
+}
+.ink-ticker__name > :not(.ink-tag) {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ink-ticker__value {
+  justify-self: end;
+  font-size: var(--text-xl);
+  font-weight: var(--weight-regular);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+  white-space: nowrap;
+  letter-spacing: -0.01em;
+}
+
+.ink-ticker__change {
+  justify-self: end;
+  display: inline-flex;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.ink-ticker__summary {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  background: var(--ink);
+  color: var(--on-ink);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-tight);
+  font-variant-numeric: tabular-nums;
+}
+.ink-ticker__summary > :last-child { margin-left: auto; }
+
+/* Narrow containers (cards under ~340px): smaller numbers, tighter columns.
+   Container queries can't read custom properties, so the breakpoint stays literal. */
+@container ink-ticker (max-width: 340px) {
+  .ink-ticker__row { column-gap: var(--space-2); grid-template-columns: minmax(0, 1fr) auto auto; }
+  .ink-ticker__value { font-size: var(--text-lg); }
+  .ink-ticker__name { font-size: var(--text-sm); }
+}
+
+/* ---------- Stat ---------- */
+
+.ink-stat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+.ink-stat__label {
+  font-size: var(--text-2xs);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--ink-3);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ink-stat__value {
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-black);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+  white-space: nowrap;
+}
+.ink-stat__unit {
+  margin-left: var(--space-half);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+}
+.ink-stat__delta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  font-variant-numeric: tabular-nums;
+}
+.ink-stat__delta .ink-icon { width: var(--icon-sm); height: var(--icon-sm); }
+
+.ink-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 2), minmax(0, 1fr));
+  border-top: var(--stroke-hair) solid var(--ink);
+  border-left: var(--stroke-hair) solid var(--ink);
+}
+.ink-stat-grid > * {
+  padding: var(--space-3);
+  border-right: var(--stroke-hair) solid var(--ink);
+  border-bottom: var(--stroke-hair) solid var(--ink);
+}
+
+/* Flush: inside a thick card frame the outer hairlines would double it. Drop the grid's own
+   top/left edges, stretch it one hairline past the right/bottom and clip that hairline away,
+   so only the inner dividers remain (works for any --cols and incomplete last rows). */
+.ink-stat-grid--flush,
+.ink-card > .ink-stat-grid,
+.ink-card__body--flush > .ink-stat-grid {
+  border-top: 0;
+  border-left: 0;
+  margin-right: calc(-1 * var(--stroke-hair));
+  margin-bottom: calc(-1 * var(--stroke-hair));
+  clip-path: inset(0 var(--stroke-hair) var(--stroke-hair) 0);
+}
+
+/* ---------- Progress ---------- */
+
+.ink-progress {
+  --value: 0%;
+  position: relative;
+  display: block;
+  width: 100%;
+  height: var(--space-4);
+  padding: var(--space-half);
+  border: var(--stroke-bold) solid var(--ink);
+  border-radius: var(--radius-xs);
+  background: var(--paper);
+  overflow: hidden;
+}
+.ink-progress--sm { height: calc(var(--space-2) + var(--space-half)); border-width: var(--stroke); padding: var(--stroke-hair); }
+
+.ink-progress__bar {
+  display: block;
+  height: 100%;
+  width: var(--value);
+  max-width: 100%;
+  background: var(--ink);
+}
+
+/* Segmented: 10 blocks. Empty blocks are paper-2, gaps are paper; fill snaps down to 10% steps. */
+.ink-progress--segmented { background: var(--paper); }
+.ink-progress--segmented::before,
+.ink-progress--segmented::after {
+  content: "";
+  position: absolute;
+  inset: var(--space-half); /* = .ink-progress padding */
+  pointer-events: none;
+}
+.ink-progress--segmented::before { background: var(--paper-2); z-index: 0; }
+.ink-progress--segmented::after {
+  z-index: 2;
+  background-image: repeating-linear-gradient(
+    to right,
+    transparent 0,
+    transparent calc(10% - var(--space-half) * 1.5),
+    var(--paper) calc(10% - var(--space-half) * 1.5),
+    var(--paper) 10%
+  );
+}
+.ink-progress--segmented .ink-progress__bar { position: relative; z-index: 1; }
+@supports (width: round(down, 50%, 10%)) {
+  .ink-progress--segmented .ink-progress__bar { width: round(down, var(--value), 10%); }
+}
+
+/* ---------- Meter (battery) ---------- */
+
+.ink-meter {
+  --value: 0%;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  font-variant-numeric: tabular-nums;
+  vertical-align: middle;
+}
+.ink-meter__body {
+  position: relative;
+  display: inline-block;
+  width: var(--meter-w);
+  height: var(--meter-h);
+  padding: var(--space-half);
+  border: var(--stroke) solid var(--ink);
+  border-radius: var(--radius-xs);
+  margin-right: var(--space-1); /* room for the nub */
+}
+.ink-meter__body::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: calc(-1 * var(--space-1));
+  width: var(--space-half);
+  height: calc(var(--meter-h) * 0.4);
+  transform: translateY(-50%);
+  background: var(--ink);
+  border-radius: 0 var(--radius-xs) var(--radius-xs) 0;
+}
+.ink-meter__fill {
+  display: block;
+  height: 100%;
+  width: var(--value);
+  max-width: 100%;
+  background: var(--ink);
+  border-radius: calc(var(--radius-xs) / 2);
+}
+.ink-meter--lg .ink-meter__body {
+  width: calc(var(--meter-w) * 1.6);
+  height: calc(var(--meter-h) * 1.5);
+  border-width: var(--stroke-bold);
+  padding: calc(var(--space-half) * 1.5);
+}
+.ink-meter--lg .ink-meter__body::after { right: calc(-1 * (var(--space-1) + var(--space-half))); width: calc(var(--space-half) * 1.5); }
+.ink-meter__label { line-height: 1; }
+
+/* ---------- Key / value ---------- */
+
+.ink-kv { margin: 0; display: flex; flex-direction: column; min-width: 0; }
+.ink-kv__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  min-height: var(--control-sm);
+  padding: var(--space-2) 0;
+  border-bottom: var(--stroke-hair) solid var(--ink-4);
+}
+.ink-kv__row:last-child { border-bottom: 0; }
+.ink-kv dt {
+  min-width: 0;
+  font-size: var(--text-sm);
+  color: var(--ink-2);
+}
+.ink-kv dd {
+  margin: 0;
+  flex: none;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+/* ---------- Date block ---------- */
+
+.ink-date-block {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: stretch;
+  min-width: calc(var(--text-3xl) + var(--space-6) + var(--space-1)); /* 76px: two big digits + padding */
+  border: var(--stroke-bold) solid var(--ink);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--paper);
+  color: var(--ink);
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+.ink-date-block__month {
+  padding: var(--space-half) var(--space-2);
+  background: var(--ink);
+  color: var(--on-ink);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-normal);
+}
+.ink-date-block__day {
+  padding: var(--space-1) var(--space-2) 0;
+  font-size: var(--text-3xl);
+  font-weight: var(--weight-black);
+  line-height: 1;
+}
+.ink-date-block__weekday {
+  padding: var(--space-1) var(--space-2) var(--space-2);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  color: var(--ink-2);
+}
+
+/* ---------- Weather ---------- */
+
+.ink-weather {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+}
+.ink-weather__icon,
+.ink-weather > .ink-icon {
+  width: var(--icon-xl);
+  height: var(--icon-xl);
+  flex: none;
+  stroke-width: 1.5;
+}
+.ink-weather__temp {
+  flex: none;
+  font-size: var(--text-3xl);
+  font-weight: var(--weight-black);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+.ink-weather__info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-half);
+  min-width: 0;
+}
+.ink-weather__cond {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-tight);
+}
+.ink-weather__meta {
+  font-size: var(--text-xs);
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+  line-height: var(--leading-tight);
+}

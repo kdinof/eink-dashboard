@@ -1,0 +1,184 @@
+/*
+ * Ink UI — feedback: empty state, quote, skeleton, alert, loading. Requires tokens.css, base.css.
+ * Everything is static: no animation (e-ink ghosts on every redraw).
+ *
+ * Classes
+ *   .ink-empty                     centred empty state
+ *   .ink-empty__icon               thin square holding a line icon
+ *   .ink-empty__title              bold short title ("Нет устройств")
+ *   .ink-empty__hint               grey hint
+ *   .ink-empty__action             optional action slot (button)
+ *
+ *   .ink-quote                     quote block (<figure>)
+ *   .ink-quote__caption            small grey caption on top with short rule ("Цитата дня")
+ *   .ink-quote__text               centred serif text (<blockquote>)
+ *   .ink-quote__cite               tiny right-aligned attribution (<figcaption>)
+ *
+ *   .ink-skeleton                  paper-2 placeholder block (--w, --h custom props)
+ *     --text                       one text line (--text-xs tall), last one shorter in a stack
+ *     --title                      title line (--text-lg tall)
+ *     --circle                     round
+ *   .ink-skeleton-stack            vertical stack of skeleton lines
+ *
+ *   .ink-alert                     inverted banner: __icon, __body > __title + __text
+ *     --outline                    paper banner with thick ink frame
+ *
+ *   .ink-loading                   static "Загрузка…" label with three dots
+ *   .ink-loading__dots             three square dots (fading ink steps, static)
+ *     .ink-loading--block          centred, padded (fills a card body)
+ *
+ * Markup
+ *   <div class="ink-empty">
+ *     <div class="ink-empty__icon"><svg class="ink-icon"><use href="icons.svg#i-device"/></svg></div>
+ *     <p class="ink-empty__title">Нет устройств</p>
+ *     <p class="ink-empty__hint">Нажмите «Добавить устройство», чтобы начать</p>
+ *   </div>
+ *   <div class="ink-loading" role="status">Загрузка<span class="ink-loading__dots"><i></i><i></i><i></i></span></div>
+ */
+
+/* ---------- Empty ---------- */
+
+.ink-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-10) var(--space-4);
+  text-align: center;
+  color: var(--ink);
+}
+.ink-empty__icon {
+  display: grid;
+  place-items: center;
+  width: var(--space-12);
+  height: var(--space-12);
+  margin-bottom: var(--space-2);
+  border: var(--stroke-hair) solid var(--ink-4);
+  border-radius: var(--radius-xs);
+  color: var(--ink-3);
+}
+.ink-empty__icon .ink-icon { width: var(--icon-lg); height: var(--icon-lg); stroke-width: 1.5; }
+.ink-empty__title {
+  margin: 0;
+  font-size: var(--text-md);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-tight);
+}
+.ink-empty__hint {
+  margin: 0;
+  max-width: 32ch;
+  font-size: var(--text-xs);
+  color: var(--ink-3);
+  line-height: var(--leading-normal);
+}
+.ink-empty__action { margin-top: var(--space-3); }
+
+/* ---------- Quote ---------- */
+
+.ink-quote {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin: 0;
+  padding: var(--space-4) var(--space-4) var(--space-3);
+}
+.ink-quote__caption {
+  align-self: center;
+  padding: 0 var(--space-3) var(--space-1);
+  border-bottom: var(--stroke-hair) solid var(--ink-3);
+  font-size: var(--text-xs);
+  color: var(--ink-3);
+  line-height: var(--leading-tight);
+}
+.ink-quote__text {
+  margin: 0;
+  padding: var(--space-3) var(--space-2);
+  font-family: var(--font-serif);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-normal);
+  text-align: center;
+  text-wrap: balance;
+}
+.ink-quote__cite {
+  align-self: flex-end;
+  font-size: var(--text-2xs);
+  font-style: normal;
+  color: var(--ink-3);
+}
+
+/* ---------- Skeleton ---------- */
+
+.ink-skeleton {
+  display: block;
+  width: var(--w, 100%);
+  height: var(--h, var(--text-xs));
+  background: var(--paper-2);
+  border-radius: var(--radius-xs);
+}
+.ink-skeleton--text { --h: var(--text-xs); }
+.ink-skeleton--title { --h: var(--text-lg); --w: 60%; }
+.ink-skeleton--circle { border-radius: var(--radius-pill); --w: var(--h); --h: var(--control-md); }
+.ink-skeleton-stack { display: flex; flex-direction: column; gap: var(--space-2); }
+.ink-skeleton-stack > .ink-skeleton--text:last-child { --w: 70%; }
+
+/* ---------- Alert ---------- */
+
+.ink-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--ink);
+  color: var(--on-ink);
+  border: var(--stroke-bold) solid var(--ink);
+  border-radius: var(--radius-sm);
+}
+.ink-alert__icon,
+.ink-alert > .ink-icon { flex: none; width: var(--icon-md); height: var(--icon-md); margin-top: var(--stroke-hair); /* optical align with title */ }
+.ink-alert__body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: var(--space-half); }
+.ink-alert__title {
+  margin: 0;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-tight);
+}
+.ink-alert__text {
+  margin: 0;
+  font-size: var(--text-xs);
+  line-height: var(--leading-normal);
+}
+.ink-alert__action { flex: none; align-self: center; }
+
+.ink-alert--outline {
+  background: var(--paper);
+  color: var(--ink);
+}
+.ink-alert--outline .ink-alert__text { color: var(--ink-2); }
+
+/* ---------- Loading (static) ---------- */
+
+.ink-loading {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--space-1);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--ink-2);
+}
+.ink-loading__dots { display: inline-flex; gap: calc(var(--space-half) * 1.5); margin-left: var(--space-half); }
+.ink-loading__dots > i {
+  display: inline-block;
+  width: var(--space-1);
+  height: var(--space-1);
+  background: var(--ink);
+}
+.ink-loading__dots > i:nth-child(2) { background: var(--ink-3); }
+.ink-loading__dots > i:nth-child(3) { background: var(--ink-4); }
+
+.ink-loading--block {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-8) var(--space-4);
+}

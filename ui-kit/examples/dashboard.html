@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Дашборд — Ink UI</title>
+  <link rel="stylesheet" href="../ink.css">
+  <script src="../ink.js" defer></script>
+  <style>
+    /* Page-level layout only. 936px ≈ 1404×1872 tablet at 1.5x. */
+    .board { --gap: var(--space-5); margin-top: var(--space-5); }
+    .board > .wide { grid-column: 1 / -1; }
+    .clock-row { --gap: var(--space-6); align-items: flex-end; }
+    .weather-rows { --gap: var(--space-3); }
+  </style>
+</head>
+<body>
+  <main class="ink-page ink-page--wide ink-page--bare">
+    <header class="ink-page-header">
+      <p class="ink-page-header__eyebrow">DAILY BOARD</p>
+      <h1 class="ink-page-header__title">Доброе утро, Кирилл</h1>
+      <div class="ink-page-header__action">
+        <span class="ink-badge"><time data-ink-clock data-format="date">26 сентября, сб</time></span>
+      </div>
+    </header>
+
+    <div class="ink-grid board" style="--cols: 2">
+
+      <!-- Clock + date -->
+      <article class="ink-card">
+        <span class="ink-card__tab">Сейчас</span>
+        <div class="ink-card__body">
+          <div class="ink-row clock-row">
+            <time class="ink-hero" data-ink-clock>07:30</time>
+            <div class="ink-date-block">
+              <span class="ink-date-block__month">Сентябрь</span>
+              <span class="ink-date-block__day">26</span>
+              <span class="ink-date-block__weekday">суббота</span>
+            </div>
+          </div>
+        </div>
+        <footer class="ink-card__footer">
+          <span>39-я неделя</span>
+          <span class="ink-card__meta">Восход 06:21 · Закат 18:24</span>
+        </footer>
+      </article>
+
+      <!-- Weather -->
+      <article class="ink-card">
+        <header class="ink-card__header">
+          <svg class="ink-icon" aria-hidden="true"><use href="../icons.svg#i-sun"/></svg>
+          <h2 class="ink-card__title">Погода</h2>
+          <span class="ink-card__meta">Ташкент</span>
+        </header>
+        <div class="ink-card__body ink-stack weather-rows">
+          <div class="ink-weather">
+            <svg class="ink-icon ink-weather__icon" aria-hidden="true"><use href="../icons.svg#i-sun"/></svg>
+            <span class="ink-weather__temp">24°</span>
+            <div class="ink-weather__info">
+              <span class="ink-weather__cond">Ясно</span>
+              <span class="ink-weather__meta">Ощущается 23° · 16° / 29°</span>
+            </div>
+          </div>
+          <dl class="ink-kv">
+            <div class="ink-kv__row"><dt>Ветер</dt><dd>СЗ 3 м/с</dd></div>
+            <div class="ink-kv__row"><dt>Вечером</dt><dd>Облачно, 19°</dd></div>
+          </dl>
+        </div>
+      </article>
+
+      <!-- Calendar -->
+      <article class="ink-card">
+        <header class="ink-card__header">
+          <svg class="ink-icon" aria-hidden="true"><use href="../icons.svg#i-calendar"/></svg>
+          <h2 class="ink-card__title">Календарь</h2>
+          <span class="ink-card__meta">5 событий</span>
+        </header>
+        <div class="ink-card__body ink-card__body--flush">
+          <ul class="ink-list ink-list--ruled ink-list--inset">
+            <li class="ink-list__item">
+              <div class="ink-list__content">
+                <p class="ink-list__title">Планёрка команды</p>
+                <p class="ink-list__sub">Zoom · 10:00–10:30</p>
+              </div>
+              <span class="ink-list__trailing"><span class="ink-badge">Скоро</span></span>
+            </li>
+            <li class="ink-list__item">
+              <div class="ink-list__content">
+                <p class="ink-list__title">Ревью макетов дашборда</p>
+                <p class="ink-list__sub">Переговорная 2 · 14:30</p>
+              </div>
+              <span class="ink-list__trailing">1 ч</span>
+            </li>
+            <li class="ink-list__item">
+              <div class="ink-list__content">
+                <p class="ink-list__title">Звонок с дизайнерами</p>
+                <p class="ink-list__sub">Meet · 16:00</p>
+              </div>
+              <span class="ink-list__trailing">30 мин</span>
+            </li>
+            <li class="ink-list__item">
+              <div class="ink-list__content">
+                <p class="ink-list__title">Забрать посылку</p>
+                <p class="ink-list__sub">Пункт выдачи · до 18:00</p>
+              </div>
+              <span class="ink-list__trailing">—</span>
+            </li>
+            <li class="ink-list__item">
+              <div class="ink-list__content">
+                <p class="ink-list__title">Тренировка</p>
+                <p class="ink-list__sub">Зал · 19:00</p>
+              </div>
+              <span class="ink-list__trailing">1.5 ч</span>
+            </li>
+          </ul>
+        </div>
+      </article>
+
+      <!-- Todo -->
+      <article class="ink-card">
+        <header class="ink-card__header">
+          <svg class="ink-icon" aria-hidden="true"><use href="../icons.svg#i-todo"/></svg>
+          <h2 class="ink-card__title">Задачи на сегодня</h2>
+          <span class="ink-card__meta">2 / 5</span>
+        </header>
+        <div class="ink-card__body ink-card__body--flush">
+          <ul class="ink-list ink-list--ruled ink-list--inset">
+            <li class="ink-list__item"><label class="ink-check ink-check--task"><input type="checkbox" class="ink-checkbox" checked> Отправить отчёт за неделю</label></li>
+            <li class="ink-list__item"><label class="ink-check ink-check--task"><input type="checkbox" class="ink-checkbox" checked> Оплатить интернет</label></li>
+            <li class="ink-list__item"><label class="ink-check ink-check--task"><input type="checkbox" class="ink-checkbox"> Подготовить демо TaskForge</label></li>
+            <li class="ink-list__item"><label class="ink-check ink-check--task"><input type="checkbox" class="ink-checkbox"> Купить молоко и хлеб</label></li>
+            <li class="ink-list__item"><label class="ink-check ink-check--task"><input type="checkbox" class="ink-checkbox"> Позвонить маме</label></li>
+          </ul>
+        </div>
+        <div class="ink-card__body">
+          <div class="ink-progress ink-progress--segmented" role="progressbar" aria-label="Выполнено задач" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="--value: 40%">
+            <div class="ink-progress__bar"></div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Stats -->
+      <article class="ink-card wide">
+        <header class="ink-card__header">
+          <svg class="ink-icon" aria-hidden="true"><use href="../icons.svg#i-grid"/></svg>
+          <h2 class="ink-card__title">Сводка</h2>
+          <span class="ink-card__meta">за вчера</span>
+        </header>
+        <div class="ink-stat-grid" style="--cols: 4">
+          <div class="ink-stat">
+            <span class="ink-stat__label">Steps</span>
+            <span class="ink-stat__value">8&nbsp;412</span>
+            <span class="ink-stat__delta"><svg class="ink-icon" aria-hidden="true"><use href="../icons.svg#i-trend-up"/></svg>+12%</span>
+          </div>
+          <div class="ink-stat">
+            <span class="ink-stat__label">Sleep</span>
+            <span class="ink-stat__value">7.2<span class="ink-stat__unit">ч</span></span>
+            <span class="ink-stat__delta"><svg class="ink-icon" aria-hidden="true"><use href="../icons.svg#i-trend-down"/></svg>−0.4 ч</span>
+          </div>
+          <div class="ink-stat">
+            <span class="ink-stat__label">Tasks</span>
+            <span class="ink-stat__value">14</span>
+            <span class="ink-stat__delta"><svg class="ink-icon" aria-hidden="true"><use href="../icons.svg#i-trend-up"/></svg>+3</span>
+          </div>
+          <div class="ink-stat">
+            <span class="ink-stat__label">USD / UZS</span>
+            <span class="ink-stat__value">12&nbsp;640</span>
+            <span class="ink-stat__delta"><svg class="ink-icon" aria-hidden="true"><use href="../icons.svg#i-trend-up"/></svg>+0.3%</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Quote -->
+      <article class="ink-card ink-card--double wide">
+        <figure class="ink-quote">
+          <figcaption class="ink-quote__caption">Цитата дня</figcaption>
+          <blockquote class="ink-quote__text">Делайте дни такими, какими хотите их видеть.</blockquote>
+          <cite class="ink-quote__cite">— Неизвестный автор</cite>
+        </figure>
+      </article>
+    </div>
+  </main>
+</body>
+</html>
