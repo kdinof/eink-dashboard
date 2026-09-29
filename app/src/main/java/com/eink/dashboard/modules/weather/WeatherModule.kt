@@ -3,6 +3,7 @@ package com.eink.dashboard.modules.weather
 import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ImageBitmap
 import com.eink.dashboard.dashboard.DashboardModule
 import com.eink.dashboard.dashboard.DataWidgetRefreshPolicy
 import com.eink.dashboard.dashboard.ModuleState
@@ -13,6 +14,8 @@ import com.eink.dashboard.modules.weather.data.DataStoreWeatherCache
 import com.eink.dashboard.modules.weather.data.LocationResolver
 import com.eink.dashboard.modules.weather.data.RetrofitWeatherApi
 import com.eink.dashboard.modules.weather.model.WeatherSnapshot
+import com.eink.dashboard.modules.weather.photo.CityPhotoRepository
+import com.eink.dashboard.modules.weather.photo.CityPhotos
 import com.eink.dashboard.modules.weather.ui.WeatherContent
 import com.eink.dashboard.modules.weather.ui.WeatherSettingsSection
 import kotlinx.coroutines.Dispatchers
@@ -36,6 +39,11 @@ import kotlinx.coroutines.withContext
  * - live fetch fails but a cached snapshot exists → [ModuleState.Ok] with `isStale`;
  * - live fetch fails with nothing cached → [ModuleState.Error].
  *
+ * After each refresh the module also asks [cityPhotos] for a grayscale photo of
+ * the same place, shown behind the board's clock ([cityPhoto]). It is disk-cached
+ * per place, so this is a file read on almost every refresh, and it never
+ * affects [state]: no photo just means a plain card.
+ *
  * The refresh policy is [RefreshPolicy.Periodic] at 10 minutes: weather never
  * refreshes on the once-a-minute clock tick (T05: "do not refresh weather every
  * minute"), only on resume/manual/settings-change or every 10 minutes in foreground.
@@ -44,6 +52,7 @@ class WeatherModule(
     private val repo: WeatherRepository,
     private val settingsStore: WeatherSettingsStore,
     private val locationResolver: LocationResolver,
+    private val cityPhotos: CityPhotos? = null,
 ) : DashboardModule {
 
     override val id: String = "weather"
@@ -57,6 +66,10 @@ class WeatherModule(
     /** Latest snapshot for [Content]; null until the first load (live or cached). */
     private val _snapshot = MutableStateFlow<WeatherSnapshot?>(null)
     val snapshot: StateFlow<WeatherSnapshot?> = _snapshot.asStateFlow()
+
+    /** Processed photo of the weather location for the board's "Now" card; null if none. */
+    private val _cityPhoto = MutableStateFlow<ImageBitmap?>(null)
+    val cityPhoto: StateFlow<ImageBitmap?> = _cityPhoto.asStateFlow()
 
     override suspend fun refresh(reason: RefreshReason) {
         val settings = settingsStore.current()
@@ -91,6 +104,9 @@ class WeatherModule(
                 }
             }
         }
+        cityPhotos?.let { photos ->
+            _cityPhoto.value = withContext(Dispatchers.IO) { photos.load(location) }
+        }
     }
 
     @Composable
@@ -114,6 +130,7 @@ class WeatherModule(
                 ),
                 settingsStore = WeatherSettingsStore(app),
                 locationResolver = LocationResolver(AndroidDeviceLocationSource(app)),
+                cityPhotos = CityPhotoRepository.create(app),
             )
         }
     }

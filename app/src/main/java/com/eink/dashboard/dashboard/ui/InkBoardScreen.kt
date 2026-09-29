@@ -1,5 +1,6 @@
 package com.eink.dashboard.dashboard.ui
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,7 +20,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.eink.dashboard.core.DeviceProfile
 import com.eink.dashboard.core.time.TimeFormat
@@ -100,6 +104,7 @@ fun InkBoardScreen(
     val board = taskForgeModule?.board?.collectAsStateWithLifecycle()?.value
     val calendarState = calendarModule?.state?.collectAsStateWithLifecycle()?.value
     val weatherState = weatherModule?.state?.collectAsStateWithLifecycle()?.value
+    val cityPhoto = weatherModule?.cityPhoto?.collectAsStateWithLifecycle()?.value
     val taskForgeState = taskForgeModule?.state?.collectAsStateWithLifecycle()?.value
     val taskNotice = taskForgeModule?.notice?.collectAsStateWithLifecycle()?.value
     val moduleStates = listOfNotNull(
@@ -132,6 +137,7 @@ fun InkBoardScreen(
         totalTasks = board?.totalMatches ?: 0,
         taskForgeState = taskForgeState,
         taskNotice = taskNotice,
+        cityPhoto = cityPhoto,
         updatedEpochMs = moduleStates.mapNotNull { it.lastUpdatedEpochMs }.maxOrNull() ?: epochMs,
         onComplete = { task -> taskForgeModule?.let { scope.launch { it.complete(task) } } },
         modifier = modifier,
@@ -155,6 +161,7 @@ internal fun InkBoard(
     onComplete: (TaskForgeTask) -> Unit,
     modifier: Modifier = Modifier,
     taskNotice: String? = null,
+    cityPhoto: ImageBitmap? = null,
 ) {
     val now = Instant.ofEpochMilli(epochMs).atZone(ZoneId.systemDefault())
     val today = now.toLocalDate()
@@ -174,6 +181,7 @@ internal fun InkBoard(
                 charging = battery?.charging == true,
                 sunTimes = weather?.today,
                 updatedEpochMs = updatedEpochMs,
+                photo = cityPhoto,
                 modifier = Modifier.weight(1f).fillMaxHeight(),
             )
             WeatherCard(
@@ -208,6 +216,8 @@ internal fun InkBoard(
 
 // ---------------------------------------------------------------------------
 // Now: hero clock + calendar leaf, battery meter, sun times in the footer band.
+// With a city photo the card gets it as a backdrop: the photo is pre-faded to
+// paper on its left, and the clock shrinks a step to stay on that white area.
 // ---------------------------------------------------------------------------
 
 @Composable
@@ -218,35 +228,49 @@ private fun NowCard(
     charging: Boolean,
     sunTimes: DailyConditions?,
     updatedEpochMs: Long,
+    photo: ImageBitmap?,
     modifier: Modifier,
 ) {
     InkCard(modifier = modifier) {
-        InkCardTab("Now")
-        InkCardBody(fill = true, spacing = InkSpace.s4) {
-            Row(
-                modifier = Modifier.fillMaxWidth().weight(1f),
-                horizontalArrangement = Arrangement.spacedBy(InkSpace.s6),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(
-                    text = clock,
-                    style = InkType.hero,
-                    maxLines = 1,
-                    modifier = Modifier.weight(1f),
-                )
-                InkDateBlock(
-                    month = MONTH.format(today),
-                    day = today.dayOfMonth.toString(),
-                    weekday = WEEKDAY.format(today).lowercase(Locale.ENGLISH),
+        Box(modifier = Modifier.fillMaxWidth().weight(1f)) {
+            if (photo != null) {
+                Image(
+                    bitmap = photo,
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    alignment = Alignment.CenterEnd,
+                    modifier = Modifier.matchParentSize(),
                 )
             }
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(InkSpace.s3),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                InkEyebrow("Battery")
-                InkMeter(percent = batteryPercent, label = batteryPercent?.let { "$it%" } ?: "—")
-                if (charging) InkBadge("Charging", icon = InkIcons.BatteryCharging)
+            Column(modifier = Modifier.fillMaxSize()) {
+                InkCardTab("Now")
+                InkCardBody(fill = true, spacing = InkSpace.s4) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth().weight(1f),
+                        horizontalArrangement = Arrangement.spacedBy(InkSpace.s6),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text(
+                            text = clock,
+                            style = if (photo != null) InkType.hero.copy(fontSize = PHOTO_CLOCK_SIZE) else InkType.hero,
+                            maxLines = 1,
+                            modifier = if (photo != null) Modifier else Modifier.weight(1f),
+                        )
+                        InkDateBlock(
+                            month = MONTH.format(today),
+                            day = today.dayOfMonth.toString(),
+                            weekday = WEEKDAY.format(today).lowercase(Locale.ENGLISH),
+                        )
+                    }
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(InkSpace.s3),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        InkEyebrow("Battery")
+                        InkMeter(percent = batteryPercent, label = batteryPercent?.let { "$it%" } ?: "—")
+                        if (charging) InkBadge("Charging", icon = InkIcons.BatteryCharging)
+                    }
+                }
             }
         }
         val sun = listOfNotNull(
@@ -543,3 +567,6 @@ private val HOUR_MIN = DateTimeFormatter.ofPattern("HH:mm", Locale.ENGLISH)
 private val TASK_DATE = DateTimeFormatter.ofPattern("d MMM", Locale.ENGLISH)
 
 private const val NOTICE_VISIBLE_MS = 10_000L
+
+/** Hero clock size over a city photo: small enough to end before the photo fades in. */
+private val PHOTO_CLOCK_SIZE = 96.sp

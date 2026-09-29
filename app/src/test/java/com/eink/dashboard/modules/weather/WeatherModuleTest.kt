@@ -14,8 +14,10 @@ import com.eink.dashboard.modules.weather.model.CurrentConditions
 import com.eink.dashboard.modules.weather.model.DailyConditions
 import com.eink.dashboard.modules.weather.model.GeoPoint
 import com.eink.dashboard.modules.weather.model.LocationPresets
+import com.eink.dashboard.modules.weather.model.ResolvedLocation
 import com.eink.dashboard.modules.weather.model.WeatherSnapshot
 import com.eink.dashboard.modules.weather.model.WmoCondition
+import com.eink.dashboard.modules.weather.photo.CityPhotos
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -60,11 +62,28 @@ class WeatherModuleTest {
         api: FakeWeatherApi,
         cache: InMemoryWeatherCache = InMemoryWeatherCache(),
         deviceFix: GeoPoint? = null,
+        cityPhotos: CityPhotos? = null,
     ): WeatherModule = WeatherModule(
         repo = WeatherRepository(api, cache),
         settingsStore = tempStore(),
         locationResolver = LocationResolver(FakeDeviceLocationSource(deviceFix)) { ZoneId.of("Asia/Tashkent") },
+        cityPhotos = cityPhotos,
     )
+
+    @Test
+    fun cityPhoto_isRequestedForTheResolvedLocation_evenWhenTheForecastFails(): Unit = runBlocking {
+        val asked = mutableListOf<ResolvedLocation>()
+        val m = module(
+            FakeWeatherApi(error = WeatherError.Network),
+            cityPhotos = { location -> asked += location; null },
+        )
+
+        m.refresh(RefreshReason.MANUAL)
+
+        assertThat(asked).containsExactly(LocationPresets.TASHKENT)
+        assertThat(m.cityPhoto.value).isNull()
+        assertThat(m.state.value).isInstanceOf(ModuleState.Error::class.java)
+    }
 
     @Test
     fun contractIdentity_isStable() {
